@@ -1,3 +1,3 @@
 # Open Source Projects
 
-Public modules and utilities by kobeforever23.
+Public modules and utilities.
