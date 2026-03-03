@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EQFIN Stress Shock Calibrator</title>
+<style>
+  :root {
+    --bg: #f3f6fb;
+    --card: #ffffff;
+    --ink: #152238;
+    --muted: #5d6b80;
+    --line: #d6dee8;
+    --accent: #0b5da8;
+    --danger: #b42318;
+    --good: #067647;
+  }
+  body {
+    margin: 0;
+    font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 8% 0%, #dfeffc 0%, rgba(223,239,252,0) 40%),
+      linear-gradient(180deg, #edf3fa 0%, #f9fbfe 40%, #f4f7fb 100%);
+  }
+  .wrap { max-width: 1460px; margin: 0 auto; padding: 20px; }
+  h1 { margin: 0 0 8px; font-size: 30px; letter-spacing: 0.2px; }
+  h2 { margin: 0 0 10px; font-size: 18px; letter-spacing: 0.2px; }
+  .sub { color: var(--muted); margin-bottom: 16px; line-height: 1.35; }
+  .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 12px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px;
+    box-shadow: 0 8px 20px rgba(16, 36, 64, 0.05);
+  }
+  .col-3 { grid-column: span 3; }
+  .col-4 { grid-column: span 4; }
+  .col-5 { grid-column: span 5; }
+  .col-6 { grid-column: span 6; }
+  .col-7 { grid-column: span 7; }
+  .col-8 { grid-column: span 8; }
+  .col-12 { grid-column: span 12; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  input, textarea, button, select {
+    font: inherit;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 9px 10px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #fff;
+  }
+  input:focus, textarea:focus, button:focus, select:focus {
+    outline: 2px solid rgba(11, 93, 168, 0.18);
+    outline-offset: 1px;
+    border-color: #9bc0e4;
+  }
+  textarea {
+    min-height: 180px;
+    resize: vertical;
+    font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    line-height: 1.4;
+  }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .row > * { flex: 1 1 220px; min-width: 0; }
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.05s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  }
+  .btn:hover { filter: brightness(1.03); box-shadow: 0 4px 12px rgba(11, 93, 168, 0.22); }
+  .btn:active { transform: translateY(1px); }
+  .btn.secondary:hover {
+    box-shadow: 0 4px 10px rgba(22, 34, 56, 0.08);
+  }
+  .btn.secondary { background: #fff; color: var(--ink); }
+  .metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .metrics-quick { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .metric { border: 1px solid var(--line); border-radius: 10px; padding: 9px; background: #fbfcfe; }
+  .metric .k { font-size: 11px; color: var(--muted); }
+  .metric .v { font-size: 19px; font-weight: 700; margin-top: 4px; }
+  .focus-metric { border-color: #8ecfa1; background: #f1faf4; }
+  .focus-metric .k { color: #0c5e3a; font-weight: 700; }
+  .focus-metric .v { color: #067647; }
+  .bad { color: var(--danger); }
+  .good { color: var(--good); }
+  .calibrated-cell { background: #f1faf4; font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 7px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  th:nth-child(2), td:nth-child(2) { text-align: left; }
+  .table-wrap {
+    max-height: 380px;
+    overflow: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+  }
+  .table-wrap thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #f4f8fd;
+    font-weight: 700;
+  }
+  tbody tr:nth-child(even) td { background: #fbfcff; }
+  .table-actions {
+    display: flex;
+    gap: 8px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .table-btn {
+    width: auto;
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  .small { font-size: 12px; color: var(--muted); }
+  .warn { color: var(--danger); font-weight: 600; }
+  .readonly {
+    background: #f7f9fc;
+    font-weight: 600;
+  }
+  .control-row { align-items: center; }
+  .live-status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid #d3e2f2;
+    background: #f3f8fd;
+    color: #315273;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .hero {
+    border-left: 4px solid #90bfe8;
+    background: linear-gradient(180deg, #ffffff 0%, #f9fcff 100%);
+  }
+  details summary { cursor: pointer; font-weight: 600; color: var(--accent); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef4fb; border: 1px solid #d3e0ef; font-size: 11px; margin-right: 6px; }
+  .advanced-card { display: none !important; }
+  .advanced-hidden .advanced-card { display: none; }
+  @media (max-width: 1100px) {
+    .col-3, .col-4, .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .metrics-quick { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>EQFIN Stress Shock Calibrator</h1>
+  <div class="sub">
+    Built for desk-node shock reconciliation where single-name and index shocks do not offset.<br>
+    <span class="pill">As-of date: 2026-02-27 EOD</span>
+    <span class="pill">SPX proxy: IVV holdings (503 equities)</span>
+    <span class="pill">NDX proxy: CNDX holdings (101 equities)</span>
+  </div>
+
+  <div class="grid advanced-hidden" id="gridRoot">
+    <div class="card col-12 hero">
+      <h2>Quick Index Shock Calibration (No Exposures Required)</h2>
+      <div class="small">Set target SPX/NDX shocks and your fixed-name shock list (for example 50%), and the tool solves the residual shocks for all other names.</div>
+      <div class="small" style="margin-top:6px;"><b>Units:</b> shocks are in percent points. Enter <code>26</code> for <code>26%</code> (not <code>0.26</code>).</div>
+      <div class="row" style="margin-top:8px;">
+        <div>
+          <label>Current SPX shock % (for comparison)</label>
+          <input id="qSpxShock0" type="number" step="0.01" value="26">
+        </div>
+        <div>
+          <label>Current NDX shock % (for comparison)</label>
+          <input id="qNdxShock0" type="number" step="0.01" value="35">
+        </div>
+      </div>
+      <div class="row" id="qOverrideRow" style="margin-top:8px;">
+        <div>
+          <label>Target SPX shock %</label>
+          <input id="qTargetSpx" type="number" step="0.01" value="26">
+        </div>
+        <div>
+          <label>Target NDX shock %</label>
+          <input id="qTargetNdx" type="number" step="0.01" value="35">
+        </div>
+        <div>
+          <label>Fixed single-name shock %</label>
+          <input id="qFixedNameShock" type="number" step="0.01" value="50">
+        </div>
+      </div>
+      <div id="qOverrideTickersRow" style="margin-top:8px;">
+        <label>Fixed names at single-name shock (ticker per line, optional override: <code>TICKER,SHOCK%</code>)</label>
+        <textarea id="qFixedTickers" style="min-height:160px;">ACN
+ADBE
+AEP
+AI
+AMAT
+AMD
+AMZN
+ANET
+ASML
+AUR
+AVGO
+BABA
+BE
+BIDU
+BLDP
+CART
+CAT
+CEG
+CFLT
+CMI
+CRM
+CRWD
+CSCO
+DBX
+DELL
+DLR
+EPAM
+EQIX
+ESTC
+ETN
+FCEL
+GPS
+GLOB
+GOOGL
+HPE
+IBM
+INFY
+INTC
+IRBT
+JCI
+KLAC
+LRCX
+MBLY
+MDB
+META
+MRVL
+MSFT
+MU
+MXL
+NOW
+NVDA
+OKLO
+ORCL
+PANW
+PATH
+PGY
+PLTR
+PLUG
+RSKD
+RXRX
+S
+SHOP
+SIEGY
+SMCI
+SNOW
+SNPS
+SOFI
+TEAM
+TSLA
+TSM
+TT
+UPST
+VRT
+ZM
+ZS</textarea>
+      </div>
+      <div class="row control-row" style="margin-top:10px;">
+        <div><button class="btn" id="runQuickBtn">Calibrate Index Shocks</button></div>
+        <div><button class="btn secondary" id="resetQuickBtn">Reset Defaults</button></div>
+        <div><span class="live-status" id="qLiveStatus">Live recalculation is enabled.</span></div>
+        <div><input id="qCopyLine" class="readonly" readonly value=""></div>
+      </div>
+      <div id="qWarn" class="small warn" style="margin-top:8px;"></div>
+      <div id="exportStatus" class="small" style="margin-top:4px;"></div>
+      <div class="metrics-quick" style="margin-top:8px;">
+        <div class="metric"><div class="k" id="qLabelA">Required Residual SPX Shock (%)</div><div class="v" id="qIndexPnlCurrent">-</div></div>
+        <div class="metric"><div class="k" id="qLabelB">Required Residual NDX Shock (%)</div><div class="v" id="qIndexPnlTarget">-</div></div>
+        <div class="metric"><div class="k" id="qLabelScale">Fixed Weight Coverage (SPX/NDX)</div><div class="v" id="qScale">-</div></div>
+        <div class="metric focus-metric"><div class="k">Calibrated SPX Shock (%)</div><div class="v" id="qSpxShockNew">-</div></div>
+        <div class="metric focus-metric"><div class="k">Calibrated NDX Shock (%)</div><div class="v" id="qNdxShockNew">-</div></div>
+        <div class="metric"><div class="k" id="qLabelCheck">Rebuilt Index Shock (SPX/NDX)</div><div class="v" id="qNetCheck">-</div></div>
+      </div>
+      <div class="table-actions" style="margin-top:10px;">
+        <button class="btn secondary table-btn copy-table-btn" data-table-id="quickShockTableEl">Copy Table</button>
+        <button class="btn secondary table-btn download-table-btn" data-table-id="quickShockTableEl" data-filename="eqfin_quick_calibrated_shocks_2026-02-27.csv">Download CSV</button>
+      </div>
+      <div class="table-wrap" style="max-height:220px;">
+        <table id="quickShockTableEl">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Current Shock (%)</th>
+              <th>Calibrated Shock (%)</th>
+              <th>Change (pp)</th>
+              <th>Relative Change (%)</th>
+            </tr>
+          </thead>
+          <tbody id="quickShockTable"></tbody>
+        </table>
+      </div>
+      <div id="overrideSolveWrap" style="margin-top:10px;">
+        <div class="table-actions">
+          <button class="btn secondary table-btn copy-table-btn" data-table-id="overrideSolveTableEl">Copy Table</button>
+          <button class="btn secondary table-btn download-table-btn" data-table-id="overrideSolveTableEl" data-filename="eqfin_override_residual_shocks_2026-02-27.csv">Download CSV</button>
+        </div>
+        <div class="table-wrap" style="max-height:220px;">
+          <table id="overrideSolveTableEl">
+            <thead>
+              <tr>
+                <th>Index</th>
+                <th>Target Shock (%)</th>
+                <th>Fixed Names Matched</th>
+                <th>Fixed Weight (%)</th>
+                <th>Residual Weight (%)</th>
+                <th>Required Residual Shock (%)</th>
+                <th>Rebuilt Index Shock (%)</th>
+              </tr>
+            </thead>
+            <tbody id="overrideSolveTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card col-4 advanced-card">
+      <h2>Scenario Shocks (Down % Magnitude)</h2>
+      <div class="row">
+        <div>
+          <label>Single-name shock %</label>
+          <input id="singleShock" type="number" step="0.01" value="50">
+        </div>
+        <div>
+          <label>SPX shock %</label>
+          <input id="spxShock" type="number" step="0.01" value="26">
+        </div>
+        <div>
+          <label>NDX shock %</label>
+          <input id="ndxShock" type="number" step="0.01" value="35">
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px;">
+        <div>
+          <label>Target net stress PnL ($)</label>
+          <input id="targetNet" type="number" step="1" value="-3000000">
+        </div>
+        <div>
+          <label>Observed net stress PnL ($)</label>
+          <input id="observedNet" type="number" step="1" value="-2000000000">
+        </div>
+      </div>
+    </div>
+
+    <div class="card col-4 advanced-card">
+      <h2>Index Exposure Inputs</h2>
+      <div class="small">Use <b>USD PnL per 1% down move</b>. Positive value = long risk (loss on down shock), negative = short/hedge.</div>
+      <div class="row" style="margin-top:8px;">
+        <div>
+          <label>SPX exposure ($ per 1%)</label>
+          <input id="spxExp" type="number" step="0.01" value="0">
+        </div>
+        <div>
+          <label>NDX exposure ($ per 1%)</label>
+          <input id="ndxExp" type="number" step="0.01" value="0">
+        </div>
+      </div>
+      <div class="small" style="margin-top:8px;">Modelled index PnL = <code>SPX_exp * (-SPX_shock)</code> + <code>NDX_exp * (-NDX_shock)</code></div>
+    </div>
+
+    <div class="card col-4 advanced-card">
+      <h2>Run + Data Refresh</h2>
+      <div class="row">
+        <button class="btn" id="runBtn">Run Calibration</button>
+        <button class="btn secondary" id="loadDemoBtn">Load 75 Demo Names</button>
+      </div>
+      <div class="small" style="margin-top:8px;">For periodic recalibration, upload fresh iShares holdings CSVs (same format):</div>
+      <div class="row" style="margin-top:8px;">
+        <div>
+          <label>SPX proxy CSV (IVV)</label>
+          <input id="spxCsv" type="file" accept=".csv,text/csv">
+        </div>
+        <div>
+          <label>NDX proxy CSV (CNDX/NDX ETF)</label>
+          <input id="ndxCsv" type="file" accept=".csv,text/csv">
+        </div>
+      </div>
+      <div class="small" id="dataStatus" style="margin-top:8px;">Loaded fixed month-end dataset: 2026-02-27 holdings and 2026-02-27 adjusted closes.</div>
+    </div>
+
+    <div class="card col-12 advanced-card">
+      <h2>Single-Name Exposure Input (Your 75 names)</h2>
+      <div class="small">Paste CSV or TSV: <code>TICKER, exposure_per_1pct</code> per line (example: <code>NVDA, 1250000</code>).</div>
+      <textarea id="singleNameInput">NVDA,1250000
+AAPL,1150000
+MSFT,980000
+AMZN,850000
+GOOGL,620000
+META,540000
+TSLA,500000</textarea>
+    </div>
+
+    <div class="card col-12 advanced-card">
+      <h2>Key Outputs</h2>
+      <div class="metrics">
+        <div class="metric"><div class="k">Single-name PnL</div><div class="v" id="mSingle">-</div></div>
+        <div class="metric"><div class="k">Index PnL</div><div class="v" id="mIndex">-</div></div>
+        <div class="metric"><div class="k">Modelled Net PnL</div><div class="v" id="mNet">-</div></div>
+        <div class="metric"><div class="k">Gap vs Target</div><div class="v" id="mTargetGap">-</div></div>
+        <div class="metric"><div class="k">Gap vs Observed</div><div class="v" id="mObservedGap">-</div></div>
+      </div>
+    </div>
+
+    <div class="card col-6 advanced-card">
+      <h2>Shock Re-Solve (to hit target net PnL)</h2>
+      <div class="table-actions">
+        <button class="btn secondary table-btn copy-table-btn" data-table-id="solveTableEl">Copy Table</button>
+        <button class="btn secondary table-btn download-table-btn" data-table-id="solveTableEl" data-filename="eqfin_shock_resolve_2026-02-27.csv">Download CSV</button>
+      </div>
+      <div class="table-wrap">
+        <table id="solveTableEl">
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>SPX Shock %</th>
+              <th>NDX Shock %</th>
+              <th>Implied Net PnL</th>
+            </tr>
+          </thead>
+          <tbody id="solveTable"></tbody>
+        </table>
+      </div>
+      <div class="small" style="margin-top:8px;">`Scale Both` preserves your SPX:NDX shock ratio (26:35 by default).</div>
+    </div>
+
+    <div class="card col-6 advanced-card">
+      <h2>Coverage + Basis Summary</h2>
+      <div class="table-actions">
+        <button class="btn secondary table-btn copy-table-btn" data-table-id="coverageTableEl">Copy Table</button>
+        <button class="btn secondary table-btn download-table-btn" data-table-id="coverageTableEl" data-filename="eqfin_coverage_summary_2026-02-27.csv">Download CSV</button>
+      </div>
+      <div class="table-wrap" style="max-height: 220px;">
+        <table id="coverageTableEl">
+          <tbody id="coverageTable"></tbody>
+        </table>
+      </div>
+      <div class="small" style="margin-top:8px;">`Delta shock` = single-name shock minus blended index-implied shock for each ticker.</div>
+    </div>
+
+    <div class="card col-12 advanced-card">
+      <h2>Single-Name vs Index Shock Mismatch Detail</h2>
+      <div class="table-actions">
+        <button class="btn secondary table-btn copy-table-btn" data-table-id="basisTableEl">Copy Table</button>
+        <button class="btn secondary table-btn download-table-btn" data-table-id="basisTableEl" data-filename="eqfin_basis_detail_2026-02-27.csv">Download CSV</button>
+      </div>
+      <div class="table-wrap" style="max-height: 420px;">
+        <table id="basisTableEl">
+          <thead>
+            <tr>
+              <th>Ticker</th>
+              <th>Exposure/1%</th>
+              <th>Single PnL</th>
+              <th>SPX Wt%</th>
+              <th>NDX Wt%</th>
+              <th>Blended Index Shock%</th>
+              <th>Delta Shock%</th>
+              <th>Extra PnL vs Index</th>
+            </tr>
+          </thead>
+          <tbody id="basisTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card col-6">
+      <h2>SPX Proxy Constituents (IVV)</h2>
+      <input id="spxFilter" placeholder="Filter by ticker or name">
+      <div class="table-actions">
+        <button class="btn secondary table-btn copy-table-btn" data-table-id="spxTableEl">Copy Table</button>
+        <button class="btn secondary table-btn download-table-btn" data-table-id="spxTableEl" data-filename="eqfin_spx_proxy_constituents_2026-02-27.csv">Download CSV</button>
+      </div>
+      <div class="table-wrap" style="margin-top:8px; max-height: 320px;">
+        <table id="spxTableEl">
+          <thead><tr><th>Ticker</th><th>Name</th><th>Weight %</th><th>Adj Close</th><th>Prior Shift %</th><th>New Shift %</th></tr></thead>
+          <tbody id="spxTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card col-6">
+      <h2>NDX Proxy Constituents (CNDX)</h2>
+      <input id="ndxFilter" placeholder="Filter by ticker or name">
+      <div class="table-actions">
+        <button class="btn secondary table-btn copy-table-btn" data-table-id="ndxTableEl">Copy Table</button>
+        <button class="btn secondary table-btn download-table-btn" data-table-id="ndxTableEl" data-filename="eqfin_ndx_proxy_constituents_2026-02-27.csv">Download CSV</button>
+      </div>
+      <div class="table-wrap" style="margin-top:8px; max-height: 320px;">
+        <table id="ndxTableEl">
+          <thead><tr><th>Ticker</th><th>Name</th><th>Weight %</th><th>Adj Close</th><th>Prior Shift %</th><th>New Shift %</th></tr></thead>
+          <tbody id="ndxTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card col-12 small">
+      <details>
+        <summary>Method and assumptions</summary>
+        <ol>
+          <li>SPX constituent weights are proxied with iShares IVV holdings, and NDX with iShares CNDX holdings, both as-of 2026-02-27.</li>
+          <li>Adjusted close values are attached per ticker for 2026-02-27 via the local generator script (yfinance/Yahoo adjusted close field).</li>
+          <li>Shock inputs/outputs use percent points (26 means 26%, not 0.26).</li>
+          <li>Fixed-name rows use the fixed single-name shock (50% default); all other names receive the solved residual shock to hit target SPX/NDX levels.</li>
+          <li>Monthly/quarterly recalibration is recommended because index weights drift and rebalances occur.</li>
+          <li>Required residual shocks are solved independently for SPX and NDX from index weights and your fixed ticker list.</li>
+          <li>Constituent tables show `Prior Shift %` (current anchor shocks with fixed-name overrides) and `New Shift %` (calibrated mix).</li>
+        </ol>
+      </details>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+let SPX_DATA = [{"ticker":"NVDA","name":"NVIDIA CORP","weight":7.31,"adjClose":177.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"AAPL","name":"APPLE INC","weight":6.63,"adjClose":264.17999267578125,"adjCloseDate":"2026-02-27"},{"ticker":"MSFT","name":"MICROSOFT CORP","weight":4.96,"adjClose":392.739990234375,"adjCloseDate":"2026-02-27"},{"ticker":"AMZN","name":"AMAZON COM INC","weight":3.47,"adjClose":210.0,"adjCloseDate":"2026-02-27"},{"ticker":"GOOGL","name":"ALPHABET INC CLASS A","weight":3.08,"adjClose":311.760009765625,"adjCloseDate":"2026-02-27"},{"ticker":"AVGO","name":"BROADCOM INC","weight":2.56,"adjClose":319.54998779296875,"adjCloseDate":"2026-02-27"},{"ticker":"GOOG","name":"ALPHABET INC CLASS C","weight":2.46,"adjClose":311.42999267578125,"adjCloseDate":"2026-02-27"},{"ticker":"META","name":"META PLATFORMS INC CLASS A","weight":2.4,"adjClose":648.1799926757812,"adjCloseDate":"2026-02-27"},{"ticker":"TSLA","name":"TESLA INC","weight":1.92,"adjClose":402.510009765625,"adjCloseDate":"2026-02-27"},{"ticker":"BRKB","name":"BERKSHIRE HATHAWAY INC CLASS B","weight":1.57,"adjClose":504.95001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"LLY","name":"ELI LILLY","weight":1.42,"adjClose":1051.989990234375,"adjCloseDate":"2026-02-27"},{"ticker":"JPM","name":"JPMORGAN CHASE & CO","weight":1.39,"adjClose":300.29998779296875,"adjCloseDate":"2026-02-27"},{"ticker":"XOM","name":"EXXON MOBIL CORP","weight":1.09,"adjClose":152.5,"adjCloseDate":"2026-02-27"},{"ticker":"JNJ","name":"JOHNSON & JOHNSON","weight":1.02,"adjClose":248.42999267578125,"adjCloseDate":"2026-02-27"},{"ticker":"WMT","name":"WALMART INC","weight":0.95,"adjClose":127.94999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"V","name":"VISA INC CLASS A","weight":0.92,"adjClose":320.1400146484375,"adjCloseDate":"2026-02-27"},{"ticker":"MU","name":"MICRON TECHNOLOGY INC","weight":0.79,"adjClose":412.3699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"COST","name":"COSTCO WHOLESALE CORP","weight":0.76,"adjClose":1010.7899780273438,"adjCloseDate":"2026-02-27"},{"ticker":"MA","name":"MASTERCARD INC CLASS A","weight":0.72,"adjClose":517.2100219726562,"adjCloseDate":"2026-02-27"},{"ticker":"ABBV","name":"ABBVIE INC","weight":0.7,"adjClose":232.0800018310547,"adjCloseDate":"2026-02-27"},{"ticker":"NFLX","name":"NETFLIX INC","weight":0.69,"adjClose":96.23999786376953,"adjCloseDate":"2026-02-27"},{"ticker":"PG","name":"PROCTER & GAMBLE","weight":0.66,"adjClose":167.1999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"HD","name":"HOME DEPOT INC","weight":0.64,"adjClose":380.7200012207031,"adjCloseDate":"2026-02-27"},{"ticker":"GE","name":"GE AEROSPACE","weight":0.61,"adjClose":342.260009765625,"adjCloseDate":"2026-02-27"},{"ticker":"CVX","name":"CHEVRON CORP","weight":0.6,"adjClose":186.75999450683594,"adjCloseDate":"2026-02-27"},{"ticker":"CAT","name":"CATERPILLAR INC","weight":0.59,"adjClose":742.8300170898438,"adjCloseDate":"2026-02-27"},{"ticker":"BAC","name":"BANK OF AMERICA CORP","weight":0.57,"adjClose":49.83000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"AMD","name":"ADVANCED MICRO DEVICES INC","weight":0.55,"adjClose":200.2100067138672,"adjCloseDate":"2026-02-27"},{"ticker":"KO","name":"COCA-COLA","weight":0.54,"adjClose":81.55999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"CSCO","name":"CISCO SYSTEMS INC","weight":0.53,"adjClose":79.45999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"PLTR","name":"PALANTIR TECHNOLOGIES INC CLASS A","weight":0.53,"adjClose":137.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"MRK","name":"MERCK & CO INC","weight":0.52,"adjClose":123.81999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"AMAT","name":"APPLIED MATERIAL INC","weight":0.5,"adjClose":372.29998779296875,"adjCloseDate":"2026-02-27"},{"ticker":"LRCX","name":"LAM RESEARCH CORP","weight":0.5,"adjClose":233.88999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"PM","name":"PHILIP MORRIS INTERNATIONAL INC","weight":0.49,"adjClose":186.8300018310547,"adjCloseDate":"2026-02-27"},{"ticker":"RTX","name":"RTX CORP","weight":0.46,"adjClose":202.6199951171875,"adjCloseDate":"2026-02-27"},{"ticker":"UNH","name":"UNITEDHEALTH GROUP INC","weight":0.45,"adjClose":293.2699890136719,"adjCloseDate":"2026-02-27"},{"ticker":"GS","name":"GOLDMAN SACHS GROUP INC","weight":0.44,"adjClose":855.0700073242188,"adjCloseDate":"2026-02-27"},{"ticker":"WFC","name":"WELLS FARGO","weight":0.43,"adjClose":81.44999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"ORCL","name":"ORACLE CORP","weight":0.42,"adjClose":145.39999389648438,"adjCloseDate":"2026-02-27"},{"ticker":"MCD","name":"MCDONALDS CORP","weight":0.41,"adjClose":341.05999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"GEV","name":"GE VERNOVA INC","weight":0.4,"adjClose":873.5999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"LIN","name":"LINDE PLC","weight":0.4,"adjClose":508.0799865722656,"adjCloseDate":"2026-02-27"},{"ticker":"PEP","name":"PEPSICO INC","weight":0.39,"adjClose":169.74000549316406,"adjCloseDate":"2026-02-27"},{"ticker":"IBM","name":"INTERNATIONAL BUSINESS MACHINES CO","weight":0.38,"adjClose":240.2100067138672,"adjCloseDate":"2026-02-27"},{"ticker":"VZ","name":"VERIZON COMMUNICATIONS INC","weight":0.36,"adjClose":50.13999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"AMGN","name":"AMGEN INC","weight":0.35,"adjClose":388.1600036621094,"adjCloseDate":"2026-02-27"},{"ticker":"INTC","name":"INTEL CORPORATION CORP","weight":0.35,"adjClose":45.61000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"ABT","name":"ABBOTT LABORATORIES","weight":0.34,"adjClose":116.3499984741211,"adjCloseDate":"2026-02-27"},{"ticker":"KLAC","name":"KLA CORP","weight":0.34,"adjClose":1524.550048828125,"adjCloseDate":"2026-02-27"},{"ticker":"MS","name":"MORGAN STANLEY","weight":0.34,"adjClose":166.50999450683594,"adjCloseDate":"2026-02-27"},{"ticker":"T","name":"AT&T INC","weight":0.34,"adjClose":28.010000228881836,"adjCloseDate":"2026-02-27"},{"ticker":"C","name":"CITIGROUP INC","weight":0.33,"adjClose":110.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"NEE","name":"NEXTERA ENERGY INC","weight":0.33,"adjClose":93.7699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"TMO","name":"THERMO FISHER SCIENTIFIC INC","weight":0.33,"adjClose":521.1099853515625,"adjCloseDate":"2026-02-27"},{"ticker":"TXN","name":"TEXAS INSTRUMENT INC","weight":0.33,"adjClose":212.11000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"DIS","name":"WALT DISNEY","weight":0.32,"adjClose":106.04000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"CRM","name":"SALESFORCE INC","weight":0.31,"adjClose":194.7899932861328,"adjCloseDate":"2026-02-27"},{"ticker":"GILD","name":"GILEAD SCIENCES INC","weight":0.31,"adjClose":148.9499969482422,"adjCloseDate":"2026-02-27"},{"ticker":"TJX","name":"TJX INC","weight":0.31,"adjClose":161.66000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"ADI","name":"ANALOG DEVICES INC","weight":0.3,"adjClose":355.7900085449219,"adjCloseDate":"2026-02-27"},{"ticker":"APH","name":"AMPHENOL CORP CLASS A","weight":0.3,"adjClose":146.05999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"BA","name":"BOEING","weight":0.3,"adjClose":227.52999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"ISRG","name":"INTUITIVE SURGICAL INC","weight":0.3,"adjClose":503.510009765625,"adjCloseDate":"2026-02-27"},{"ticker":"AXP","name":"AMERICAN EXPRESS","weight":0.28,"adjClose":308.8999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"DE","name":"DEERE","weight":0.27,"adjClose":629.7100219726562,"adjCloseDate":"2026-02-27"},{"ticker":"PFE","name":"PFIZER INC","weight":0.27,"adjClose":27.649999618530273,"adjCloseDate":"2026-02-27"},{"ticker":"SCHW","name":"CHARLES SCHWAB CORP","weight":0.27,"adjClose":95.19999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"UBER","name":"UBER TECHNOLOGIES INC","weight":0.27,"adjClose":75.41999816894531,"adjCloseDate":"2026-02-27"},{"ticker":"UNP","name":"UNION PACIFIC CORP","weight":0.27,"adjClose":264.9800109863281,"adjCloseDate":"2026-02-27"},{"ticker":"BLK","name":"BLACKROCK INC","weight":0.26,"adjClose":1063.22998046875,"adjCloseDate":"2026-02-27"},{"ticker":"HON","name":"HONEYWELL INTERNATIONAL INC","weight":0.26,"adjClose":243.58999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"QCOM","name":"QUALCOMM INC","weight":0.26,"adjClose":142.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"ETN","name":"EATON PLC","weight":0.25,"adjClose":375.9200134277344,"adjCloseDate":"2026-02-27"},{"ticker":"LOW","name":"LOWES COMPANIES INC","weight":0.25,"adjClose":264.57000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"COP","name":"CONOCOPHILLIPS","weight":0.24,"adjClose":113.45999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"NEM","name":"NEWMONT","weight":0.24,"adjClose":130.0,"adjCloseDate":"2026-02-27"},{"ticker":"WELL","name":"WELLTOWER INC","weight":0.24,"adjClose":207.1199951171875,"adjCloseDate":"2026-02-27"},{"ticker":"ANET","name":"ARISTA NETWORKS INC","weight":0.23,"adjClose":133.5,"adjCloseDate":"2026-02-27"},{"ticker":"BKNG","name":"BOOKING HOLDINGS INC","weight":0.23,"adjClose":4239.35009765625,"adjCloseDate":"2026-02-27"},{"ticker":"LMT","name":"LOCKHEED MARTIN CORP","weight":0.23,"adjClose":654.6300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"SPGI","name":"S&P GLOBAL INC","weight":0.23,"adjClose":441.8800048828125,"adjCloseDate":"2026-02-27"},{"ticker":"SYK","name":"STRYKER CORP","weight":0.23,"adjClose":387.4599914550781,"adjCloseDate":"2026-02-27"},{"ticker":"ACN","name":"ACCENTURE PLC CLASS A","weight":0.22,"adjClose":208.72000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"BMY","name":"BRISTOL MYERS SQUIBB","weight":0.22,"adjClose":62.369998931884766,"adjCloseDate":"2026-02-27"},{"ticker":"DHR","name":"DANAHER CORP","weight":0.22,"adjClose":210.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"PH","name":"PARKER-HANNIFIN CORP","weight":0.22,"adjClose":1009.1799926757812,"adjCloseDate":"2026-02-27"},{"ticker":"PLD","name":"PROLOGIS REIT INC","weight":0.22,"adjClose":142.57000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"CB","name":"CHUBB LTD","weight":0.21,"adjClose":340.8599853515625,"adjCloseDate":"2026-02-27"},{"ticker":"COF","name":"CAPITAL ONE FINANCIAL CORP","weight":0.21,"adjClose":195.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"MCK","name":"MCKESSON CORP","weight":0.21,"adjClose":986.5499877929688,"adjCloseDate":"2026-02-27"},{"ticker":"MDT","name":"MEDTRONIC PLC","weight":0.21,"adjClose":97.66000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"PGR","name":"PROGRESSIVE CORP","weight":0.21,"adjClose":213.66000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"VRTX","name":"VERTEX PHARMACEUTICALS INC","weight":0.21,"adjClose":496.8299865722656,"adjCloseDate":"2026-02-27"},{"ticker":"APP","name":"APPLOVIN CORP CLASS A","weight":0.2,"adjClose":434.7699890136719,"adjCloseDate":"2026-02-27"},{"ticker":"CME","name":"CME GROUP INC CLASS A","weight":0.2,"adjClose":319.5,"adjCloseDate":"2026-02-27"},{"ticker":"GLW","name":"CORNING INC","weight":0.2,"adjClose":150.3800048828125,"adjCloseDate":"2026-02-27"},{"ticker":"MO","name":"ALTRIA GROUP INC","weight":0.2,"adjClose":69.04000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"PANW","name":"PALO ALTO NETWORKS INC","weight":0.2,"adjClose":148.9199981689453,"adjCloseDate":"2026-02-27"},{"ticker":"ADBE","name":"ADOBE INC","weight":0.19,"adjClose":262.4100036621094,"adjCloseDate":"2026-02-27"},{"ticker":"BSX","name":"BOSTON SCIENTIFIC CORP","weight":0.19,"adjClose":76.8499984741211,"adjCloseDate":"2026-02-27"},{"ticker":"CMCSA","name":"COMCAST CORP CLASS A","weight":0.19,"adjClose":30.959999084472656,"adjCloseDate":"2026-02-27"},{"ticker":"INTU","name":"INTUIT INC","weight":0.19,"adjClose":409.0299987792969,"adjCloseDate":"2026-02-27"},{"ticker":"NOW","name":"SERVICENOW INC","weight":0.19,"adjClose":108.01000213623047,"adjCloseDate":"2026-02-27"},{"ticker":"SBUX","name":"STARBUCKS CORP","weight":0.19,"adjClose":98.0199966430664,"adjCloseDate":"2026-02-27"},{"ticker":"HWM","name":"HOWMET AEROSPACE INC","weight":0.18,"adjClose":262.5299987792969,"adjCloseDate":"2026-02-27"},{"ticker":"SO","name":"SOUTHERN","weight":0.18,"adjClose":97.37999725341797,"adjCloseDate":"2026-02-27"},{"ticker":"TMUS","name":"T MOBILE US INC","weight":0.18,"adjClose":217.08999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"CEG","name":"CONSTELLATION ENERGY CORP","weight":0.17,"adjClose":329.8800048828125,"adjCloseDate":"2026-02-27"},{"ticker":"CVS","name":"CVS HEALTH CORP","weight":0.17,"adjClose":79.9000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"DUK","name":"DUKE ENERGY CORP","weight":0.17,"adjClose":130.85000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"FCX","name":"FREEPORT MCMORAN INC","weight":0.17,"adjClose":68.08000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"NOC","name":"NORTHROP GRUMMAN CORP","weight":0.17,"adjClose":724.3800048828125,"adjCloseDate":"2026-02-27"},{"ticker":"TT","name":"TRANE TECHNOLOGIES PLC","weight":0.17,"adjClose":462.32000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"CRWD","name":"CROWDSTRIKE HOLDINGS INC CLASS A","weight":0.16,"adjClose":371.9800109863281,"adjCloseDate":"2026-02-27"},{"ticker":"EQIX","name":"EQUINIX REIT INC","weight":0.16,"adjClose":974.260009765625,"adjCloseDate":"2026-02-27"},{"ticker":"ICE","name":"INTERCONTINENTAL EXCHANGE INC","weight":0.16,"adjClose":164.1300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"MRSH","name":"MARSH INC","weight":0.16,"adjClose":186.74000549316406,"adjCloseDate":"2026-02-27"},{"ticker":"SNDK","name":"SANDISK CORP","weight":0.16,"adjClose":635.3599853515625,"adjCloseDate":"2026-02-27"},{"ticker":"WDC","name":"WESTERN DIGITAL CORP","weight":0.16,"adjClose":279.70001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"ADP","name":"AUTOMATIC DATA PROCESSING INC","weight":0.15,"adjClose":214.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"AMT","name":"AMERICAN TOWER REIT CORP","weight":0.15,"adjClose":191.86000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"GD","name":"GENERAL DYNAMICS CORP","weight":0.15,"adjClose":357.04998779296875,"adjCloseDate":"2026-02-27"},{"ticker":"JCI","name":"JOHNSON CONTROLS INTERNATIONAL PLC","weight":0.15,"adjClose":144.3000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"MMM","name":"3M","weight":0.15,"adjClose":165.32000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"STX","name":"SEAGATE TECHNOLOGY HOLDINGS PLC","weight":0.15,"adjClose":407.8399963378906,"adjCloseDate":"2026-02-27"},{"ticker":"UPS","name":"UNITED PARCEL SERVICE INC CLASS B","weight":0.15,"adjClose":115.95999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"WM","name":"WASTE MANAGEMENT INC","weight":0.15,"adjClose":240.83999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"WMB","name":"WILLIAMS INC","weight":0.15,"adjClose":74.72000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"BK","name":"BANK OF NEW YORK MELLON CORP","weight":0.14,"adjClose":119.0999984741211,"adjCloseDate":"2026-02-27"},{"ticker":"BX","name":"BLACKSTONE INC","weight":0.14,"adjClose":113.37000274658203,"adjCloseDate":"2026-02-27"},{"ticker":"CDNS","name":"CADENCE DESIGN SYSTEMS INC","weight":0.14,"adjClose":301.3999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"CL","name":"COLGATE-PALMOLIVE","weight":0.14,"adjClose":99.13999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"CMI","name":"CUMMINS INC","weight":0.14,"adjClose":583.8699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"CRH","name":"CRH PUBLIC LIMITED PLC","weight":0.14,"adjClose":119.9800033569336,"adjCloseDate":"2026-02-27"},{"ticker":"CSX","name":"CSX CORP","weight":0.14,"adjClose":42.689998626708984,"adjCloseDate":"2026-02-27"},{"ticker":"EMR","name":"EMERSON ELECTRIC","weight":0.14,"adjClose":150.75,"adjCloseDate":"2026-02-27"},{"ticker":"FDX","name":"FEDEX CORP","weight":0.14,"adjClose":387.0,"adjCloseDate":"2026-02-27"},{"ticker":"HCA","name":"HCA HEALTHCARE INC","weight":0.14,"adjClose":529.7000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"MSI","name":"MOTOROLA SOLUTIONS INC","weight":0.14,"adjClose":482.260009765625,"adjCloseDate":"2026-02-27"},{"ticker":"PNC","name":"PNC FINANCIAL SERVICES GROUP INC","weight":0.14,"adjClose":212.35000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"PWR","name":"QUANTA SERVICES INC","weight":0.14,"adjClose":563.0800170898438,"adjCloseDate":"2026-02-27"},{"ticker":"SHW","name":"SHERWIN WILLIAMS","weight":0.14,"adjClose":361.7900085449219,"adjCloseDate":"2026-02-27"},{"ticker":"USB","name":"US BANCORP","weight":0.14,"adjClose":54.65999984741211,"adjCloseDate":"2026-02-27"},{"ticker":"CI","name":"CIGNA","weight":0.13,"adjClose":289.82000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"ECL","name":"ECOLAB INC","weight":0.13,"adjClose":308.3500061035156,"adjCloseDate":"2026-02-27"},{"ticker":"ITW","name":"ILLINOIS TOOL INC","weight":0.13,"adjClose":290.6300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"MAR","name":"MARRIOTT INTERNATIONAL INC CLASS A","weight":0.13,"adjClose":341.7300109863281,"adjCloseDate":"2026-02-27"},{"ticker":"MDLZ","name":"MONDELEZ INTERNATIONAL INC CLASS A","weight":0.13,"adjClose":61.58000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"NKE","name":"NIKE INC CLASS B","weight":0.13,"adjClose":61.77000045776367,"adjCloseDate":"2026-02-27"},{"ticker":"ORLY","name":"OREILLY AUTOMOTIVE INC","weight":0.13,"adjClose":93.87999725341797,"adjCloseDate":"2026-02-27"},{"ticker":"RCL","name":"ROYAL CARIBBEAN GROUP LTD","weight":0.13,"adjClose":310.9599914550781,"adjCloseDate":"2026-02-27"},{"ticker":"REGN","name":"REGENERON PHARMACEUTICALS INC","weight":0.13,"adjClose":781.6699829101562,"adjCloseDate":"2026-02-27"},{"ticker":"SLB","name":"SLB NV","weight":0.13,"adjClose":51.34000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"SNPS","name":"SYNOPSYS INC","weight":0.13,"adjClose":414.0,"adjCloseDate":"2026-02-27"},{"ticker":"AEP","name":"AMERICAN ELECTRIC POWER INC","weight":0.12,"adjClose":133.82000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"AON","name":"AON PLC CLASS A","weight":0.12,"adjClose":335.4700012207031,"adjCloseDate":"2026-02-27"},{"ticker":"COR","name":"CENCORA INC","weight":0.12,"adjClose":372.1400146484375,"adjCloseDate":"2026-02-27"},{"ticker":"CTAS","name":"CINTAS CORP","weight":0.12,"adjClose":201.1300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"ELV","name":"ELEVANCE HEALTH INC","weight":0.12,"adjClose":320.0,"adjCloseDate":"2026-02-27"},{"ticker":"GM","name":"GENERAL MOTORS","weight":0.12,"adjClose":78.70999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"HLT","name":"HILTON WORLDWIDE HOLDINGS INC","weight":0.12,"adjClose":311.7799987792969,"adjCloseDate":"2026-02-27"},{"ticker":"LHX","name":"L3HARRIS TECHNOLOGIES INC","weight":0.12,"adjClose":364.5400085449219,"adjCloseDate":"2026-02-27"},{"ticker":"MCO","name":"MOODYS CORP","weight":0.12,"adjClose":476.55999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"NSC","name":"NORFOLK SOUTHERN CORP","weight":0.12,"adjClose":314.739990234375,"adjCloseDate":"2026-02-27"},{"ticker":"TDG","name":"TRANSDIGM GROUP INC","weight":0.12,"adjClose":1302.7900390625,"adjCloseDate":"2026-02-27"},{"ticker":"TRV","name":"TRAVELERS COMPANIES INC","weight":0.12,"adjClose":308.6400146484375,"adjCloseDate":"2026-02-27"},{"ticker":"WBD","name":"WARNER BROS. DISCOVERY INC SERIES","weight":0.12,"adjClose":28.170000076293945,"adjCloseDate":"2026-02-27"},{"ticker":"AZO","name":"AUTOZONE INC","weight":0.11,"adjClose":3755.580078125,"adjCloseDate":"2026-02-27"},{"ticker":"BKR","name":"BAKER HUGHES CLASS A","weight":0.11,"adjClose":65.26000213623047,"adjCloseDate":"2026-02-27"},{"ticker":"DASH","name":"DOORDASH INC CLASS A","weight":0.11,"adjClose":176.47000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"EOG","name":"EOG RESOURCES INC","weight":0.11,"adjClose":124.08000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"KMI","name":"KINDER MORGAN INC","weight":0.11,"adjClose":33.27000045776367,"adjCloseDate":"2026-02-27"},{"ticker":"PCAR","name":"PACCAR INC","weight":0.11,"adjClose":126.08999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"PSX","name":"PHILLIPS","weight":0.11,"adjClose":154.3300018310547,"adjCloseDate":"2026-02-27"},{"ticker":"ROST","name":"ROSS STORES INC","weight":0.11,"adjClose":205.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"SPG","name":"SIMON PROPERTY GROUP REIT INC","weight":0.11,"adjClose":203.85000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"SRE","name":"SEMPRA","weight":0.11,"adjClose":96.2699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"TEL","name":"TE CONNECTIVITY PLC","weight":0.11,"adjClose":230.14999389648438,"adjCloseDate":"2026-02-27"},{"ticker":"TFC","name":"TRUIST FINANCIAL CORP","weight":0.11,"adjClose":49.310001373291016,"adjCloseDate":"2026-02-27"},{"ticker":"VLO","name":"VALERO ENERGY CORP","weight":0.11,"adjClose":204.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"ABNB","name":"AIRBNB INC CLASS A","weight":0.1,"adjClose":135.11000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"AJG","name":"ARTHUR J GALLAGHER","weight":0.1,"adjClose":228.1999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"ALL","name":"ALLSTATE CORP","weight":0.1,"adjClose":213.44000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"APD","name":"AIR PRODUCTS AND CHEMICALS INC","weight":0.1,"adjClose":275.6700134277344,"adjCloseDate":"2026-02-27"},{"ticker":"DLR","name":"DIGITAL REALTY TRUST REIT INC","weight":0.1,"adjClose":177.1999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"HOOD","name":"ROBINHOOD MARKETS INC CLASS A","weight":0.1,"adjClose":75.8499984741211,"adjCloseDate":"2026-02-27"},{"ticker":"KKR","name":"KKR AND CO INC","weight":0.1,"adjClose":87.68000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"MNST","name":"MONSTER BEVERAGE CORP","weight":0.1,"adjClose":85.30000305175781,"adjCloseDate":"2026-02-27"},{"ticker":"MPC","name":"MARATHON PETROLEUM CORP","weight":0.1,"adjClose":198.2100067138672,"adjCloseDate":"2026-02-27"},{"ticker":"NXPI","name":"NXP SEMICONDUCTORS NV","weight":0.1,"adjClose":227.00999450683594,"adjCloseDate":"2026-02-27"},{"ticker":"O","name":"REALTY INCOME REIT CORP","weight":0.1,"adjClose":67.0,"adjCloseDate":"2026-02-27"},{"ticker":"ZTS","name":"ZOETIS INC CLASS A","weight":0.1,"adjClose":131.10000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"ADSK","name":"AUTODESK INC","weight":0.09,"adjClose":245.8699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"AFL","name":"AFLAC INC","weight":0.09,"adjClose":112.93000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"AME","name":"AMETEK INC","weight":0.09,"adjClose":239.22000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"BDX","name":"BECTON DICKINSON","weight":0.09,"adjClose":176.47999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"CAH","name":"CARDINAL HEALTH INC","weight":0.09,"adjClose":229.22999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"CARR","name":"CARRIER GLOBAL CORP","weight":0.09,"adjClose":64.4000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"CTVA","name":"CORTEVA INC","weight":0.09,"adjClose":79.94000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"D","name":"DOMINION ENERGY INC","weight":0.09,"adjClose":63.13999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"EW","name":"EDWARDS LIFESCIENCES CORP","weight":0.09,"adjClose":86.47000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"F","name":"FORD MOTOR CO","weight":0.09,"adjClose":14.09000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"FAST","name":"FASTENAL","weight":0.09,"adjClose":46.040000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"FIX","name":"COMFORT SYSTEMS USA INC","weight":0.09,"adjClose":1429.3699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"GWW","name":"WW GRAINGER INC","weight":0.09,"adjClose":1144.72998046875,"adjCloseDate":"2026-02-27"},{"ticker":"IDXX","name":"IDEXX LABORATORIES INC","weight":0.09,"adjClose":656.72998046875,"adjCloseDate":"2026-02-27"},{"ticker":"KEYS","name":"KEYSIGHT TECHNOLOGIES INC","weight":0.09,"adjClose":307.3299865722656,"adjCloseDate":"2026-02-27"},{"ticker":"MPWR","name":"MONOLITHIC POWER SYSTEMS INC","weight":0.09,"adjClose":1142.739990234375,"adjCloseDate":"2026-02-27"},{"ticker":"OKE","name":"ONEOK INC","weight":0.09,"adjClose":82.7699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"TER","name":"TERADYNE INC","weight":0.09,"adjClose":320.0299987792969,"adjCloseDate":"2026-02-27"},{"ticker":"TGT","name":"TARGET CORP","weight":0.09,"adjClose":113.79000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"TRGP","name":"TARGA RESOURCES CORP","weight":0.09,"adjClose":235.8000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"URI","name":"UNITED RENTALS INC","weight":0.09,"adjClose":840.0,"adjCloseDate":"2026-02-27"},{"ticker":"VST","name":"VISTRA CORP","weight":0.09,"adjClose":173.88999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"APO","name":"APOLLO GLOBAL MANAGEMENT INC","weight":0.08,"adjClose":104.5999984741211,"adjCloseDate":"2026-02-27"},{"ticker":"CIEN","name":"CIENA CORP","weight":0.08,"adjClose":348.70001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"CMG","name":"CHIPOTLE MEXICAN GRILL INC","weight":0.08,"adjClose":37.220001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"CVNA","name":"CARVANA CLASS A","weight":0.08,"adjClose":334.1600036621094,"adjCloseDate":"2026-02-27"},{"ticker":"DELL","name":"DELL TECHNOLOGIES INC CLASS C","weight":0.08,"adjClose":148.0800018310547,"adjCloseDate":"2026-02-27"},{"ticker":"EA","name":"ELECTRONIC ARTS INC","weight":0.08,"adjClose":200.57000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"ETR","name":"ENTERGY CORP","weight":0.08,"adjClose":107.11000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"EXC","name":"EXELON CORP","weight":0.08,"adjClose":49.05000305175781,"adjCloseDate":"2026-02-27"},{"ticker":"FITB","name":"FIFTH THIRD BANCORP","weight":0.08,"adjClose":49.470001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"FTNT","name":"FORTINET INC","weight":0.08,"adjClose":79.02999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"PSA","name":"PUBLIC STORAGE REIT","weight":0.08,"adjClose":307.05999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"ROK","name":"ROCKWELL AUTOMATION INC","weight":0.08,"adjClose":407.45001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"RSG","name":"REPUBLIC SERVICES INC","weight":0.08,"adjClose":229.0,"adjCloseDate":"2026-02-27"},{"ticker":"WAB","name":"WESTINGHOUSE AIR BRAKE TECHNOLOGIE","weight":0.08,"adjClose":263.95001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"XEL","name":"XCEL ENERGY INC","weight":0.08,"adjClose":83.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"YUM","name":"YUM BRANDS INC","weight":0.08,"adjClose":168.16000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"AIG","name":"AMERICAN INTERNATIONAL GROUP INC","weight":0.07,"adjClose":80.48999786376953,"adjCloseDate":"2026-02-27"},{"ticker":"AMP","name":"AMERIPRISE FINANCE INC","weight":0.07,"adjClose":470.1199951171875,"adjCloseDate":"2026-02-27"},{"ticker":"AXON","name":"AXON ENTERPRISE INC","weight":0.07,"adjClose":542.4000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"CBRE","name":"CBRE GROUP INC CLASS A","weight":0.07,"adjClose":147.66000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"CCI","name":"CROWN CASTLE INC","weight":0.07,"adjClose":89.54000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"COIN","name":"COINBASE GLOBAL INC CLASS A","weight":0.07,"adjClose":175.85000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"DAL","name":"DELTA AIR LINES INC","weight":0.07,"adjClose":65.69999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"DHI","name":"D R HORTON INC","weight":0.07,"adjClose":160.38999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"EBAY","name":"EBAY INC","weight":0.07,"adjClose":90.86000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"ED","name":"CONSOLIDATED EDISON INC","weight":0.07,"adjClose":112.5199966430664,"adjCloseDate":"2026-02-27"},{"ticker":"EQT","name":"EQT CORP","weight":0.07,"adjClose":61.41999816894531,"adjCloseDate":"2026-02-27"},{"ticker":"GEHC","name":"GE HEALTHCARE TECHNOLOGIES INC","weight":0.07,"adjClose":84.2699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"GRMN","name":"GARMIN LTD","weight":0.07,"adjClose":252.8300018310547,"adjCloseDate":"2026-02-27"},{"ticker":"HIG","name":"HARTFORD INSURANCE GROUP INC","weight":0.07,"adjClose":140.22999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"KDP","name":"KEURIG DR PEPPER INC","weight":0.07,"adjClose":30.280000686645508,"adjCloseDate":"2026-02-27"},{"ticker":"KR","name":"KROGER","weight":0.07,"adjClose":68.23999786376953,"adjCloseDate":"2026-02-27"},{"ticker":"MCHP","name":"MICROCHIP TECHNOLOGY INC","weight":0.07,"adjClose":74.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"MET","name":"METLIFE INC","weight":0.07,"adjClose":72.06999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"MLM","name":"MARTIN MARIETTA MATERIALS INC","weight":0.07,"adjClose":675.739990234375,"adjCloseDate":"2026-02-27"},{"ticker":"MSCI","name":"MSCI INC","weight":0.07,"adjClose":571.8300170898438,"adjCloseDate":"2026-02-27"},{"ticker":"NDAQ","name":"NASDAQ INC","weight":0.07,"adjClose":87.58000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"NUE","name":"NUCOR CORP","weight":0.07,"adjClose":176.8800048828125,"adjCloseDate":"2026-02-27"},{"ticker":"PCG","name":"PG&E CORP","weight":0.07,"adjClose":19.0,"adjCloseDate":"2026-02-27"},{"ticker":"PEG","name":"PUBLIC SERVICE ENTERPRISE GROUP IN","weight":0.07,"adjClose":86.06999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"PYPL","name":"PAYPAL HOLDINGS INC","weight":0.07,"adjClose":46.209999084472656,"adjCloseDate":"2026-02-27"},{"ticker":"SYY","name":"SYSCO CORP","weight":0.07,"adjClose":91.16000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"VMC","name":"VULCAN MATERIALS","weight":0.07,"adjClose":310.0,"adjCloseDate":"2026-02-27"},{"ticker":"VTR","name":"VENTAS REIT INC","weight":0.07,"adjClose":86.16000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"A","name":"AGILENT TECHNOLOGIES INC","weight":0.06,"adjClose":121.37999725341797,"adjCloseDate":"2026-02-27"},{"ticker":"ACGL","name":"ARCH CAPITAL GROUP LTD","weight":0.06,"adjClose":100.1500015258789,"adjCloseDate":"2026-02-27"},{"ticker":"ADM","name":"ARCHER DANIELS MIDLAND","weight":0.06,"adjClose":69.04000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"CCL","name":"CARNIVAL CORP","weight":0.06,"adjClose":31.549999237060547,"adjCloseDate":"2026-02-27"},{"ticker":"CPRT","name":"COPART INC","weight":0.06,"adjClose":38.09000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"DDOG","name":"DATADOG INC CLASS A","weight":0.06,"adjClose":111.95999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"DG","name":"DOLLAR GENERAL CORP","weight":0.06,"adjClose":156.24000549316406,"adjCloseDate":"2026-02-27"},{"ticker":"EME","name":"EMCOR GROUP INC","weight":0.06,"adjClose":724.6199951171875,"adjCloseDate":"2026-02-27"},{"ticker":"FANG","name":"DIAMONDBACK ENERGY INC","weight":0.06,"adjClose":174.0800018310547,"adjCloseDate":"2026-02-27"},{"ticker":"FICO","name":"FAIR ISAAC CORP","weight":0.06,"adjClose":1409.3599853515625,"adjCloseDate":"2026-02-27"},{"ticker":"FISV","name":"FISERV INC","weight":0.06,"adjClose":62.290000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"HBAN","name":"HUNTINGTON BANCSHARES INC","weight":0.06,"adjClose":16.799999237060547,"adjCloseDate":"2026-02-27"},{"ticker":"HSY","name":"HERSHEY FOODS","weight":0.06,"adjClose":236.27999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"IR","name":"INGERSOLL RAND INC","weight":0.06,"adjClose":94.13999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"KMB","name":"KIMBERLY CLARK CORP","weight":0.06,"adjClose":111.44000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"KVUE","name":"KENVUE INC","weight":0.06,"adjClose":19.1200008392334,"adjCloseDate":"2026-02-27"},{"ticker":"MTB","name":"M&T BANK CORP","weight":0.06,"adjClose":215.47999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"NRG","name":"NRG ENERGY INC","weight":0.06,"adjClose":178.9600067138672,"adjCloseDate":"2026-02-27"},{"ticker":"ODFL","name":"OLD DOMINION FREIGHT LINE INC","weight":0.06,"adjClose":203.0500030517578,"adjCloseDate":"2026-02-27"},{"ticker":"OTIS","name":"OTIS WORLDWIDE CORP","weight":0.06,"adjClose":92.55999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"OXY","name":"OCCIDENTAL PETROLEUM CORP","weight":0.06,"adjClose":53.08000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"PRU","name":"PRUDENTIAL FINANCIAL INC","weight":0.06,"adjClose":98.37999725341797,"adjCloseDate":"2026-02-27"},{"ticker":"RMD","name":"RESMED INC","weight":0.06,"adjClose":256.260009765625,"adjCloseDate":"2026-02-27"},{"ticker":"ROP","name":"ROPER TECHNOLOGIES INC","weight":0.06,"adjClose":349.7300109863281,"adjCloseDate":"2026-02-27"},{"ticker":"STT","name":"STATE STREET CORP","weight":0.06,"adjClose":128.6199951171875,"adjCloseDate":"2026-02-27"},{"ticker":"TTWO","name":"TAKE TWO INTERACTIVE SOFTWARE INC","weight":0.06,"adjClose":211.47999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"UAL","name":"UNITED AIRLINES HOLDINGS INC","weight":0.06,"adjClose":106.30000305175781,"adjCloseDate":"2026-02-27"},{"ticker":"WEC","name":"WEC ENERGY GROUP INC","weight":0.06,"adjClose":116.95999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"XYZ","name":"BLOCK INC CLASS A","weight":0.06,"adjClose":63.70000076293945,"adjCloseDate":"2026-02-27"},{"ticker":"AEE","name":"AMEREN CORP","weight":0.05,"adjClose":113.27999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"ATO","name":"ATMOS ENERGY CORP","weight":0.05,"adjClose":186.7899932861328,"adjCloseDate":"2026-02-27"},{"ticker":"AWK","name":"AMERICAN WATER WORKS INC","weight":0.05,"adjClose":136.02999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"BIIB","name":"BIOGEN INC","weight":0.05,"adjClose":191.82000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"CBOE","name":"CBOE GLOBAL MARKETS INC","weight":0.05,"adjClose":299.7200012207031,"adjCloseDate":"2026-02-27"},{"ticker":"CNP","name":"CENTERPOINT ENERGY INC","weight":0.05,"adjClose":43.5,"adjCloseDate":"2026-02-27"},{"ticker":"CTSH","name":"COGNIZANT TECHNOLOGY SOLUTIONS COR","weight":0.05,"adjClose":64.43000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"DOV","name":"DOVER CORP","weight":0.05,"adjClose":225.5,"adjCloseDate":"2026-02-27"},{"ticker":"DTE","name":"DTE ENERGY","weight":0.05,"adjClose":148.24000549316406,"adjCloseDate":"2026-02-27"},{"ticker":"DVN","name":"DEVON ENERGY CORP","weight":0.05,"adjClose":43.529998779296875,"adjCloseDate":"2026-02-27"},{"ticker":"DXCM","name":"DEXCOM INC","weight":0.05,"adjClose":73.43000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"EIX","name":"EDISON INTERNATIONAL","weight":0.05,"adjClose":74.73999786376953,"adjCloseDate":"2026-02-27"},{"ticker":"EL","name":"ESTEE LAUDER INC CLASS A","weight":0.05,"adjClose":109.47000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"ES","name":"EVERSOURCE ENERGY","weight":0.05,"adjClose":76.20999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"EXR","name":"EXTRA SPACE STORAGE REIT INC","weight":0.05,"adjClose":151.02999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"FE","name":"FIRSTENERGY CORP","weight":0.05,"adjClose":51.15999984741211,"adjCloseDate":"2026-02-27"},{"ticker":"HAL","name":"HALLIBURTON","weight":0.05,"adjClose":36.0,"adjCloseDate":"2026-02-27"},{"ticker":"HPE","name":"HEWLETT PACKARD ENTERPRISE","weight":0.05,"adjClose":21.469999313354492,"adjCloseDate":"2026-02-27"},{"ticker":"HUBB","name":"HUBBELL INC","weight":0.05,"adjClose":511.6300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"IBKR","name":"INTERACTIVE BROKERS GROUP INC CLAS","weight":0.05,"adjClose":71.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"IQV","name":"IQVIA HOLDINGS INC","weight":0.05,"adjClose":178.80999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"IRM","name":"IRON MOUNTAIN INC","weight":0.05,"adjClose":108.33000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"JBL","name":"JABIL INC","weight":0.05,"adjClose":264.989990234375,"adjCloseDate":"2026-02-27"},{"ticker":"MTD","name":"METTLER TOLEDO INC","weight":0.05,"adjClose":1366.68994140625,"adjCloseDate":"2026-02-27"},{"ticker":"NTRS","name":"NORTHERN TRUST CORP","weight":0.05,"adjClose":143.08999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"OMC","name":"OMNICOM GROUP INC","weight":0.05,"adjClose":85.29000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"ON","name":"ON SEMICONDUCTOR CORP","weight":0.05,"adjClose":66.4800033569336,"adjCloseDate":"2026-02-27"},{"ticker":"PAYX","name":"PAYCHEX INC","weight":0.05,"adjClose":93.6500015258789,"adjCloseDate":"2026-02-27"},{"ticker":"PHM","name":"PULTEGROUP INC","weight":0.05,"adjClose":137.1999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"PPG","name":"PPG INDUSTRIES INC","weight":0.05,"adjClose":123.2699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"PPL","name":"PPL CORP","weight":0.05,"adjClose":38.97999954223633,"adjCloseDate":"2026-02-27"},{"ticker":"Q","name":"QNITY ELECTRONICS INC","weight":0.05,"adjClose":126.76000213623047,"adjCloseDate":"2026-02-27"},{"ticker":"RJF","name":"RAYMOND JAMES INC","weight":0.05,"adjClose":153.0800018310547,"adjCloseDate":"2026-02-27"},{"ticker":"STLD","name":"STEEL DYNAMICS INC","weight":0.05,"adjClose":193.1300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"TDY","name":"TELEDYNE TECHNOLOGIES INC","weight":0.05,"adjClose":681.0999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"TPL","name":"TEXAS PACIFIC LAND CORP","weight":0.05,"adjClose":523.6900024414062,"adjCloseDate":"2026-02-27"},{"ticker":"TPR","name":"TAPESTRY INC","weight":0.05,"adjClose":155.47000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"TSCO","name":"TRACTOR SUPPLY","weight":0.05,"adjClose":51.84000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"ULTA","name":"ULTA BEAUTY INC","weight":0.05,"adjClose":684.7899780273438,"adjCloseDate":"2026-02-27"},{"ticker":"VICI","name":"VICI PPTYS INC","weight":0.05,"adjClose":30.209999084472656,"adjCloseDate":"2026-02-27"},{"ticker":"VRSK","name":"VERISK ANALYTICS INC","weight":0.05,"adjClose":207.57000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"WAT","name":"WATERS CORP","weight":0.05,"adjClose":319.3800048828125,"adjCloseDate":"2026-02-27"},{"ticker":"WDAY","name":"WORKDAY INC CLASS A","weight":0.05,"adjClose":133.75999450683594,"adjCloseDate":"2026-02-27"},{"ticker":"WTW","name":"WILLIS TOWERS WATSON PLC","weight":0.05,"adjClose":305.1700134277344,"adjCloseDate":"2026-02-27"},{"ticker":"XYL","name":"XYLEM INC","weight":0.05,"adjClose":129.55999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"ALB","name":"ALBEMARLE CORP","weight":0.04,"adjClose":178.6699981689453,"adjCloseDate":"2026-02-27"},{"ticker":"AMCR","name":"AMCOR PLC","weight":0.04,"adjClose":48.43000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"ARES","name":"ARES MANAGEMENT CORP CLASS A","weight":0.04,"adjClose":112.01000213623047,"adjCloseDate":"2026-02-27"},{"ticker":"AVB","name":"AVALONBAY COMMUNITIES REIT INC","weight":0.04,"adjClose":177.22999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"BR","name":"BROADRIDGE FINANCIAL SOLUTIONS INC","weight":0.04,"adjClose":185.8699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"BRO","name":"BROWN & BROWN INC","weight":0.04,"adjClose":71.81999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"CFG","name":"CITIZENS FINANCIAL GROUP INC","weight":0.04,"adjClose":60.189998626708984,"adjCloseDate":"2026-02-27"},{"ticker":"CHD","name":"CHURCH AND DWIGHT INC","weight":0.04,"adjClose":104.86000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"CHRW","name":"CH ROBINSON WORLDWIDE INC","weight":0.04,"adjClose":185.25,"adjCloseDate":"2026-02-27"},{"ticker":"CHTR","name":"CHARTER COMMUNICATIONS INC CLASS A","weight":0.04,"adjClose":234.6300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"CINF","name":"CINCINNATI FINANCIAL CORP","weight":0.04,"adjClose":163.97999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"CMS","name":"CMS ENERGY CORP","weight":0.04,"adjClose":78.06999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"CNC","name":"CENTENE CORP","weight":0.04,"adjClose":44.880001068115234,"adjCloseDate":"2026-02-27"},{"ticker":"CPAY","name":"CORPAY INC","weight":0.04,"adjClose":325.1000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"CTRA","name":"COTERRA ENERGY INC","weight":0.04,"adjClose":30.59000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"DD","name":"DUPONT DE NEMOURS INC","weight":0.04,"adjClose":49.84000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"DGX","name":"QUEST DIAGNOSTICS INC","weight":0.04,"adjClose":211.91000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"DLTR","name":"DOLLAR TREE INC","weight":0.04,"adjClose":126.4800033569336,"adjCloseDate":"2026-02-27"},{"ticker":"DOW","name":"DOW INC","weight":0.04,"adjClose":30.729999542236328,"adjCloseDate":"2026-02-27"},{"ticker":"DRI","name":"DARDEN RESTAURANTS INC","weight":0.04,"adjClose":213.85000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"EFX","name":"EQUIFAX INC","weight":0.04,"adjClose":208.9600067138672,"adjCloseDate":"2026-02-27"},{"ticker":"EQR","name":"EQUITY RESIDENTIAL REIT","weight":0.04,"adjClose":63.209999084472656,"adjCloseDate":"2026-02-27"},{"ticker":"EXE","name":"EXPAND ENERGY CORP","weight":0.04,"adjClose":107.91999816894531,"adjCloseDate":"2026-02-27"},{"ticker":"EXPE","name":"EXPEDIA GROUP INC","weight":0.04,"adjClose":215.69000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"FIS","name":"FIDELITY NATIONAL INFORMATION SERV","weight":0.04,"adjClose":50.959999084472656,"adjCloseDate":"2026-02-27"},{"ticker":"FSLR","name":"FIRST SOLAR INC","weight":0.04,"adjClose":197.1999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"GIS","name":"GENERAL MILLS INC","weight":0.04,"adjClose":45.22999954223633,"adjCloseDate":"2026-02-27"},{"ticker":"HUM","name":"HUMANA INC","weight":0.04,"adjClose":190.5399932861328,"adjCloseDate":"2026-02-27"},{"ticker":"IFF","name":"INTERNATIONAL FLAVORS & FRAGRANCES","weight":0.04,"adjClose":82.2300033569336,"adjCloseDate":"2026-02-27"},{"ticker":"IP","name":"INTERNATIONAL PAPER","weight":0.04,"adjClose":43.54999923706055,"adjCloseDate":"2026-02-27"},{"ticker":"KHC","name":"KRAFT HEINZ","weight":0.04,"adjClose":24.610000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"LDOS","name":"LEIDOS HOLDINGS INC","weight":0.04,"adjClose":175.10000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"LEN","name":"LENNAR A CORP CLASS A","weight":0.04,"adjClose":114.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"LH","name":"LABCORP HOLDINGS INC","weight":0.04,"adjClose":289.1199951171875,"adjCloseDate":"2026-02-27"},{"ticker":"LUV","name":"SOUTHWEST AIRLINES","weight":0.04,"adjClose":49.2599983215332,"adjCloseDate":"2026-02-27"},{"ticker":"LYV","name":"LIVE NATION ENTERTAINMENT INC","weight":0.04,"adjClose":162.13999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"NI","name":"NISOURCE INC","weight":0.04,"adjClose":47.29999923706055,"adjCloseDate":"2026-02-27"},{"ticker":"NVR","name":"NVR INC","weight":0.04,"adjClose":7517.7900390625,"adjCloseDate":"2026-02-27"},{"ticker":"PKG","name":"PACKAGING CORP OF AMERICA","weight":0.04,"adjClose":232.13999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"RF","name":"REGIONS FINANCIAL CORP","weight":0.04,"adjClose":27.565000534057617,"adjCloseDate":"2026-02-27"},{"ticker":"SBAC","name":"SBA COMMUNICATIONS REIT CORP CLASS","weight":0.04,"adjClose":201.16000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"STE","name":"STERIS","weight":0.04,"adjClose":252.35000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"STZ","name":"CONSTELLATION BRANDS INC CLASS A","weight":0.04,"adjClose":157.86000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"SW","name":"SMURFIT WESTROCK PLC","weight":0.04,"adjClose":47.0099983215332,"adjCloseDate":"2026-02-27"},{"ticker":"SYF","name":"SYNCHRONY FINANCIAL","weight":0.04,"adjClose":69.11000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"TROW","name":"T ROWE PRICE GROUP INC","weight":0.04,"adjClose":94.62999725341797,"adjCloseDate":"2026-02-27"},{"ticker":"VLTO","name":"VERALTO CORP","weight":0.04,"adjClose":97.43000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"WRB","name":"WR BERKLEY CORP","weight":0.04,"adjClose":71.69999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"WSM","name":"WILLIAMS SONOMA INC","weight":0.04,"adjClose":205.64999389648438,"adjCloseDate":"2026-02-27"},{"ticker":"APTV","name":"APTIV PLC","weight":0.03,"adjClose":73.54000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"AVY","name":"AVERY DENNISON CORP","weight":0.03,"adjClose":196.35000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"BALL","name":"BALL CORP","weight":0.03,"adjClose":66.93000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"BG","name":"BUNGE GLOBAL","weight":0.03,"adjClose":120.6500015258789,"adjCloseDate":"2026-02-27"},{"ticker":"CDW","name":"CDW CORP","weight":0.03,"adjClose":122.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"CF","name":"CF INDUSTRIES HOLDINGS INC","weight":0.03,"adjClose":99.54000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"CLX","name":"CLOROX","weight":0.03,"adjClose":127.16000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"COO","name":"COOPER INC","weight":0.03,"adjClose":83.66999816894531,"adjCloseDate":"2026-02-27"},{"ticker":"CSGP","name":"COSTAR GROUP INC","weight":0.03,"adjClose":44.630001068115234,"adjCloseDate":"2026-02-27"},{"ticker":"DECK","name":"DECKERS OUTDOOR CORP","weight":0.03,"adjClose":117.2699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"ESS","name":"ESSEX PROPERTY TRUST REIT INC","weight":0.03,"adjClose":255.11000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"EVRG","name":"EVERGY INC","weight":0.03,"adjClose":83.66000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"EXPD","name":"EXPEDITORS INTERNATIONAL OF WASHIN","weight":0.03,"adjClose":145.02999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"FFIV","name":"F5 INC","weight":0.03,"adjClose":271.3599853515625,"adjCloseDate":"2026-02-27"},{"ticker":"FTV","name":"FORTIVE CORP","weight":0.03,"adjClose":59.20000076293945,"adjCloseDate":"2026-02-27"},{"ticker":"GPC","name":"GENUINE PARTS","weight":0.03,"adjClose":119.26000213623047,"adjCloseDate":"2026-02-27"},{"ticker":"GPN","name":"GLOBAL PAYMENTS INC","weight":0.03,"adjClose":76.45999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"HII","name":"HUNTINGTON INGALLS INDUSTRIES INC","weight":0.03,"adjClose":444.5199890136719,"adjCloseDate":"2026-02-27"},{"ticker":"HOLX","name":"HOLOGIC INC","weight":0.03,"adjClose":75.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"HPQ","name":"HP INC","weight":0.03,"adjClose":18.989999771118164,"adjCloseDate":"2026-02-27"},{"ticker":"IEX","name":"IDEX CORP","weight":0.03,"adjClose":209.47000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"INCY","name":"INCYTE CORP","weight":0.03,"adjClose":101.2699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"INVH","name":"INVITATION HOMES INC","weight":0.03,"adjClose":26.34000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"J","name":"JACOBS SOLUTIONS INC","weight":0.03,"adjClose":137.86000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"JBHT","name":"JB HUNT TRANSPORT SERVICES INC","weight":0.03,"adjClose":233.41000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"KEY","name":"KEYCORP","weight":0.03,"adjClose":20.739999771118164,"adjCloseDate":"2026-02-27"},{"ticker":"KIM","name":"KIMCO REALTY REIT CORP","weight":0.03,"adjClose":23.549999237060547,"adjCloseDate":"2026-02-27"},{"ticker":"L","name":"LOEWS CORP","weight":0.03,"adjClose":110.0199966430664,"adjCloseDate":"2026-02-27"},{"ticker":"LII","name":"LENNOX INTERNATIONAL INC","weight":0.03,"adjClose":569.9400024414062,"adjCloseDate":"2026-02-27"},{"ticker":"LNT","name":"ALLIANT ENERGY CORP","weight":0.03,"adjClose":72.33999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"LULU","name":"LULULEMON ATHLETICA INC","weight":0.03,"adjClose":185.1699981689453,"adjCloseDate":"2026-02-27"},{"ticker":"LVS","name":"LAS VEGAS SANDS CORP","weight":0.03,"adjClose":56.720001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"LYB","name":"LYONDELLBASELL INDUSTRIES NV CLASS","weight":0.03,"adjClose":56.82999801635742,"adjCloseDate":"2026-02-27"},{"ticker":"MAA","name":"MID AMERICA APARTMENT COMMUNITIES","weight":0.03,"adjClose":133.86000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"MAS","name":"MASCO CORP","weight":0.03,"adjClose":71.62000274658203,"adjCloseDate":"2026-02-27"},{"ticker":"MKC","name":"MCCORMICK & CO NON-VOTING INC","weight":0.03,"adjClose":71.04000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"MRNA","name":"MODERNA INC","weight":0.03,"adjClose":53.56999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"NDSN","name":"NORDSON CORP","weight":0.03,"adjClose":293.44000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"NTAP","name":"NETAPP INC","weight":0.03,"adjClose":99.02999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"PFG","name":"PRINCIPAL FINANCIAL GROUP INC","weight":0.03,"adjClose":95.41999816894531,"adjCloseDate":"2026-02-27"},{"ticker":"PNR","name":"PENTAIR","weight":0.03,"adjClose":99.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"PODD","name":"INSULET CORP","weight":0.03,"adjClose":246.61000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"PTC","name":"PTC INC","weight":0.03,"adjClose":156.58999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"ROL","name":"ROLLINS INC","weight":0.03,"adjClose":60.88999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"SMCI","name":"SUPER MICRO COMPUTER INC","weight":0.03,"adjClose":32.38999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"SNA","name":"SNAP ON INC","weight":0.03,"adjClose":385.2200012207031,"adjCloseDate":"2026-02-27"},{"ticker":"TKO","name":"TKO GROUP HOLDINGS INC CLASS A","weight":0.03,"adjClose":223.8699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"TRMB","name":"TRIMBLE INC","weight":0.03,"adjClose":66.87000274658203,"adjCloseDate":"2026-02-27"},{"ticker":"TSN","name":"TYSON FOODS INC CLASS A","weight":0.03,"adjClose":64.98999786376953,"adjCloseDate":"2026-02-27"},{"ticker":"TXT","name":"TEXTRON INC","weight":0.03,"adjClose":98.6500015258789,"adjCloseDate":"2026-02-27"},{"ticker":"TYL","name":"TYLER TECHNOLOGIES INC","weight":0.03,"adjClose":354.69000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"VRSN","name":"VERISIGN INC","weight":0.03,"adjClose":227.94000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"VTRS","name":"VIATRIS INC","weight":0.03,"adjClose":14.930000305175781,"adjCloseDate":"2026-02-27"},{"ticker":"WST","name":"WEST PHARMACEUTICAL SERVICES INC","weight":0.03,"adjClose":254.33999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"WY","name":"WEYERHAEUSER REIT","weight":0.03,"adjClose":24.530000686645508,"adjCloseDate":"2026-02-27"},{"ticker":"ZBH","name":"ZIMMER BIOMET HOLDINGS INC","weight":0.03,"adjClose":98.44000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"AES","name":"AES CORP","weight":0.02,"adjClose":17.280000686645508,"adjCloseDate":"2026-02-27"},{"ticker":"AIZ","name":"ASSURANT INC","weight":0.02,"adjClose":229.58999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"AKAM","name":"AKAMAI TECHNOLOGIES INC","weight":0.02,"adjClose":98.38999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"ALGN","name":"ALIGN TECHNOLOGY INC","weight":0.02,"adjClose":190.10000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"ALLE","name":"ALLEGION PLC","weight":0.02,"adjClose":161.14999389648438,"adjCloseDate":"2026-02-27"},{"ticker":"AOS","name":"A O SMITH CORP","weight":0.02,"adjClose":78.0,"adjCloseDate":"2026-02-27"},{"ticker":"APA","name":"APA CORP","weight":0.02,"adjClose":30.3700008392334,"adjCloseDate":"2026-02-27"},{"ticker":"BAX","name":"BAXTER INTERNATIONAL INC","weight":0.02,"adjClose":20.3700008392334,"adjCloseDate":"2026-02-27"},{"ticker":"BBY","name":"BEST BUY INC","weight":0.02,"adjClose":61.970001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"BLDR","name":"BUILDERS FIRSTSOURCE INC","weight":0.02,"adjClose":104.29000091552734,"adjCloseDate":"2026-02-27"},{"ticker":"CAG","name":"CONAGRA BRANDS INC","weight":0.02,"adjClose":19.25,"adjCloseDate":"2026-02-27"},{"ticker":"CPT","name":"CAMDEN PROPERTY TRUST REIT","weight":0.02,"adjClose":108.33999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"DOC","name":"HEALTHPEAK PROPERTIES INC","weight":0.02,"adjClose":17.68000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"DPZ","name":"DOMINOS PIZZA INC","weight":0.02,"adjClose":402.510009765625,"adjCloseDate":"2026-02-27"},{"ticker":"EG","name":"EVEREST GROUP LTD","weight":0.02,"adjClose":335.489990234375,"adjCloseDate":"2026-02-27"},{"ticker":"FOXA","name":"FOX CORP CLASS A","weight":0.02,"adjClose":56.34000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"GDDY","name":"GODADDY INC CLASS A","weight":0.02,"adjClose":87.16000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"GEN","name":"GEN DIGITAL INC","weight":0.02,"adjClose":22.56999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"GL","name":"GLOBE LIFE INC","weight":0.02,"adjClose":145.25999450683594,"adjCloseDate":"2026-02-27"},{"ticker":"GNRC","name":"GENERAC HOLDINGS INC","weight":0.02,"adjClose":225.3699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"HAS","name":"HASBRO INC","weight":0.02,"adjClose":99.58999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"HST","name":"HOST HOTELS & RESORTS REIT INC","weight":0.02,"adjClose":19.59000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"IT","name":"GARTNER INC","weight":0.02,"adjClose":157.1999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"IVZ","name":"INVESCO LTD","weight":0.02,"adjClose":26.260000228881836,"adjCloseDate":"2026-02-27"},{"ticker":"JKHY","name":"JACK HENRY AND ASSOCIATES INC","weight":0.02,"adjClose":162.4600067138672,"adjCloseDate":"2026-02-27"},{"ticker":"MOS","name":"MOSAIC","weight":0.02,"adjClose":27.84000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"NCLH","name":"NORWEGIAN CRUISE LINE HOLDINGS LTD","weight":0.02,"adjClose":24.790000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"NWSA","name":"NEWS CORP CLASS A","weight":0.02,"adjClose":24.290000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"PNW","name":"PINNACLE WEST CORP","weight":0.02,"adjClose":100.30000305175781,"adjCloseDate":"2026-02-27"},{"ticker":"REG","name":"REGENCY CENTERS REIT CORP","weight":0.02,"adjClose":79.0,"adjCloseDate":"2026-02-27"},{"ticker":"RL","name":"RALPH LAUREN CORP CLASS A","weight":0.02,"adjClose":362.6000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"RVTY","name":"REVVITY INC","weight":0.02,"adjClose":98.30999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"SJM","name":"JM SMUCKER","weight":0.02,"adjClose":115.94999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"SOLV","name":"SOLVENTUM CORP","weight":0.02,"adjClose":74.19999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"SWK","name":"STANLEY BLACK & DECKER INC","weight":0.02,"adjClose":86.48999786376953,"adjCloseDate":"2026-02-27"},{"ticker":"SWKS","name":"SKYWORKS SOLUTIONS INC","weight":0.02,"adjClose":59.58000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"TECH","name":"BIO TECHNE CORP","weight":0.02,"adjClose":59.0,"adjCloseDate":"2026-02-27"},{"ticker":"TTD","name":"TRADE DESK INC CLASS A","weight":0.02,"adjClose":23.81999969482422,"adjCloseDate":"2026-02-27"},{"ticker":"UDR","name":"UDR REIT INC","weight":0.02,"adjClose":37.5,"adjCloseDate":"2026-02-27"},{"ticker":"UHS","name":"UNIVERSAL HEALTH SERVICES INC CLAS","weight":0.02,"adjClose":205.90000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"WYNN","name":"WYNN RESORTS LTD","weight":0.02,"adjClose":108.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"ZBRA","name":"ZEBRA TECHNOLOGIES CORP CLASS A","weight":0.02,"adjClose":223.9600067138672,"adjCloseDate":"2026-02-27"},{"ticker":"ARE","name":"ALEXANDRIA REAL ESTATE EQUITIES RE","weight":0.01,"adjClose":54.040000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"BEN","name":"FRANKLIN RESOURCES INC","weight":0.01,"adjClose":26.540000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"BFB","name":"BROWN FORMAN CORP CLASS B","weight":0.01,"adjClose":28.860000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"BXP","name":"BXP INC","weight":0.01,"adjClose":57.58000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"CPB","name":"CAMPBELL SOUP","weight":0.01,"adjClose":26.950000762939453,"adjCloseDate":"2026-02-27"},{"ticker":"CRL","name":"CHARLES RIVER LABORATORIES INTERNA","weight":0.01,"adjClose":178.49000549316406,"adjCloseDate":"2026-02-27"},{"ticker":"DVA","name":"DAVITA INC","weight":0.01,"adjClose":156.3000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"EPAM","name":"EPAM SYSTEMS INC","weight":0.01,"adjClose":141.0,"adjCloseDate":"2026-02-27"},{"ticker":"ERIE","name":"ERIE INDEMNITY CLASS A","weight":0.01,"adjClose":269.44000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"FDS","name":"FACTSET RESEARCH SYSTEMS INC","weight":0.01,"adjClose":216.80999755859375,"adjCloseDate":"2026-02-27"},{"ticker":"FOX","name":"FOX CORP CLASS B","weight":0.01,"adjClose":51.72999954223633,"adjCloseDate":"2026-02-27"},{"ticker":"FRT","name":"FEDERAL REALTY INVESTMENT TRUST RE","weight":0.01,"adjClose":108.7699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"HRL","name":"HORMEL FOODS CORP","weight":0.01,"adjClose":25.600000381469727,"adjCloseDate":"2026-02-27"},{"ticker":"HSIC","name":"HENRY SCHEIN INC","weight":0.01,"adjClose":82.38999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"LW","name":"LAMB WESTON HOLDINGS INC","weight":0.01,"adjClose":48.189998626708984,"adjCloseDate":"2026-02-27"},{"ticker":"MGM","name":"MGM RESORTS INTERNATIONAL","weight":0.01,"adjClose":36.86000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"MOH","name":"MOLINA HEALTHCARE INC","weight":0.01,"adjClose":154.0500030517578,"adjCloseDate":"2026-02-27"},{"ticker":"MTCH","name":"MATCH GROUP INC","weight":0.01,"adjClose":31.600000381469727,"adjCloseDate":"2026-02-27"},{"ticker":"NWS","name":"NEWS CORP CLASS B","weight":0.01,"adjClose":26.780000686645508,"adjCloseDate":"2026-02-27"},{"ticker":"PAYC","name":"PAYCOM SOFTWARE INC","weight":0.01,"adjClose":125.83000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"POOL","name":"POOL CORP","weight":0.01,"adjClose":227.17999267578125,"adjCloseDate":"2026-02-27"},{"ticker":"PSKY","name":"PARAMOUNT SKYDANCE CORP CLASS B","weight":0.01,"adjClose":13.510000228881836,"adjCloseDate":"2026-02-27"},{"ticker":"TAP","name":"MOLSON COORS BREWING CLASS B","weight":0.01,"adjClose":48.9900016784668,"adjCloseDate":"2026-02-27"}];
+let NDX_DATA = [{"ticker":"NVDA","name":"NVIDIA CORP","weight":8.4,"adjClose":177.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"AAPL","name":"APPLE INC","weight":7.61,"adjClose":264.17999267578125,"adjCloseDate":"2026-02-27"},{"ticker":"MSFT","name":"MICROSOFT CORP","weight":5.69,"adjClose":392.739990234375,"adjCloseDate":"2026-02-27"},{"ticker":"AMZN","name":"AMAZON COM INC","weight":4.38,"adjClose":210.0,"adjCloseDate":"2026-02-27"},{"ticker":"TSLA","name":"TESLA INC","weight":3.92,"adjClose":402.510009765625,"adjCloseDate":"2026-02-27"},{"ticker":"META","name":"META PLATFORMS INC CLASS A","weight":3.71,"adjClose":648.1799926757812,"adjCloseDate":"2026-02-27"},{"ticker":"GOOGL","name":"ALPHABET INC CLASS A","weight":3.54,"adjClose":311.760009765625,"adjCloseDate":"2026-02-27"},{"ticker":"WMT","name":"WALMART INC","weight":3.37,"adjClose":127.94999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"GOOG","name":"ALPHABET INC CLASS C","weight":3.28,"adjClose":311.42999267578125,"adjCloseDate":"2026-02-27"},{"ticker":"AVGO","name":"BROADCOM INC","weight":2.94,"adjClose":319.54998779296875,"adjCloseDate":"2026-02-27"},{"ticker":"MU","name":"MICRON TECHNOLOGY INC","weight":2.5,"adjClose":412.3699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"COST","name":"COSTCO WHOLESALE CORP","weight":2.41,"adjClose":1010.7899780273438,"adjCloseDate":"2026-02-27"},{"ticker":"NFLX","name":"NETFLIX INC","weight":2.19,"adjClose":96.23999786376953,"adjCloseDate":"2026-02-27"},{"ticker":"AMD","name":"ADVANCED MICRO DEVICES INC","weight":1.76,"adjClose":200.2100067138672,"adjCloseDate":"2026-02-27"},{"ticker":"CSCO","name":"CISCO SYSTEMS INC","weight":1.69,"adjClose":79.45999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"PLTR","name":"PALANTIR TECHNOLOGIES INC CLASS A","weight":1.69,"adjClose":137.19000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"AMAT","name":"APPLIED MATERIAL INC","weight":1.59,"adjClose":372.29998779296875,"adjCloseDate":"2026-02-27"},{"ticker":"LRCX","name":"LAM RESEARCH CORP","weight":1.58,"adjClose":233.88999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"TMUS","name":"T MOBILE US INC","weight":1.31,"adjClose":217.08999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"LIN","name":"LINDE PLC","weight":1.28,"adjClose":508.0799865722656,"adjCloseDate":"2026-02-27"},{"ticker":"PEP","name":"PEPSICO INC","weight":1.25,"adjClose":169.74000549316406,"adjCloseDate":"2026-02-27"},{"ticker":"INTC","name":"INTEL CORPORATION CORP","weight":1.17,"adjClose":45.61000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"AMGN","name":"AMGEN INC","weight":1.13,"adjClose":388.1600036621094,"adjCloseDate":"2026-02-27"},{"ticker":"KLAC","name":"KLA CORP","weight":1.08,"adjClose":1524.550048828125,"adjCloseDate":"2026-02-27"},{"ticker":"TXN","name":"TEXAS INSTRUMENT INC","weight":1.04,"adjClose":212.11000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"GILD","name":"GILEAD SCIENCES INC","weight":1.0,"adjClose":148.9499969482422,"adjCloseDate":"2026-02-27"},{"ticker":"ISRG","name":"INTUITIVE SURGICAL INC","weight":0.96,"adjClose":503.510009765625,"adjCloseDate":"2026-02-27"},{"ticker":"ADI","name":"ANALOG DEVICES INC","weight":0.94,"adjClose":355.7900085449219,"adjCloseDate":"2026-02-27"},{"ticker":"HON","name":"HONEYWELL INTERNATIONAL INC","weight":0.83,"adjClose":243.58999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"QCOM","name":"QUALCOMM INC","weight":0.82,"adjClose":142.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"SHOP","name":"SHOPIFY SUBORDINATE VOTING INC CLA","weight":0.79,"adjClose":120.7300033569336,"adjCloseDate":"2026-02-27"},{"ticker":"BKNG","name":"BOOKING HOLDINGS INC","weight":0.73,"adjClose":4239.35009765625,"adjCloseDate":"2026-02-27"},{"ticker":"APP","name":"APPLOVIN CORP CLASS A","weight":0.72,"adjClose":434.7699890136719,"adjCloseDate":"2026-02-27"},{"ticker":"ASML","name":"ASML HOLDING ADR REPRESENTING NV","weight":0.69,"adjClose":1450.56005859375,"adjCloseDate":"2026-02-27"},{"ticker":"VRTX","name":"VERTEX PHARMACEUTICALS INC","weight":0.68,"adjClose":496.8299865722656,"adjCloseDate":"2026-02-27"},{"ticker":"PANW","name":"PALO ALTO NETWORKS INC","weight":0.65,"adjClose":148.9199981689453,"adjCloseDate":"2026-02-27"},{"ticker":"CEG","name":"CONSTELLATION ENERGY CORP","weight":0.64,"adjClose":329.8800048828125,"adjCloseDate":"2026-02-27"},{"ticker":"INTU","name":"INTUIT INC","weight":0.61,"adjClose":409.0299987792969,"adjCloseDate":"2026-02-27"},{"ticker":"CMCSA","name":"COMCAST CORP CLASS A","weight":0.6,"adjClose":30.959999084472656,"adjCloseDate":"2026-02-27"},{"ticker":"SBUX","name":"STARBUCKS CORP","weight":0.6,"adjClose":98.0199966430664,"adjCloseDate":"2026-02-27"},{"ticker":"ADBE","name":"ADOBE INC","weight":0.59,"adjClose":262.4100036621094,"adjCloseDate":"2026-02-27"},{"ticker":"WDC","name":"WESTERN DIGITAL CORP","weight":0.51,"adjClose":279.70001220703125,"adjCloseDate":"2026-02-27"},{"ticker":"CRWD","name":"CROWDSTRIKE HOLDINGS INC CLASS A","weight":0.5,"adjClose":371.9800109863281,"adjCloseDate":"2026-02-27"},{"ticker":"MAR","name":"MARRIOTT INTERNATIONAL INC CLASS A","weight":0.49,"adjClose":341.7300109863281,"adjCloseDate":"2026-02-27"},{"ticker":"MELI","name":"MERCADOLIBRE INC","weight":0.48,"adjClose":1757.5799560546875,"adjCloseDate":"2026-02-27"},{"ticker":"STX","name":"SEAGATE TECHNOLOGY HOLDINGS PLC","weight":0.47,"adjClose":407.8399963378906,"adjCloseDate":"2026-02-27"},{"ticker":"ADP","name":"AUTOMATIC DATA PROCESSING INC","weight":0.46,"adjClose":214.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"MNST","name":"MONSTER BEVERAGE CORP","weight":0.45,"adjClose":85.30000305175781,"adjCloseDate":"2026-02-27"},{"ticker":"CDNS","name":"CADENCE DESIGN SYSTEMS INC","weight":0.44,"adjClose":301.3999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"CTAS","name":"CINTAS CORP","weight":0.44,"adjClose":201.1300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"CSX","name":"CSX CORP","weight":0.43,"adjClose":42.689998626708984,"adjCloseDate":"2026-02-27"},{"ticker":"MDLZ","name":"MONDELEZ INTERNATIONAL INC CLASS A","weight":0.43,"adjClose":61.58000183105469,"adjCloseDate":"2026-02-27"},{"ticker":"ORLY","name":"OREILLY AUTOMOTIVE INC","weight":0.43,"adjClose":93.87999725341797,"adjCloseDate":"2026-02-27"},{"ticker":"REGN","name":"REGENERON PHARMACEUTICALS INC","weight":0.43,"adjClose":781.6699829101562,"adjCloseDate":"2026-02-27"},{"ticker":"SNPS","name":"SYNOPSYS INC","weight":0.42,"adjClose":414.0,"adjCloseDate":"2026-02-27"},{"ticker":"DASH","name":"DOORDASH INC CLASS A","weight":0.39,"adjClose":176.47000122070312,"adjCloseDate":"2026-02-27"},{"ticker":"AEP","name":"AMERICAN ELECTRIC POWER INC","weight":0.38,"adjClose":133.82000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"MRVL","name":"MARVELL TECHNOLOGY INC","weight":0.38,"adjClose":81.69000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"PDD","name":"PDD HOLDINGS ADS INC","weight":0.37,"adjClose":103.7300033569336,"adjCloseDate":"2026-02-27"},{"ticker":"WBD","name":"WARNER BROS. DISCOVERY INC SERIES","weight":0.37,"adjClose":28.170000076293945,"adjCloseDate":"2026-02-27"},{"ticker":"ROST","name":"ROSS STORES INC","weight":0.36,"adjClose":205.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"PCAR","name":"PACCAR INC","weight":0.35,"adjClose":126.08999633789062,"adjCloseDate":"2026-02-27"},{"ticker":"BKR","name":"BAKER HUGHES CLASS A","weight":0.34,"adjClose":65.26000213623047,"adjCloseDate":"2026-02-27"},{"ticker":"FTNT","name":"FORTINET INC","weight":0.32,"adjClose":79.02999877929688,"adjCloseDate":"2026-02-27"},{"ticker":"ABNB","name":"AIRBNB INC CLASS A","weight":0.31,"adjClose":135.11000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"NXPI","name":"NXP SEMICONDUCTORS NV","weight":0.31,"adjClose":227.00999450683594,"adjCloseDate":"2026-02-27"},{"ticker":"FAST","name":"FASTENAL","weight":0.29,"adjClose":46.040000915527344,"adjCloseDate":"2026-02-27"},{"ticker":"FER","name":"FERROVIAL","weight":0.29,"adjClose":74.37999725341797,"adjCloseDate":"2026-02-27"},{"ticker":"MPWR","name":"MONOLITHIC POWER SYSTEMS INC","weight":0.29,"adjClose":1142.739990234375,"adjCloseDate":"2026-02-27"},{"ticker":"ADSK","name":"AUTODESK INC","weight":0.28,"adjClose":245.8699951171875,"adjCloseDate":"2026-02-27"},{"ticker":"IDXX","name":"IDEXX LABORATORIES INC","weight":0.28,"adjClose":656.72998046875,"adjCloseDate":"2026-02-27"},{"ticker":"CCEP","name":"COCA COLA EUROPACIFIC PARTNERS PLC","weight":0.27,"adjClose":110.43000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"EA","name":"ELECTRONIC ARTS INC","weight":0.27,"adjClose":200.57000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"EXC","name":"EXELON CORP","weight":0.27,"adjClose":49.05000305175781,"adjCloseDate":"2026-02-27"},{"ticker":"FANG","name":"DIAMONDBACK ENERGY INC","weight":0.27,"adjClose":174.0800018310547,"adjCloseDate":"2026-02-27"},{"ticker":"XEL","name":"XCEL ENERGY INC","weight":0.27,"adjClose":83.36000061035156,"adjCloseDate":"2026-02-27"},{"ticker":"ALNY","name":"ALNYLAM PHARMACEUTICALS INC","weight":0.24,"adjClose":332.9200134277344,"adjCloseDate":"2026-02-27"},{"ticker":"AXON","name":"AXON ENTERPRISE INC","weight":0.23,"adjClose":542.4000244140625,"adjCloseDate":"2026-02-27"},{"ticker":"ODFL","name":"OLD DOMINION FREIGHT LINE INC","weight":0.23,"adjClose":203.0500030517578,"adjCloseDate":"2026-02-27"},{"ticker":"PYPL","name":"PAYPAL HOLDINGS INC","weight":0.23,"adjClose":46.209999084472656,"adjCloseDate":"2026-02-27"},{"ticker":"TRI","name":"THOMSON REUTERS CORP","weight":0.23,"adjClose":96.41000366210938,"adjCloseDate":"2026-02-27"},{"ticker":"KDP","name":"KEURIG DR PEPPER INC","weight":0.22,"adjClose":30.280000686645508,"adjCloseDate":"2026-02-27"},{"ticker":"MCHP","name":"MICROCHIP TECHNOLOGY INC","weight":0.22,"adjClose":74.63999938964844,"adjCloseDate":"2026-02-27"},{"ticker":"GEHC","name":"GE HEALTHCARE TECHNOLOGIES INC","weight":0.21,"adjClose":84.2699966430664,"adjCloseDate":"2026-02-27"},{"ticker":"TTWO","name":"TAKE TWO INTERACTIVE SOFTWARE INC","weight":0.21,"adjClose":211.47999572753906,"adjCloseDate":"2026-02-27"},{"ticker":"CPRT","name":"COPART INC","weight":0.2,"adjClose":38.09000015258789,"adjCloseDate":"2026-02-27"},{"ticker":"DDOG","name":"DATADOG INC CLASS A","weight":0.2,"adjClose":111.95999908447266,"adjCloseDate":"2026-02-27"},{"ticker":"ROP","name":"ROPER TECHNOLOGIES INC","weight":0.2,"adjClose":349.7300109863281,"adjCloseDate":"2026-02-27"},{"ticker":"MSTR","name":"STRATEGY INC CLASS A","weight":0.19,"adjClose":129.5,"adjCloseDate":"2026-02-27"},{"ticker":"PAYX","name":"PAYCHEX INC","weight":0.18,"adjClose":93.6500015258789,"adjCloseDate":"2026-02-27"},{"ticker":"CTSH","name":"COGNIZANT TECHNOLOGY SOLUTIONS COR","weight":0.17,"adjClose":64.43000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"INSM","name":"INSMED INC","weight":0.17,"adjClose":149.3300018310547,"adjCloseDate":"2026-02-27"},{"ticker":"CHTR","name":"CHARTER COMMUNICATIONS INC CLASS A","weight":0.16,"adjClose":234.6300048828125,"adjCloseDate":"2026-02-27"},{"ticker":"KHC","name":"KRAFT HEINZ","weight":0.16,"adjClose":24.610000610351562,"adjCloseDate":"2026-02-27"},{"ticker":"VRSK","name":"VERISK ANALYTICS INC","weight":0.16,"adjClose":207.57000732421875,"adjCloseDate":"2026-02-27"},{"ticker":"DXCM","name":"DEXCOM INC","weight":0.15,"adjClose":73.43000030517578,"adjCloseDate":"2026-02-27"},{"ticker":"WDAY","name":"WORKDAY INC CLASS A","weight":0.15,"adjClose":133.75999450683594,"adjCloseDate":"2026-02-27"},{"ticker":"ZS","name":"ZSCALER INC","weight":0.13,"adjClose":146.99000549316406,"adjCloseDate":"2026-02-27"},{"ticker":"CSGP","name":"COSTAR GROUP INC","weight":0.1,"adjClose":44.630001068115234,"adjCloseDate":"2026-02-27"},{"ticker":"ARM","name":"ARM HOLDINGS AMERICAN DEPOSITARY S","weight":0.09,"adjClose":127.44999694824219,"adjCloseDate":"2026-02-27"},{"ticker":"TEAM","name":"ATLASSIAN CORP CLASS A","weight":0.07,"adjClose":75.12999725341797,"adjCloseDate":"2026-02-27"}];
+
+const fmtUsd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const fmtPct = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const QUICK_STATE = {
+  fixedOverrides: new Map(),
+  fixedShock: 50,
+  priorSpx: 26,
+  priorNdx: 35,
+  calibratedSpx: 26,
+  calibratedNdx: 35,
+  residualSpx: 26,
+  residualNdx: 35
+};
+const DEFAULT_QUICK_INPUTS = {
+  priorSpx: 26,
+  priorNdx: 35,
+  targetSpx: 26,
+  targetNdx: 35,
+  fixedShock: 50
+};
+const DEFAULT_FIXED_TICKERS_TEXT = (() => {
+  const el = document.getElementById('qFixedTickers');
+  return el ? el.value.trim() : '';
+})();
+
+function toNum(v, d=0) {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : d;
+}
+
+function csvParse(text) {
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') {
+          cell += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        cell += ch;
+      }
+      continue;
+    }
+    if (ch === '"') { inQuotes = true; continue; }
+    if (ch === ',') { row.push(cell); cell = ''; continue; }
+    if (ch === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; continue; }
+    if (ch === '\r') { continue; }
+    cell += ch;
+  }
+  if (cell.length || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
+function extractTableMatrix(tableId) {
+  const table = document.getElementById(tableId);
+  if (!table) return [];
+  const out = [];
+  const rows = table.querySelectorAll('tr');
+  for (const row of rows) {
+    const cells = row.querySelectorAll('th,td');
+    if (!cells.length) continue;
+    const values = Array.from(cells).map(c => c.textContent.replace(/\s+/g, ' ').trim());
+    if (values.some(v => v.length > 0)) out.push(values);
+  }
+  return out;
+}
+
+function matrixToTsv(matrix) {
+  return matrix.map(row => row.join('\t')).join('\n');
+}
+
+function matrixToCsv(matrix) {
+  const esc = (v) => {
+    const s = String(v ?? '');
+    if (s.includes('"') || s.includes(',') || s.includes('\n')) {
+      return `"${s.replace(/"/g, '""')}"`;
+    }
+    return s;
+  };
+  return matrix.map(row => row.map(esc).join(',')).join('\n');
+}
+
+function setExportStatus(msg, isError=false) {
+  const el = document.getElementById('exportStatus');
+  if (!el) return;
+  el.textContent = msg;
+  el.className = `small ${isError ? 'warn' : ''}`.trim();
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  ta.remove();
+}
+
+async function copyTable(tableId) {
+  const table = document.getElementById(tableId);
+  const matrix = extractTableMatrix(tableId);
+  if (!matrix.length) {
+    setExportStatus(`No rows found in table ${tableId}.`, true);
+    return;
+  }
+  const headerRows = table && table.querySelector('thead tr') ? 1 : 0;
+  const dataRows = Math.max(matrix.length - headerRows, 0);
+  await copyTextToClipboard(matrixToTsv(matrix));
+  setExportStatus(`Copied ${dataRows} data rows from ${tableId} to clipboard.`);
+}
+
+function downloadTableCsv(tableId, filename) {
+  const table = document.getElementById(tableId);
+  const matrix = extractTableMatrix(tableId);
+  if (!matrix.length) {
+    setExportStatus(`No rows found in table ${tableId}.`, true);
+    return;
+  }
+  const headerRows = table && table.querySelector('thead tr') ? 1 : 0;
+  const dataRows = Math.max(matrix.length - headerRows, 0);
+  const csv = matrixToCsv(matrix);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename || `${tableId}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  setExportStatus(`Downloaded ${dataRows} data rows from ${tableId}.`);
+}
+
+function parseExposureInput(raw) {
+  const lines = raw.split(/\r?\n/);
+  const out = [];
+  for (const line of lines) {
+    if (!line.trim() || line.trim().startsWith('#')) continue;
+    const parts = line.includes('	') ? line.split('	') : line.split(',');
+    if (parts.length < 2) continue;
+    const ticker = parts[0].trim().toUpperCase().replace(/[^A-Z0-9.]/g, '');
+    const exp = Number(parts[1].replace(/[$,\s]/g, ''));
+    if (!ticker || !Number.isFinite(exp)) continue;
+    out.push({ ticker, exposurePer1Pct: exp });
+  }
+  return out;
+}
+
+function parseIsharesHoldingsCsv(raw) {
+  const rows = csvParse(raw.replace(/^\uFEFF/, ''));
+  let header = -1;
+  for (let i = 0; i < rows.length; i++) {
+    if (rows[i][0] && rows[i][0].trim() === 'Ticker') { header = i; break; }
+  }
+  if (header < 0) throw new Error('Ticker header not found in CSV');
+  const cols = rows[header].map(c => c.trim());
+  const idxTicker = cols.indexOf('Ticker');
+  const idxName = cols.indexOf('Name');
+  const idxWeight = cols.indexOf('Weight (%)');
+  const idxAsset = cols.indexOf('Asset Class');
+  if (idxTicker < 0 || idxName < 0 || idxWeight < 0) throw new Error('Required columns missing');
+
+  const out = [];
+  for (let i = header + 1; i < rows.length; i++) {
+    const r = rows[i];
+    const ticker = (r[idxTicker] || '').trim().toUpperCase();
+    const name = (r[idxName] || '').trim();
+    const asset = idxAsset >= 0 ? (r[idxAsset] || '').trim().toLowerCase() : 'equity';
+    const w = Number((r[idxWeight] || '').replace(/,/g, '').trim());
+    if (!ticker || !Number.isFinite(w)) continue;
+    if (asset && asset !== 'equity') continue;
+    out.push({ ticker, name, weight: w });
+  }
+  out.sort((a,b) => b.weight - a.weight);
+  return out;
+}
+
+function buildWeightMap(arr) {
+  const m = new Map();
+  for (const r of arr) m.set(r.ticker, r.weight);
+  return m;
+}
+
+function renderConstituentTable(targetId, data, filterValue='', indexKey='') {
+  const q = filterValue.trim().toUpperCase();
+  const idx = indexKey || (targetId.toLowerCase().includes('spx') ? 'spx' : 'ndx');
+  const body = document.getElementById(targetId);
+  const frag = [];
+  for (const r of data) {
+    if (q && !(r.ticker.includes(q) || r.name.toUpperCase().includes(q))) continue;
+    const px = Number.isFinite(r.adjClose) ? fmtUsd.format(r.adjClose) : '-';
+    const isFixed = QUICK_STATE.fixedOverrides.has(r.ticker);
+    const priorBase = idx === 'spx' ? QUICK_STATE.priorSpx : QUICK_STATE.priorNdx;
+    const residualBase = idx === 'spx' ? QUICK_STATE.residualSpx : QUICK_STATE.residualNdx;
+    const priorShift = isFixed ? QUICK_STATE.fixedShock : priorBase;
+    const newShift = isFixed ? QUICK_STATE.fixedShock : residualBase;
+    frag.push(`
+      <tr>
+        <td>${r.ticker}</td>
+        <td>${r.name}</td>
+        <td>${fmtPct.format(r.weight)}</td>
+        <td>${px}</td>
+        <td>${fmtShockPct(priorShift)}</td>
+        <td class="calibrated-cell">${fmtShockPct(newShift)}</td>
+      </tr>
+    `);
+  }
+  body.innerHTML = frag.join('');
+}
+
+function refreshConstituentTables() {
+  const spxFilter = (document.getElementById('spxFilter') || {}).value || '';
+  const ndxFilter = (document.getElementById('ndxFilter') || {}).value || '';
+  renderConstituentTable('spxTable', SPX_DATA, spxFilter, 'spx');
+  renderConstituentTable('ndxTable', NDX_DATA, ndxFilter, 'ndx');
+}
+
+function setMetric(id, value, goodBad=0) {
+  const el = document.getElementById(id);
+  el.textContent = fmtUsd.format(value);
+  el.className = 'v ' + (goodBad > 0 ? 'good' : goodBad < 0 ? 'bad' : '');
+}
+
+function safeRow(label, value) {
+  return `<tr><td style="text-align:left;">${label}</td><td>${value}</td></tr>`;
+}
+
+function setQuickText(id, text, css='') {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = `v ${css}`.trim();
+}
+
+function setLiveStatus(text) {
+  const el = document.getElementById('qLiveStatus');
+  if (!el) return;
+  el.textContent = text;
+}
+
+function setQuickLabels() {
+  const labelA = document.getElementById('qLabelA');
+  const labelB = document.getElementById('qLabelB');
+  const labelScale = document.getElementById('qLabelScale');
+  const labelCheck = document.getElementById('qLabelCheck');
+  if (!labelA || !labelB || !labelScale || !labelCheck) return;
+  labelA.textContent = 'Required Residual SPX Shock (%)';
+  labelB.textContent = 'Required Residual NDX Shock (%)';
+  labelScale.textContent = 'Fixed Weight Coverage (SPX/NDX)';
+  labelCheck.textContent = 'Rebuilt Index Shock (SPX/NDX)';
+}
+
+function setQuickModeUi() {
+  const overrideRow = document.getElementById('qOverrideRow');
+  const overrideTickersRow = document.getElementById('qOverrideTickersRow');
+  const overrideSolveWrap = document.getElementById('overrideSolveWrap');
+  if (overrideRow) overrideRow.style.display = 'flex';
+  if (overrideTickersRow) overrideTickersRow.style.display = 'block';
+  if (overrideSolveWrap) overrideSolveWrap.style.display = 'block';
+  setQuickLabels();
+}
+
+function fmtShockPct(value) {
+  if (!Number.isFinite(value)) return 'n/a';
+  return `${fmtPct.format(value)}%`;
+}
+
+function fmtSignedPct(value, unit) {
+  if (!Number.isFinite(value)) return 'n/a';
+  const sign = value >= 0 ? '+' : '-';
+  return `${sign}${fmtPct.format(Math.abs(value))}${unit}`;
+}
+
+function parseFixedOverrides(raw, defaultShock) {
+  const map = new Map();
+  const lines = (raw || '').split(/\r?\n/);
+  for (const lineRaw of lines) {
+    const line = lineRaw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const parts = line.includes('	') ? line.split('	') : line.split(',');
+    const ticker = (parts[0] || '').trim().toUpperCase().replace(/[^A-Z0-9.]/g, '');
+    if (!ticker) continue;
+    let shock = defaultShock;
+    if (parts.length > 1 && parts[1].trim() !== '') {
+      const parsed = Number(parts[1].replace(/[,%\s]/g, ''));
+      if (Number.isFinite(parsed)) shock = Math.abs(parsed);
+    }
+    map.set(ticker, shock);
+  }
+  return map;
+}
+
+function solveResidualForIndex(indexName, data, targetShock, overrideMap) {
+  let totalWeight = 0;
+  let fixedWeight = 0;
+  let fixedContribution = 0;
+  let fixedCount = 0;
+  for (const r of data) {
+    totalWeight += r.weight;
+    if (!overrideMap.has(r.ticker)) continue;
+    fixedCount += 1;
+    fixedWeight += r.weight;
+    fixedContribution += r.weight * overrideMap.get(r.ticker);
+  }
+  const residualWeight = totalWeight - fixedWeight;
+  const residualShock = residualWeight > 1e-9
+    ? ((targetShock * totalWeight) - fixedContribution) / residualWeight
+    : NaN;
+  const rebuiltShock = totalWeight > 1e-9 && Number.isFinite(residualShock)
+    ? (fixedContribution + residualWeight * residualShock) / totalWeight
+    : NaN;
+  return {
+    index: indexName,
+    targetShock,
+    totalWeight,
+    fixedCount,
+    fixedWeight,
+    residualWeight,
+    fixedWeightPct: totalWeight > 0 ? (fixedWeight / totalWeight) * 100 : NaN,
+    residualWeightPct: totalWeight > 0 ? (residualWeight / totalWeight) * 100 : NaN,
+    residualShock,
+    rebuiltShock
+  };
+}
+
+function renderQuickShockTable(spxOld, ndxOld, spxNew, ndxNew) {
+  const body = document.getElementById('quickShockTable');
+  if (!body) return;
+  const rows = [
+    { index: 'SPX', old: spxOld, next: spxNew },
+    { index: 'NDX', old: ndxOld, next: ndxNew }
+  ];
+  body.innerHTML = rows.map((r) => {
+    const delta = Number.isFinite(r.next) ? (r.next - r.old) : NaN;
+    const rel = Number.isFinite(delta) && Math.abs(r.old) > 1e-12 ? (delta / r.old) * 100 : NaN;
+    return `
+      <tr>
+        <td>${r.index}</td>
+        <td>${fmtShockPct(r.old)}</td>
+        <td class="calibrated-cell">${fmtShockPct(r.next)}</td>
+        <td>${fmtSignedPct(delta, ' pp')}</td>
+        <td>${fmtSignedPct(rel, '%')}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderOverrideSolveTable(spxSolve, ndxSolve) {
+  const body = document.getElementById('overrideSolveTable');
+  if (!body) return;
+  if (!spxSolve || !ndxSolve) {
+    body.innerHTML = '';
+    return;
+  }
+  const rows = [spxSolve, ndxSolve];
+  body.innerHTML = rows.map((s) => `
+    <tr>
+      <td>${s.index}</td>
+      <td>${fmtShockPct(s.targetShock)}</td>
+      <td>${s.fixedCount}</td>
+      <td>${Number.isFinite(s.fixedWeightPct) ? fmtPct.format(s.fixedWeightPct) + '%' : 'n/a'}</td>
+      <td>${Number.isFinite(s.residualWeightPct) ? fmtPct.format(s.residualWeightPct) + '%' : 'n/a'}</td>
+      <td class="calibrated-cell ${Number.isFinite(s.residualShock) && s.residualShock < 0 ? 'bad' : ''}">${fmtShockPct(s.residualShock)}</td>
+      <td>${fmtShockPct(s.rebuiltShock)}</td>
+    </tr>
+  `).join('');
+}
+
+function runQuickCalibration() {
+  const spx0 = Math.abs(toNum(document.getElementById('qSpxShock0').value, 26));
+  const ndx0 = Math.abs(toNum(document.getElementById('qNdxShock0').value, 35));
+  const targetSpx = Math.abs(toNum(document.getElementById('qTargetSpx').value, 26));
+  const targetNdx = Math.abs(toNum(document.getElementById('qTargetNdx').value, 35));
+  const fixedShock = Math.abs(toNum(document.getElementById('qFixedNameShock').value, 50));
+  const overrideMap = parseFixedOverrides(document.getElementById('qFixedTickers').value, fixedShock);
+  const spxSolve = solveResidualForIndex('SPX', SPX_DATA, targetSpx, overrideMap);
+  const ndxSolve = solveResidualForIndex('NDX', NDX_DATA, targetNdx, overrideMap);
+
+  const warnEl = document.getElementById('qWarn');
+  const warnings = [];
+  if (spx0 > 0 && spx0 < 1) warnings.push('SPX shock looks decimal; use percent points (26 means 26%).');
+  if (ndx0 > 0 && ndx0 < 1) warnings.push('NDX shock looks decimal; use percent points (35 means 35%).');
+  if (targetSpx > 0 && targetSpx < 1) warnings.push('Target SPX shock looks decimal; use percent points (26 means 26%).');
+  if (targetNdx > 0 && targetNdx < 1) warnings.push('Target NDX shock looks decimal; use percent points (35 means 35%).');
+  if (fixedShock > 0 && fixedShock < 1) warnings.push('Fixed single-name shock looks decimal; use percent points (50 means 50%).');
+  warnEl.textContent = '';
+
+  if (overrideMap.size === 0) warnings.push('No fixed names were provided; residual shock equals target shock for both indices.');
+
+  const inUniverse = new Set([...SPX_DATA.map(r => r.ticker), ...NDX_DATA.map(r => r.ticker)]);
+  const unmatched = Array.from(overrideMap.keys()).filter(t => !inUniverse.has(t));
+  const matchedCount = Math.max(overrideMap.size - unmatched.length, 0);
+  if (unmatched.length) {
+    const preview = unmatched.slice(0, 8).join(', ');
+    const suffix = unmatched.length > 8 ? ` +${unmatched.length - 8} more` : '';
+    warnings.push(`Ignored tickers not found in SPX/NDX proxy set: ${preview}${suffix}.`);
+  }
+
+  if (spxSolve.residualWeight <= 1e-9) warnings.push('SPX fixed names consume 100% of SPX proxy weight; no residual SPX basket to solve.');
+  if (ndxSolve.residualWeight <= 1e-9) warnings.push('NDX fixed names consume 100% of NDX proxy weight; no residual NDX basket to solve.');
+
+  const spxNew = targetSpx;
+  const ndxNew = targetNdx;
+  QUICK_STATE.fixedOverrides = overrideMap;
+  QUICK_STATE.fixedShock = fixedShock;
+  QUICK_STATE.priorSpx = spx0;
+  QUICK_STATE.priorNdx = ndx0;
+  QUICK_STATE.calibratedSpx = spxNew;
+  QUICK_STATE.calibratedNdx = ndxNew;
+  QUICK_STATE.residualSpx = spxSolve.residualShock;
+  QUICK_STATE.residualNdx = ndxSolve.residualShock;
+
+  setQuickText('qIndexPnlCurrent', fmtShockPct(spxSolve.residualShock), Number.isFinite(spxSolve.residualShock) && spxSolve.residualShock < 0 ? 'bad' : '');
+  setQuickText('qIndexPnlTarget', fmtShockPct(ndxSolve.residualShock), Number.isFinite(ndxSolve.residualShock) && ndxSolve.residualShock < 0 ? 'bad' : '');
+  setQuickText('qScale', `${fmtPct.format(spxSolve.fixedWeightPct)}% / ${fmtPct.format(ndxSolve.fixedWeightPct)}%`);
+  setQuickText('qSpxShockNew', fmtShockPct(spxNew), spxNew < 0 ? 'bad' : '');
+  setQuickText('qNdxShockNew', fmtShockPct(ndxNew), ndxNew < 0 ? 'bad' : '');
+
+  const checkGood = Number.isFinite(spxSolve.rebuiltShock)
+    && Number.isFinite(ndxSolve.rebuiltShock)
+    && Math.abs(spxSolve.rebuiltShock - targetSpx) < 1e-9
+    && Math.abs(ndxSolve.rebuiltShock - targetNdx) < 1e-9;
+  setQuickText('qNetCheck', `${fmtShockPct(spxSolve.rebuiltShock)} / ${fmtShockPct(ndxSolve.rebuiltShock)}`, checkGood ? 'good' : '');
+  renderOverrideSolveTable(spxSolve, ndxSolve);
+  renderQuickShockTable(spx0, ndx0, spxNew, ndxNew);
+  refreshConstituentTables();
+  warnEl.textContent = warnings.join(' ');
+  const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  setLiveStatus(`Updated ${now} • Entered ${overrideMap.size} • Matched ${matchedCount} • Unmatched ${unmatched.length}`);
+  document.getElementById('qCopyLine').value =
+    `Override solve (2026-02-27 basis): target SPX=${fmtShockPct(targetSpx)}, target NDX=${fmtShockPct(targetNdx)}, fixed-name shock=${fmtShockPct(fixedShock)}, required residual SPX=${fmtShockPct(spxSolve.residualShock)}, required residual NDX=${fmtShockPct(ndxSolve.residualShock)}`;
+
+  // Sync core fields for optional advanced run.
+  const spxShockEl = document.getElementById('spxShock');
+  const ndxShockEl = document.getElementById('ndxShock');
+  if (spxShockEl) spxShockEl.value = Number.isFinite(spxNew) ? spxNew.toFixed(6) : '';
+  if (ndxShockEl) ndxShockEl.value = Number.isFinite(ndxNew) ? ndxNew.toFixed(6) : '';
+}
+
+function resetQuickDefaults() {
+  const spx0El = document.getElementById('qSpxShock0');
+  const ndx0El = document.getElementById('qNdxShock0');
+  const targetSpxEl = document.getElementById('qTargetSpx');
+  const targetNdxEl = document.getElementById('qTargetNdx');
+  const fixedShockEl = document.getElementById('qFixedNameShock');
+  const fixedTickersEl = document.getElementById('qFixedTickers');
+  if (spx0El) spx0El.value = String(DEFAULT_QUICK_INPUTS.priorSpx);
+  if (ndx0El) ndx0El.value = String(DEFAULT_QUICK_INPUTS.priorNdx);
+  if (targetSpxEl) targetSpxEl.value = String(DEFAULT_QUICK_INPUTS.targetSpx);
+  if (targetNdxEl) targetNdxEl.value = String(DEFAULT_QUICK_INPUTS.targetNdx);
+  if (fixedShockEl) fixedShockEl.value = String(DEFAULT_QUICK_INPUTS.fixedShock);
+  if (fixedTickersEl) fixedTickersEl.value = DEFAULT_FIXED_TICKERS_TEXT;
+  runQuickCalibration();
+}
+
+function runCalibration() {
+  const singleMag = Math.abs(toNum(document.getElementById('singleShock').value, 50));
+  const spxMag = Math.abs(toNum(document.getElementById('spxShock').value, 26));
+  const ndxMag = Math.abs(toNum(document.getElementById('ndxShock').value, 35));
+  const targetNet = toNum(document.getElementById('targetNet').value, -3000000);
+  const observedNet = toNum(document.getElementById('observedNet').value, -2000000000);
+  const spxExp = toNum(document.getElementById('spxExp').value, 0);
+  const ndxExp = toNum(document.getElementById('ndxExp').value, 0);
+
+  const rows = parseExposureInput(document.getElementById('singleNameInput').value);
+  const spxMap = buildWeightMap(SPX_DATA);
+  const ndxMap = buildWeightMap(NDX_DATA);
+
+  let singlePnl = 0;
+  for (const r of rows) singlePnl += r.exposurePer1Pct * (-singleMag);
+
+  const spxPnl = spxExp * (-spxMag);
+  const ndxPnl = ndxExp * (-ndxMag);
+  const indexPnl = spxPnl + ndxPnl;
+  const netPnl = singlePnl + indexPnl;
+
+  setMetric('mSingle', singlePnl, singlePnl < 0 ? -1 : 1);
+  setMetric('mIndex', indexPnl, indexPnl < 0 ? -1 : 1);
+  setMetric('mNet', netPnl, netPnl < 0 ? -1 : 1);
+  setMetric('mTargetGap', netPnl - targetNet, Math.abs(netPnl - targetNet) < 1000000 ? 1 : -1);
+  setMetric('mObservedGap', netPnl - observedNet, Math.abs(netPnl - observedNet) < 1000000 ? 1 : -1);
+
+  const solveRows = [];
+  solveRows.push({ method: 'Current inputs', spx: spxMag, ndx: ndxMag, pnl: netPnl });
+
+  if (indexPnl !== 0) {
+    const scale = (targetNet - singlePnl) / indexPnl;
+    const spxScaled = spxMag * scale;
+    const ndxScaled = ndxMag * scale;
+    const pnl = singlePnl + spxExp * (-spxScaled) + ndxExp * (-ndxScaled);
+    solveRows.push({ method: 'Scale both shocks', spx: spxScaled, ndx: ndxScaled, pnl });
+  } else {
+    solveRows.push({ method: 'Scale both shocks', spx: NaN, ndx: NaN, pnl: NaN });
+  }
+
+  if (spxExp !== 0) {
+    const spxReq = -(targetNet - singlePnl - ndxPnl) / spxExp;
+    const pnl = singlePnl + spxExp * (-spxReq) + ndxPnl;
+    solveRows.push({ method: 'Solve SPX only (NDX fixed)', spx: spxReq, ndx: ndxMag, pnl });
+  } else {
+    solveRows.push({ method: 'Solve SPX only (NDX fixed)', spx: NaN, ndx: ndxMag, pnl: NaN });
+  }
+
+  if (ndxExp !== 0) {
+    const ndxReq = -(targetNet - singlePnl - spxPnl) / ndxExp;
+    const pnl = singlePnl + spxPnl + ndxExp * (-ndxReq);
+    solveRows.push({ method: 'Solve NDX only (SPX fixed)', spx: spxMag, ndx: ndxReq, pnl });
+  } else {
+    solveRows.push({ method: 'Solve NDX only (SPX fixed)', spx: spxMag, ndx: NaN, pnl: NaN });
+  }
+
+  const solveBody = document.getElementById('solveTable');
+  solveBody.innerHTML = solveRows.map(r => `
+    <tr>
+      <td style="text-align:left;">${r.method}</td>
+      <td>${Number.isFinite(r.spx) ? fmtPct.format(r.spx) : 'n/a'}</td>
+      <td>${Number.isFinite(r.ndx) ? fmtPct.format(r.ndx) : 'n/a'}</td>
+      <td>${Number.isFinite(r.pnl) ? fmtUsd.format(r.pnl) : 'n/a'}</td>
+    </tr>
+  `).join('');
+
+  const basisRows = [];
+  let overlapCount = 0;
+  let absExp = 0;
+  let absExpOverlap = 0;
+  let basisPnlTotal = 0;
+  for (const r of rows) {
+    const spxW = spxMap.get(r.ticker) || 0;
+    const ndxW = ndxMap.get(r.ticker) || 0;
+    const isOverlap = (spxW + ndxW) > 0;
+    if (isOverlap) overlapCount += 1;
+
+    const hSpx = Math.abs(spxExp) * spxW;
+    const hNdx = Math.abs(ndxExp) * ndxW;
+    let blendedMag = 0;
+    if ((hSpx + hNdx) > 0) {
+      blendedMag = (hSpx * spxMag + hNdx * ndxMag) / (hSpx + hNdx);
+    } else if ((spxW + ndxW) > 0) {
+      blendedMag = (spxW * spxMag + ndxW * ndxMag) / (spxW + ndxW);
+    }
+
+    const deltaShock = singleMag - blendedMag;
+    const singlePnlTicker = r.exposurePer1Pct * (-singleMag);
+    const extraPnl = -r.exposurePer1Pct * deltaShock;
+
+    absExp += Math.abs(r.exposurePer1Pct);
+    if (isOverlap) absExpOverlap += Math.abs(r.exposurePer1Pct);
+    basisPnlTotal += extraPnl;
+
+    basisRows.push({
+      ticker: r.ticker,
+      exp: r.exposurePer1Pct,
+      singlePnl: singlePnlTicker,
+      spxW,
+      ndxW,
+      blendedMag,
+      deltaShock,
+      extraPnl
+    });
+  }
+
+  basisRows.sort((a,b) => Math.abs(b.extraPnl) - Math.abs(a.extraPnl));
+
+  document.getElementById('coverageTable').innerHTML = [
+    safeRow('Input single names', rows.length.toString()),
+    safeRow('Overlap names (in SPX or NDX)', overlapCount.toString()),
+    safeRow('Exposure coverage by overlap', absExp ? fmtPct.format((absExpOverlap/absExp)*100) + '%' : 'n/a'),
+    safeRow('Total basis PnL from shock mismatch', fmtUsd.format(basisPnlTotal)),
+    safeRow('Modelled net vs target', fmtUsd.format(netPnl - targetNet))
+  ].join('');
+
+  const basisTbody = document.getElementById('basisTable');
+  basisTbody.innerHTML = basisRows.map(r => `
+    <tr>
+      <td>${r.ticker}</td>
+      <td>${fmtUsd.format(r.exp)}</td>
+      <td>${fmtUsd.format(r.singlePnl)}</td>
+      <td>${fmtPct.format(r.spxW)}</td>
+      <td>${fmtPct.format(r.ndxW)}</td>
+      <td>${fmtPct.format(r.blendedMag)}</td>
+      <td>${fmtPct.format(r.deltaShock)}</td>
+      <td class="${r.extraPnl < 0 ? 'bad' : 'good'}">${fmtUsd.format(r.extraPnl)}</td>
+    </tr>
+  `).join('');
+}
+
+function loadDemo75() {
+  const combined = new Map();
+  for (const r of SPX_DATA) combined.set(r.ticker, (combined.get(r.ticker) || 0) + r.weight);
+  for (const r of NDX_DATA) combined.set(r.ticker, (combined.get(r.ticker) || 0) + r.weight);
+  const top = Array.from(combined.entries()).sort((a,b) => b[1]-a[1]).slice(0,75);
+  const txt = top.map(([t,w],i) => `${t},${Math.round((1200000 - i*9000) * (1 + w/100))}`).join('\n');
+  document.getElementById('singleNameInput').value = txt;
+}
+
+async function loadCsvInto(which, fileInputId) {
+  const file = document.getElementById(fileInputId).files[0];
+  if (!file) return;
+  const raw = await file.text();
+  const parsed = parseIsharesHoldingsCsv(raw);
+  if (!parsed.length) throw new Error('No equity rows parsed from file');
+  if (which === 'spx') SPX_DATA = parsed;
+  if (which === 'ndx') NDX_DATA = parsed;
+  document.getElementById('dataStatus').textContent = `Loaded ${which.toUpperCase()} file: ${file.name} (${parsed.length} equity rows).`;
+  refreshConstituentTables();
+  runQuickCalibration();
+}
+
+function debounce(fn, waitMs=250) {
+  let timer = null;
+  return (...args) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), waitMs);
+  };
+}
+
+const runBtnEl = document.getElementById('runBtn');
+if (runBtnEl) runBtnEl.addEventListener('click', runCalibration);
+
+const runQuickBtnEl = document.getElementById('runQuickBtn');
+if (runQuickBtnEl) runQuickBtnEl.addEventListener('click', runQuickCalibration);
+
+const resetQuickBtnEl = document.getElementById('resetQuickBtn');
+if (resetQuickBtnEl) resetQuickBtnEl.addEventListener('click', resetQuickDefaults);
+
+const loadDemoBtnEl = document.getElementById('loadDemoBtn');
+if (loadDemoBtnEl) loadDemoBtnEl.addEventListener('click', () => { loadDemo75(); runCalibration(); });
+
+const spxFilterEl = document.getElementById('spxFilter');
+if (spxFilterEl) spxFilterEl.addEventListener('input', (e) => renderConstituentTable('spxTable', SPX_DATA, e.target.value, 'spx'));
+
+const ndxFilterEl = document.getElementById('ndxFilter');
+if (ndxFilterEl) ndxFilterEl.addEventListener('input', (e) => renderConstituentTable('ndxTable', NDX_DATA, e.target.value, 'ndx'));
+
+const quickRecalcNow = () => runQuickCalibration();
+const quickRecalcDebounced = debounce(() => runQuickCalibration(), 250);
+['qSpxShock0', 'qNdxShock0', 'qTargetSpx', 'qTargetNdx', 'qFixedNameShock'].forEach((id) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', quickRecalcNow);
+  el.addEventListener('change', quickRecalcNow);
+});
+const qFixedTickersEl = document.getElementById('qFixedTickers');
+if (qFixedTickersEl) {
+  qFixedTickersEl.addEventListener('input', quickRecalcDebounced);
+  qFixedTickersEl.addEventListener('change', quickRecalcNow);
+}
+
+const spxCsvEl = document.getElementById('spxCsv');
+if (spxCsvEl) spxCsvEl.addEventListener('change', () => loadCsvInto('spx','spxCsv').catch(e => alert(e.message)));
+
+const ndxCsvEl = document.getElementById('ndxCsv');
+if (ndxCsvEl) ndxCsvEl.addEventListener('change', () => loadCsvInto('ndx','ndxCsv').catch(e => alert(e.message)));
+document.querySelectorAll('.copy-table-btn').forEach((btn) => {
+  btn.addEventListener('click', async () => {
+    try {
+      await copyTable(btn.dataset.tableId);
+    } catch (err) {
+      setExportStatus(`Copy failed: ${err.message || err}`, true);
+    }
+  });
+});
+document.querySelectorAll('.download-table-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    try {
+      downloadTableCsv(btn.dataset.tableId, btn.dataset.filename);
+    } catch (err) {
+      setExportStatus(`Download failed: ${err.message || err}`, true);
+    }
+  });
+});
+
+refreshConstituentTables();
+setQuickModeUi();
+runQuickCalibration();
+</script>
+</body>
+</html>
