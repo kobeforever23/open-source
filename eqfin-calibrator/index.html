@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EQFIN Stress Shock Calibrator</title>
+<style>
+  :root {
+    --bg: #f3f6fb;
+    --card: #ffffff;
+    --ink: #152238;
+    --muted: #5d6b80;
+    --line: #d6dee8;
+    --accent: #0b5da8;
+    --danger: #b42318;
+    --good: #067647;
+    --step-bg: #f8fafd;
+    --step-border: #e2eaf4;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: radial-gradient(circle at 8% 0%, #dfeffc 0%, rgba(223,239,252,0) 40%),
+      linear-gradient(180deg, #edf3fa 0%, #f9fbfe 40%, #f4f7fb 100%);
+    min-height: 100vh;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 24px 20px 60px; }
+  h1 { margin: 0 0 4px; font-size: 28px; }
+  .tagline { color: var(--muted); font-size: 14px; margin-bottom: 20px; line-height: 1.4; }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eef4fb; border: 1px solid #d3e0ef; font-size: 11px; margin-right: 4px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0; margin-bottom: 0; }
+  .tab {
+    padding: 10px 20px; cursor: pointer; font-weight: 600; font-size: 14px;
+    border: 1px solid var(--line); border-bottom: none;
+    border-radius: 10px 10px 0 0; background: #f0f4fa; color: var(--muted);
+    transition: background 0.15s;
+  }
+  .tab.active { background: var(--card); color: var(--ink); border-bottom-color: var(--card); }
+  .tab-body {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 0 12px 12px 12px; padding: 20px;
+    box-shadow: 0 8px 20px rgba(16,36,64,0.05);
+  }
+  .pane { display: none; }
+  .pane.active { display: block; }
+
+  /* Form elements */
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+  input, textarea, select {
+    font: inherit; border: 1px solid var(--line); border-radius: 8px;
+    padding: 9px 10px; width: 100%; background: #fff; font-size: 14px;
+  }
+  input:focus, textarea:focus { outline: 2px solid rgba(11,93,168,0.18); border-color: #9bc0e4; }
+  textarea {
+    min-height: 140px; resize: vertical;
+    font-family: "SFMono-Regular", Menlo, Consolas, monospace; font-size: 12px; line-height: 1.4;
+  }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .row > * { flex: 1 1 180px; min-width: 0; }
+  .field { margin-bottom: 12px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    background: var(--accent); color: #fff; border: 1px solid var(--accent);
+    border-radius: 10px; padding: 12px 28px; font: inherit; font-size: 15px;
+    font-weight: 700; cursor: pointer; width: 100%;
+    transition: transform 0.05s, box-shadow 0.15s, filter 0.15s;
+  }
+  .btn:hover { filter: brightness(1.06); box-shadow: 0 4px 14px rgba(11,93,168,0.25); }
+  .btn:active { transform: translateY(1px); }
+  .btn-sm {
+    padding: 6px 14px; font-size: 12px; width: auto; border-radius: 8px;
+    background: #fff; color: var(--ink); border-color: var(--line); font-weight: 600;
+  }
+  .btn-sm:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .btn-reset { background: #fff; color: var(--ink); border-color: var(--line); }
+  .btn-reset:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); filter: none; }
+
+  /* Results area */
+  .results { margin-top: 20px; }
+  .results-placeholder {
+    text-align: center; padding: 40px 20px; color: var(--muted); font-size: 14px;
+    border: 2px dashed var(--line); border-radius: 12px;
+  }
+
+  /* Metrics */
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-bottom: 16px; }
+  .metric {
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: #fbfcfe;
+  }
+  .metric .k { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+  .metric .v { font-size: 20px; font-weight: 700; margin-top: 3px; }
+  .metric.highlight { border-color: #8ecfa1; background: #f1faf4; }
+  .metric.highlight .k { color: #0c5e3a; }
+  .metric.highlight .v { color: var(--good); }
+  .bad { color: var(--danger); }
+  .good { color: var(--good); }
+
+  /* Math steps */
+  .math-steps { margin-top: 16px; }
+  .step {
+    background: var(--step-bg); border: 1px solid var(--step-border);
+    border-radius: 10px; margin-bottom: 8px; overflow: hidden;
+  }
+  .step-header {
+    display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+    cursor: pointer; user-select: none; font-weight: 600; font-size: 14px;
+  }
+  .step-header:hover { background: #eef4fb; }
+  .step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 24px; height: 24px; border-radius: 50%; background: var(--accent);
+    color: #fff; font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .step-arrow { margin-left: auto; font-size: 12px; color: var(--muted); transition: transform 0.2s; }
+  .step.open .step-arrow { transform: rotate(90deg); }
+  .step-body {
+    display: none; padding: 0 14px 14px 48px;
+    font-size: 13px; line-height: 1.6; color: #3a4a5c;
+  }
+  .step.open .step-body { display: block; }
+  .formula {
+    background: #fff; border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 12px; margin: 6px 0; font-family: "SFMono-Regular", Menlo, Consolas, monospace;
+    font-size: 12px; overflow-x: auto; white-space: pre-wrap; word-break: break-all;
+  }
+  .val { font-weight: 700; color: var(--accent); }
+  .val-bad { font-weight: 700; color: var(--danger); }
+  .val-good { font-weight: 700; color: var(--good); }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 7px 8px; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  .table-wrap {
+    max-height: 340px; overflow: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff;
+  }
+  .table-wrap thead th { position: sticky; top: 0; z-index: 2; background: #f4f8fd; font-weight: 700; }
+  tbody tr:nth-child(even) td { background: #fbfcff; }
+  .calibrated-cell { background: #f1faf4; font-weight: 700; }
+
+  /* Warning */
+  .warn-box {
+    background: #fef6f5; border: 1px solid #f5c6c2; border-radius: 8px;
+    padding: 8px 12px; font-size: 12px; color: var(--danger); margin-top: 10px;
+    display: none;
+  }
+  .warn-box.show { display: block; }
+
+  /* Help tooltip */
+  .help-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 16px; height: 16px; border-radius: 50%; background: #e2eaf4;
+    color: var(--muted); font-size: 10px; font-weight: 700; cursor: help;
+    margin-left: 4px; vertical-align: middle;
+  }
+  .help-icon:hover { background: #cddcef; }
+  [data-tip] { position: relative; }
+  [data-tip]:hover::after {
+    content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%;
+    transform: translateX(-50%); background: #1e293b; color: #fff; padding: 6px 10px;
+    border-radius: 6px; font-size: 11px; font-weight: 400; white-space: nowrap;
+    z-index: 100; max-width: 320px; white-space: normal; line-height: 1.3;
+  }
+
+  /* Constituent browser */
+  .constituent-section { margin-top: 16px; }
+  .constituent-section h3 { font-size: 14px; margin: 0 0 6px; }
+  .filter-row { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+  .filter-row input { max-width: 300px; padding: 6px 10px; font-size: 13px; }
+
+  @media (max-width: 700px) {
+    .row > * { flex: 1 1 100%; }
+    .metrics { grid-template-columns: 1fr 1fr; }
+    .tabs { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>EQFIN Stress Shock Calibrator</h1>
+  <div class="tagline">
+    Solve consistent stress shocks across SPX, NDX, and single-name positions.
+    <span class="pill">As-of: 2026-02-27</span>
+    <span class="pill">SPX proxy: IVV (503 names)</span>
+    <span class="pill">NDX proxy: CNDX (101 names)</span>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" data-pane="quick">Index Shock Solver</div>
+    <div class="tab" data-pane="advanced">PnL-Driven Solver</div>
+  </div>
+
+  <div class="tab-body">
+
+    <!-- ===== QUICK MODE ===== -->
+    <div class="pane active" id="pane-quick">
+      <p style="font-size:13px; color:var(--muted); margin:0 0 14px;">
+        Fix certain names at a specified shock level, then solve for what the <strong>remaining</strong> index constituents must fall to hit your target index-level shock. All shocks in <strong>percent points</strong> (enter <code>26</code> for 26%).
+      </p>
+
+      <div class="row field">
+        <div>
+          <label>Target SPX Shock %
+            <span class="help-icon" data-tip="The overall SPX index shock you want to achieve after fixing certain names at higher shocks.">?</span>
+          </label>
+          <input id="qTargetSpx" type="number" step="0.01" value="26">
+        </div>
+        <div>
+          <label>Target NDX Shock %
+            <span class="help-icon" data-tip="The overall NDX index shock you want to achieve.">?</span>
+          </label>
+          <input id="qTargetNdx" type="number" step="0.01" value="35">
+        </div>
+        <div>
+          <label>Fixed Single-Name Shock %
+            <span class="help-icon" data-tip="Default shock % applied to each fixed name below. Override per-name by adding TICKER,SHOCK% (e.g. NVDA,60).">?</span>
+          </label>
+          <input id="qFixedNameShock" type="number" step="0.01" value="50">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Fixed Names (one per line, optional per-name shock: <code>TICKER,SHOCK%</code>)
+          <span class="help-icon" data-tip="List tickers that are shocked at the fixed level above. The tool solves for the residual shock needed on all OTHER index constituents.">?</span>
+        </label>
+        <textarea id="qFixedTickers">NVDA
+MSFT
+AAPL
+GOOGL
+AMZN
+META
+TSLA
+AVGO
+AMD
+CRM
+PLTR
+SNOW
+NOW
+PANW
+CRWD</textarea>
+      </div>
+
+      <div class="row" style="gap:10px; margin-bottom:6px;">
+        <div style="flex:2"><button class="btn" id="runQuickBtn">Run Calibration</button></div>
+        <div style="flex:1"><button class="btn btn-reset" id="resetQuickBtn">Reset Defaults</button></div>
+      </div>
+
+      <div class="warn-box" id="qWarn"></div>
+
+      <!-- RESULTS -->
+      <div class="results" id="quickResults">
+        <div class="results-placeholder" id="quickPlaceholder">
+          Fill in your inputs above and click <strong>Run Calibration</strong> to see results and math steps.
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ADVANCED MODE ===== -->
+    <div class="pane" id="pane-advanced">
+      <p style="font-size:13px; color:var(--muted); margin:0 0 14px;">
+        Enter your portfolio exposures and target PnL. The solver finds required SPX/NDX shocks to hit the target, with basis risk analysis. All shocks in <strong>percent points</strong>.
+      </p>
+
+      <div class="row field">
+        <div>
+          <label>Single-Name Shock %
+            <span class="help-icon" data-tip="The stress shock applied to each single-name position below.">?</span>
+          </label>
+          <input id="singleShock" type="number" step="0.01" value="50">
+        </div>
+        <div>
+          <label>SPX Shock %</label>
+          <input id="spxShock" type="number" step="0.01" value="26">
+        </div>
+        <div>
+          <label>NDX Shock %</label>
+          <input id="ndxShock" type="number" step="0.01" value="35">
+        </div>
+      </div>
+
+      <div class="row field">
+        <div>
+          <label>Target Net Stress PnL ($)
+            <span class="help-icon" data-tip="The total portfolio PnL you want to achieve under stress. Negative = loss.">?</span>
+          </label>
+          <input id="targetNet" type="number" step="1" value="-3000000">
+        </div>
+        <div>
+          <label>SPX Exposure ($ per 1% move)
+            <span class="help-icon" data-tip="Your portfolio's SPX index hedge exposure. Positive = long (loses on down), negative = short/hedge.">?</span>
+          </label>
+          <input id="spxExp" type="number" step="0.01" value="0">
+        </div>
+        <div>
+          <label>NDX Exposure ($ per 1% move)</label>
+          <input id="ndxExp" type="number" step="0.01" value="0">
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Single-Name Exposures (one per line: <code>TICKER,exposure_per_1pct</code>)
+          <span class="help-icon" data-tip="Each row is a ticker and its $ loss per 1% down move. Example: NVDA,1250000 means you lose $1.25M per 1% NVDA falls.">?</span>
+        </label>
+        <textarea id="singleNameInput">NVDA,1250000
+AAPL,1150000
+MSFT,980000
+AMZN,850000
+GOOGL,620000
+META,540000
+TSLA,500000</textarea>
+      </div>
+
+      <div class="row" style="gap:10px; margin-bottom:6px;">
+        <div style="flex:2"><button class="btn" id="runAdvBtn">Run Calibration</button></div>
+        <div style="flex:1"><button class="btn btn-reset" id="resetAdvBtn">Reset Defaults</button></div>
+      </div>
+
+      <div class="warn-box" id="advWarn"></div>
+
+      <div class="results" id="advResults">
+        <div class="results-placeholder" id="advPlaceholder">
+          Fill in your inputs above and click <strong>Run Calibration</strong> to see PnL decomposition, shock solvers, and basis risk.
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-body -->
+
+  <!-- CONSTITUENT BROWSER (always visible) -->
+  <div class="constituent-section" style="margin-top:20px;">
+    <div class="tab-body">
+      <h3 style="margin-top:0;">Index Constituent Browser</h3>
+      <p style="font-size:12px; color:var(--muted); margin:0 0 10px;">Search SPX (IVV) and NDX (CNDX) holdings. After running calibration, the New Shock column reflects solved values.</p>
+      <div class="row">
+        <div>
+          <label>SPX Filter</label>
+          <input id="spxFilter" placeholder="Type ticker or name...">
+        </div>
+        <div>
+          <label>NDX Filter</label>
+          <input id="ndxFilter" placeholder="Type ticker or name...">
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px;">
+        <div>
+          <div class="table-wrap" style="max-height:280px;">
+            <table>
+              <thead><tr><th>Ticker</th><th>Name</th><th>Wt%</th><th>Price</th><th>Prior%</th><th>New%</th></tr></thead>
+              <tbody id="spxTable"></tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="table-wrap" style="max-height:280px;">
+            <table>
+              <thead><tr><th>Ticker</th><th>Name</th><th>Wt%</th><th>Price</th><th>Prior%</th><th>New%</th></tr></thead>
+              <tbody id="ndxTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+'use strict';
+// ============================================================
+//  DATA: SPX (IVV) and NDX (CNDX) constituents as of 2026-02-27
+//  Loaded from iShares holdings + Yahoo Finance adjusted closes.
+// ============================================================
+</script>
+<script src="data.js"></script>
+<script>
+// ============================================================
+//  CORE ENGINE + UI
+// ============================================================
+
+const fmtUsd = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 });
+const fmtPct = new Intl.NumberFormat('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+
+const QUICK_STATE = {
+  fixedOverrides: new Map(), fixedShock:50,
+  priorSpx:26, priorNdx:35, calibratedSpx:26, calibratedNdx:35,
+  residualSpx:26, residualNdx:35, hasRun: false
+};
+
+function toNum(v,d=0){ const n=Number(v); return Number.isFinite(n)?n:d; }
+function fmtShockPct(v){ return Number.isFinite(v)?fmtPct.format(v)+'%':'n/a'; }
+
+// ---- Parsing helpers ----
+function parseFixedOverrides(raw, defaultShock){
+  const map=new Map();
+  for(const lineRaw of (raw||'').split(/\r?\n/)){
+    const line=lineRaw.trim();
+    if(!line||line.startsWith('#')) continue;
+    const parts=line.includes('\t')?line.split('\t'):line.split(',');
+    const ticker=(parts[0]||'').trim().toUpperCase().replace(/[^A-Z0-9.]/g,'');
+    if(!ticker) continue;
+    let shock=defaultShock;
+    if(parts.length>1 && parts[1].trim()!==''){
+      const p=Number(parts[1].replace(/[,%\s]/g,''));
+      if(Number.isFinite(p)) shock=Math.abs(p);
+    }
+    map.set(ticker,shock);
+  }
+  return map;
+}
+
+function parseExposureInput(raw){
+  const out=[];
+  for(const line of raw.split(/\r?\n/)){
+    if(!line.trim()||line.trim().startsWith('#')) continue;
+    const parts=line.includes('\t')?line.split('\t'):line.split(',');
+    if(parts.length<2) continue;
+    const ticker=parts[0].trim().toUpperCase().replace(/[^A-Z0-9.]/g,'');
+    const exp=Number(parts[1].replace(/[$,\s]/g,''));
+    if(!ticker||!Number.isFinite(exp)) continue;
+    out.push({ticker, exposurePer1Pct:exp});
+  }
+  return out;
+}
+
+function buildWeightMap(arr){ const m=new Map(); for(const r of arr) m.set(r.ticker,r.weight); return m; }
+
+// ---- Core solver ----
+function solveResidualForIndex(indexName, data, targetShock, overrideMap){
+  let totalWeight=0, fixedWeight=0, fixedContribution=0, fixedCount=0;
+  for(const r of data){
+    totalWeight+=r.weight;
+    if(!overrideMap.has(r.ticker)) continue;
+    fixedCount++;
+    fixedWeight+=r.weight;
+    fixedContribution+=r.weight*overrideMap.get(r.ticker);
+  }
+  const residualWeight=totalWeight-fixedWeight;
+  const residualShock=residualWeight>1e-9?((targetShock*totalWeight)-fixedContribution)/residualWeight:NaN;
+  const rebuiltShock=totalWeight>1e-9&&Number.isFinite(residualShock)?(fixedContribution+residualWeight*residualShock)/totalWeight:NaN;
+  return { index:indexName, targetShock, totalWeight, fixedCount, fixedWeight, residualWeight,
+    fixedWeightPct:totalWeight>0?(fixedWeight/totalWeight)*100:NaN,
+    residualWeightPct:totalWeight>0?(residualWeight/totalWeight)*100:NaN,
+    residualShock, rebuiltShock, fixedContribution };
+}
+
+// ---- Tab switching ----
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('pane-'+tab.dataset.pane).classList.add('active');
+  });
+});
+
+// ---- Constituent table rendering ----
+function renderConstituentTable(targetId, data, filterValue, indexKey){
+  const q=(filterValue||'').trim().toUpperCase();
+  const body=document.getElementById(targetId);
+  const frag=[];
+  for(const r of data){
+    if(q && !(r.ticker.includes(q)||r.name.toUpperCase().includes(q))) continue;
+    const px=Number.isFinite(r.adjClose)?'$'+r.adjClose.toFixed(2):'-';
+    const isFixed=QUICK_STATE.fixedOverrides.has(r.ticker);
+    const priorBase=indexKey==='spx'?QUICK_STATE.priorSpx:QUICK_STATE.priorNdx;
+    const residualBase=indexKey==='spx'?QUICK_STATE.residualSpx:QUICK_STATE.residualNdx;
+    const priorShift=isFixed?QUICK_STATE.fixedOverrides.get(r.ticker):priorBase;
+    const newShift=isFixed?QUICK_STATE.fixedOverrides.get(r.ticker):residualBase;
+    frag.push(`<tr><td>${r.ticker}</td><td>${r.name}</td><td>${fmtPct.format(r.weight)}</td><td>${px}</td><td>${fmtShockPct(priorShift)}</td><td class="calibrated-cell">${fmtShockPct(newShift)}</td></tr>`);
+  }
+  body.innerHTML=frag.join('');
+}
+function refreshConstituentTables(){
+  renderConstituentTable('spxTable',SPX_DATA,(document.getElementById('spxFilter')||{}).value||'','spx');
+  renderConstituentTable('ndxTable',NDX_DATA,(document.getElementById('ndxFilter')||{}).value||'','ndx');
+}
+
+document.getElementById('spxFilter').addEventListener('input',e=>renderConstituentTable('spxTable',SPX_DATA,e.target.value,'spx'));
+document.getElementById('ndxFilter').addEventListener('input',e=>renderConstituentTable('ndxTable',NDX_DATA,e.target.value,'ndx'));
+
+// ============================================================
+//  QUICK CALIBRATION
+// ============================================================
+function runQuickCalibration(){
+  const targetSpx=Math.abs(toNum(document.getElementById('qTargetSpx').value,26));
+  const targetNdx=Math.abs(toNum(document.getElementById('qTargetNdx').value,35));
+  const fixedShock=Math.abs(toNum(document.getElementById('qFixedNameShock').value,50));
+  const overrideMap=parseFixedOverrides(document.getElementById('qFixedTickers').value,fixedShock);
+
+  const spx=solveResidualForIndex('SPX',SPX_DATA,targetSpx,overrideMap);
+  const ndx=solveResidualForIndex('NDX',NDX_DATA,targetNdx,overrideMap);
+
+  // Update state
+  QUICK_STATE.fixedOverrides=overrideMap;
+  QUICK_STATE.fixedShock=fixedShock;
+  QUICK_STATE.priorSpx=targetSpx;
+  QUICK_STATE.priorNdx=targetNdx;
+  QUICK_STATE.calibratedSpx=targetSpx;
+  QUICK_STATE.calibratedNdx=targetNdx;
+  QUICK_STATE.residualSpx=spx.residualShock;
+  QUICK_STATE.residualNdx=ndx.residualShock;
+  QUICK_STATE.hasRun=true;
+
+  // Warnings
+  const warnings=[];
+  if(targetSpx>0&&targetSpx<1) warnings.push('SPX shock looks decimal; use percent points (26 = 26%).');
+  if(targetNdx>0&&targetNdx<1) warnings.push('NDX shock looks decimal; use percent points.');
+  if(overrideMap.size===0) warnings.push('No fixed names provided; residual shock equals target shock.');
+  const inUniverse=new Set([...SPX_DATA.map(r=>r.ticker),...NDX_DATA.map(r=>r.ticker)]);
+  const unmatched=[...overrideMap.keys()].filter(t=>!inUniverse.has(t));
+  if(unmatched.length) warnings.push(`Tickers not in SPX/NDX: ${unmatched.slice(0,6).join(', ')}${unmatched.length>6?' +more':''}`);
+  if(spx.residualWeight<=1e-9) warnings.push('Fixed names cover 100% of SPX weight; nothing to solve.');
+  if(ndx.residualWeight<=1e-9) warnings.push('Fixed names cover 100% of NDX weight; nothing to solve.');
+
+  const warnEl=document.getElementById('qWarn');
+  if(warnings.length){ warnEl.textContent=warnings.join(' '); warnEl.classList.add('show'); }
+  else{ warnEl.textContent=''; warnEl.classList.remove('show'); }
+
+  // Build results
+  const checkOk=Number.isFinite(spx.rebuiltShock)&&Number.isFinite(ndx.rebuiltShock)
+    &&Math.abs(spx.rebuiltShock-targetSpx)<1e-6&&Math.abs(ndx.rebuiltShock-targetNdx)<1e-6;
+
+  document.getElementById('quickPlaceholder').style.display='none';
+  document.getElementById('quickResults').innerHTML=buildQuickResultsHTML(spx,ndx,targetSpx,targetNdx,fixedShock,overrideMap,checkOk);
+
+  // Wire up step toggles
+  document.querySelectorAll('#quickResults .step-header').forEach(h=>{
+    h.addEventListener('click',()=>h.parentElement.classList.toggle('open'));
+  });
+
+  refreshConstituentTables();
+}
+
+function buildQuickResultsHTML(spx,ndx,targetSpx,targetNdx,fixedShock,overrideMap,checkOk){
+  const matched=overrideMap.size;
+  const spxMatched=spx.fixedCount;
+  const ndxMatched=ndx.fixedCount;
+
+  return `
+  <!-- KEY METRICS -->
+  <div class="metrics">
+    <div class="metric highlight">
+      <div class="k">Residual SPX Shock</div>
+      <div class="v ${Number.isFinite(spx.residualShock)&&spx.residualShock<0?'bad':''}">${fmtShockPct(spx.residualShock)}</div>
+    </div>
+    <div class="metric highlight">
+      <div class="k">Residual NDX Shock</div>
+      <div class="v ${Number.isFinite(ndx.residualShock)&&ndx.residualShock<0?'bad':''}">${fmtShockPct(ndx.residualShock)}</div>
+    </div>
+    <div class="metric">
+      <div class="k">Fixed Wt (SPX / NDX)</div>
+      <div class="v">${fmtPct.format(spx.fixedWeightPct)}% / ${fmtPct.format(ndx.fixedWeightPct)}%</div>
+    </div>
+    <div class="metric">
+      <div class="k">Rebuilt Check (SPX / NDX)</div>
+      <div class="v ${checkOk?'good':''}">${fmtShockPct(spx.rebuiltShock)} / ${fmtShockPct(ndx.rebuiltShock)}</div>
+    </div>
+  </div>
+
+  <!-- MATH STEPS -->
+  <div class="math-steps">
+    <div class="step open">
+      <div class="step-header"><span class="step-num">1</span> Parse Fixed Names <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <p>Parsed <span class="val">${matched}</span> fixed tickers from input. Default shock = <span class="val">${fmtShockPct(fixedShock)}</span>.</p>
+        <p>Matched in SPX: <span class="val">${spxMatched}</span> names (${fmtPct.format(spx.fixedWeightPct)}% of index weight).<br>
+        Matched in NDX: <span class="val">${ndxMatched}</span> names (${fmtPct.format(ndx.fixedWeightPct)}% of index weight).</p>
+      </div>
+    </div>
+
+    <div class="step open">
+      <div class="step-header"><span class="step-num">2</span> Compute Weight Decomposition <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <p><strong>SPX:</strong></p>
+        <div class="formula">Total Weight   = ${fmtPct.format(spx.totalWeight)}
+Fixed Weight   = ${fmtPct.format(spx.fixedWeight)} (${fmtPct.format(spx.fixedWeightPct)}%)
+Residual Weight = ${fmtPct.format(spx.residualWeight)} (${fmtPct.format(spx.residualWeightPct)}%)</div>
+        <p><strong>NDX:</strong></p>
+        <div class="formula">Total Weight   = ${fmtPct.format(ndx.totalWeight)}
+Fixed Weight   = ${fmtPct.format(ndx.fixedWeight)} (${fmtPct.format(ndx.fixedWeightPct)}%)
+Residual Weight = ${fmtPct.format(ndx.residualWeight)} (${fmtPct.format(ndx.residualWeightPct)}%)</div>
+      </div>
+    </div>
+
+    <div class="step open">
+      <div class="step-header"><span class="step-num">3</span> Solve Residual Shock <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <p>The core equation solves for the shock the <em>remaining</em> (non-fixed) constituents must receive:</p>
+        <div class="formula">residualShock = (targetShock * totalWeight - fixedContribution) / residualWeight</div>
+        <p><strong>SPX:</strong></p>
+        <div class="formula">fixedContribution = sum(weight_i * shock_i) for each fixed name
+                   = ${fmtPct.format(spx.fixedContribution)}
+
+residualShock = (${fmtPct.format(targetSpx)} * ${fmtPct.format(spx.totalWeight)} - ${fmtPct.format(spx.fixedContribution)}) / ${fmtPct.format(spx.residualWeight)}
+              = <span class="val">${fmtShockPct(spx.residualShock)}</span></div>
+        <p><strong>NDX:</strong></p>
+        <div class="formula">fixedContribution = ${fmtPct.format(ndx.fixedContribution)}
+
+residualShock = (${fmtPct.format(targetNdx)} * ${fmtPct.format(ndx.totalWeight)} - ${fmtPct.format(ndx.fixedContribution)}) / ${fmtPct.format(ndx.residualWeight)}
+              = <span class="val">${fmtShockPct(ndx.residualShock)}</span></div>
+      </div>
+    </div>
+
+    <div class="step open">
+      <div class="step-header"><span class="step-num">4</span> Verification (Rebuild Check) <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <p>Rebuild the index shock from solved values to confirm it matches the target:</p>
+        <div class="formula">rebuiltShock = (fixedContribution + residualWeight * residualShock) / totalWeight</div>
+        <p><strong>SPX:</strong> (${fmtPct.format(spx.fixedContribution)} + ${fmtPct.format(spx.residualWeight)} * ${fmtPct.format(spx.residualShock)}) / ${fmtPct.format(spx.totalWeight)} = <span class="${checkOk?'val-good':'val-bad'}">${fmtShockPct(spx.rebuiltShock)}</span> ${checkOk?'= target':'(mismatch!)'}</p>
+        <p><strong>NDX:</strong> (${fmtPct.format(ndx.fixedContribution)} + ${fmtPct.format(ndx.residualWeight)} * ${fmtPct.format(ndx.residualShock)}) / ${fmtPct.format(ndx.totalWeight)} = <span class="${checkOk?'val-good':'val-bad'}">${fmtShockPct(ndx.rebuiltShock)}</span> ${checkOk?'= target':'(mismatch!)'}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div style="margin-top:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="margin:0; font-size:14px;">Residual Solve Summary</h3>
+      <button class="btn-sm" onclick="copyTableById('quickSummaryTable')">Copy Table</button>
+    </div>
+    <div class="table-wrap" style="margin-top:6px; max-height:180px;">
+      <table id="quickSummaryTable">
+        <thead><tr><th>Index</th><th>Target%</th><th>Fixed Names</th><th>Fixed Wt%</th><th>Residual Wt%</th><th>Residual Shock%</th><th>Rebuilt Check%</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>SPX</td><td>${fmtShockPct(spx.targetShock)}</td><td>${spx.fixedCount}</td>
+            <td>${fmtPct.format(spx.fixedWeightPct)}%</td><td>${fmtPct.format(spx.residualWeightPct)}%</td>
+            <td class="calibrated-cell">${fmtShockPct(spx.residualShock)}</td><td>${fmtShockPct(spx.rebuiltShock)}</td>
+          </tr>
+          <tr>
+            <td>NDX</td><td>${fmtShockPct(ndx.targetShock)}</td><td>${ndx.fixedCount}</td>
+            <td>${fmtPct.format(ndx.fixedWeightPct)}%</td><td>${fmtPct.format(ndx.residualWeightPct)}%</td>
+            <td class="calibrated-cell">${fmtShockPct(ndx.residualShock)}</td><td>${fmtShockPct(ndx.rebuiltShock)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+//  ADVANCED CALIBRATION (PnL-Driven)
+// ============================================================
+function runAdvancedCalibration(){
+  const singleMag=Math.abs(toNum(document.getElementById('singleShock').value,50));
+  const spxMag=Math.abs(toNum(document.getElementById('spxShock').value,26));
+  const ndxMag=Math.abs(toNum(document.getElementById('ndxShock').value,35));
+  const targetNet=toNum(document.getElementById('targetNet').value,-3000000);
+  const spxExp=toNum(document.getElementById('spxExp').value,0);
+  const ndxExp=toNum(document.getElementById('ndxExp').value,0);
+
+  const rows=parseExposureInput(document.getElementById('singleNameInput').value);
+  const spxMap=buildWeightMap(SPX_DATA);
+  const ndxMap=buildWeightMap(NDX_DATA);
+
+  // Step 1: Single-name PnL
+  let singlePnl=0;
+  const singleDetails=[];
+  for(const r of rows){
+    const pnl=r.exposurePer1Pct*(-singleMag);
+    singlePnl+=pnl;
+    singleDetails.push({ticker:r.ticker, exp:r.exposurePer1Pct, pnl});
+  }
+
+  // Step 2: Index PnL
+  const spxPnl=spxExp*(-spxMag);
+  const ndxPnl=ndxExp*(-ndxMag);
+  const indexPnl=spxPnl+ndxPnl;
+  const netPnl=singlePnl+indexPnl;
+
+  // Step 3: Solve scenarios
+  const solves=[];
+  solves.push({method:'Current inputs', spx:spxMag, ndx:ndxMag, pnl:netPnl});
+  if(indexPnl!==0){
+    const scale=(targetNet-singlePnl)/indexPnl;
+    const s=spxMag*scale, n=ndxMag*scale;
+    solves.push({method:'Scale both shocks', spx:s, ndx:n, pnl:singlePnl+spxExp*(-s)+ndxExp*(-n), scale});
+  } else { solves.push({method:'Scale both shocks', spx:NaN, ndx:NaN, pnl:NaN}); }
+  if(spxExp!==0){
+    const s=-(targetNet-singlePnl-ndxPnl)/spxExp;
+    solves.push({method:'Solve SPX only', spx:s, ndx:ndxMag, pnl:singlePnl+spxExp*(-s)+ndxPnl});
+  } else { solves.push({method:'Solve SPX only', spx:NaN, ndx:ndxMag, pnl:NaN}); }
+  if(ndxExp!==0){
+    const n=-(targetNet-singlePnl-spxPnl)/ndxExp;
+    solves.push({method:'Solve NDX only', spx:spxMag, ndx:n, pnl:singlePnl+spxPnl+ndxExp*(-n)});
+  } else { solves.push({method:'Solve NDX only', spx:spxMag, ndx:NaN, pnl:NaN}); }
+
+  // Step 4: Basis risk
+  const basisRows=[];
+  let overlapCount=0, absExp=0, absExpOverlap=0, basisPnlTotal=0;
+  for(const r of rows){
+    const spxW=spxMap.get(r.ticker)||0;
+    const ndxW=ndxMap.get(r.ticker)||0;
+    const isOverlap=(spxW+ndxW)>0;
+    if(isOverlap) overlapCount++;
+    const hSpx=Math.abs(spxExp)*spxW, hNdx=Math.abs(ndxExp)*ndxW;
+    let blendedMag=0;
+    if((hSpx+hNdx)>0) blendedMag=(hSpx*spxMag+hNdx*ndxMag)/(hSpx+hNdx);
+    else if((spxW+ndxW)>0) blendedMag=(spxW*spxMag+ndxW*ndxMag)/(spxW+ndxW);
+    const deltaShock=singleMag-blendedMag;
+    const extraPnl=-r.exposurePer1Pct*deltaShock;
+    absExp+=Math.abs(r.exposurePer1Pct);
+    if(isOverlap) absExpOverlap+=Math.abs(r.exposurePer1Pct);
+    basisPnlTotal+=extraPnl;
+    basisRows.push({ticker:r.ticker, exp:r.exposurePer1Pct, singlePnl:r.exposurePer1Pct*(-singleMag), spxW, ndxW, blendedMag, deltaShock, extraPnl});
+  }
+  basisRows.sort((a,b)=>Math.abs(b.extraPnl)-Math.abs(a.extraPnl));
+
+  // Warnings
+  const warnings=[];
+  if(rows.length===0) warnings.push('No single-name exposures entered.');
+  if(spxExp===0&&ndxExp===0) warnings.push('Both index exposures are zero; solver cannot adjust shocks.');
+  const warnEl=document.getElementById('advWarn');
+  if(warnings.length){warnEl.textContent=warnings.join(' ');warnEl.classList.add('show');}
+  else{warnEl.textContent='';warnEl.classList.remove('show');}
+
+  document.getElementById('advPlaceholder').style.display='none';
+  document.getElementById('advResults').innerHTML=buildAdvResultsHTML(
+    singleMag,spxMag,ndxMag,targetNet,spxExp,ndxExp,
+    singlePnl,spxPnl,ndxPnl,indexPnl,netPnl,
+    rows,singleDetails,solves,basisRows,
+    overlapCount,absExp,absExpOverlap,basisPnlTotal
+  );
+
+  document.querySelectorAll('#advResults .step-header').forEach(h=>{
+    h.addEventListener('click',()=>h.parentElement.classList.toggle('open'));
+  });
+}
+
+function buildAdvResultsHTML(singleMag,spxMag,ndxMag,targetNet,spxExp,ndxExp,
+  singlePnl,spxPnl,ndxPnl,indexPnl,netPnl,
+  rows,singleDetails,solves,basisRows,
+  overlapCount,absExp,absExpOverlap,basisPnlTotal){
+
+  const gap=netPnl-targetNet;
+  const gapClass=Math.abs(gap)<1000000?'good':'bad';
+
+  // Single-name detail rows (top 10)
+  const topSingle=singleDetails.slice(0,10).map(r=>
+    `${r.ticker}: ${fmtUsd.format(r.exp)} x (-${fmtPct.format(singleMag)}%) = ${fmtUsd.format(r.pnl)}`
+  ).join('\n');
+
+  return `
+  <!-- KEY METRICS -->
+  <div class="metrics">
+    <div class="metric"><div class="k">Single-Name PnL</div><div class="v ${singlePnl<0?'bad':'good'}">${fmtUsd.format(singlePnl)}</div></div>
+    <div class="metric"><div class="k">Index Hedge PnL</div><div class="v ${indexPnl<0?'bad':'good'}">${fmtUsd.format(indexPnl)}</div></div>
+    <div class="metric"><div class="k">Net Portfolio PnL</div><div class="v ${netPnl<0?'bad':'good'}">${fmtUsd.format(netPnl)}</div></div>
+    <div class="metric"><div class="k">Gap vs Target</div><div class="v ${gapClass}">${fmtUsd.format(gap)}</div></div>
+  </div>
+
+  <!-- MATH STEPS -->
+  <div class="math-steps">
+    <div class="step open">
+      <div class="step-header"><span class="step-num">1</span> Single-Name PnL <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <p>For each name: <code>PnL = exposure_per_1pct * (-shock%)</code></p>
+        <div class="formula">${topSingle}${rows.length>10?'\n... +'+(rows.length-10)+' more names':''}
+
+Total Single-Name PnL = <span class="val">${fmtUsd.format(singlePnl)}</span></div>
+      </div>
+    </div>
+
+    <div class="step open">
+      <div class="step-header"><span class="step-num">2</span> Index Hedge PnL <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <div class="formula">SPX PnL = spxExposure * (-spxShock%)
+        = ${fmtUsd.format(spxExp)} * (-${fmtPct.format(spxMag)}%)
+        = <span class="val">${fmtUsd.format(spxPnl)}</span>
+
+NDX PnL = ndxExposure * (-ndxShock%)
+        = ${fmtUsd.format(ndxExp)} * (-${fmtPct.format(ndxMag)}%)
+        = <span class="val">${fmtUsd.format(ndxPnl)}</span>
+
+Index PnL = SPX PnL + NDX PnL = <span class="val">${fmtUsd.format(indexPnl)}</span></div>
+      </div>
+    </div>
+
+    <div class="step open">
+      <div class="step-header"><span class="step-num">3</span> Net PnL & Gap <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <div class="formula">Net PnL = Single PnL + Index PnL
+        = ${fmtUsd.format(singlePnl)} + ${fmtUsd.format(indexPnl)}
+        = <span class="val">${fmtUsd.format(netPnl)}</span>
+
+Target  = ${fmtUsd.format(targetNet)}
+Gap     = Net - Target = <span class="${gapClass}">${fmtUsd.format(gap)}</span></div>
+      </div>
+    </div>
+
+    <div class="step open">
+      <div class="step-header"><span class="step-num">4</span> Shock Solver (3 Methods) <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <p><strong>Scale Both:</strong> Find uniform scale <code>k</code> so <code>singlePnL + k*(indexPnL) = target</code></p>
+        <div class="formula">k = (target - singlePnL) / indexPnL${solves[1].scale!=null?'\n  = ('+fmtUsd.format(targetNet)+' - '+fmtUsd.format(singlePnl)+') / '+fmtUsd.format(indexPnl)+'\n  = '+fmtPct.format(solves[1].scale):'\n  = n/a (index PnL is zero)'}
+SPX scaled = ${Number.isFinite(solves[1].spx)?fmtShockPct(solves[1].spx):'n/a'}, NDX scaled = ${Number.isFinite(solves[1].ndx)?fmtShockPct(solves[1].ndx):'n/a'}</div>
+        <p><strong>Solve SPX Only</strong> (NDX fixed at ${fmtShockPct(ndxMag)}):</p>
+        <div class="formula">spxRequired = -(target - singlePnL - ndxPnL) / spxExposure
+             = ${Number.isFinite(solves[2].spx)?fmtShockPct(solves[2].spx):'n/a (spxExp=0)'}</div>
+        <p><strong>Solve NDX Only</strong> (SPX fixed at ${fmtShockPct(spxMag)}):</p>
+        <div class="formula">ndxRequired = -(target - singlePnL - spxPnL) / ndxExposure
+             = ${Number.isFinite(solves[3].ndx)?fmtShockPct(solves[3].ndx):'n/a (ndxExp=0)'}</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header"><span class="step-num">5</span> Basis Risk Analysis <span class="step-arrow">&#9654;</span></div>
+      <div class="step-body">
+        <p>For each single name, compare its shock to the blended index-implied shock:</p>
+        <div class="formula">blendedShock = (|spxExp|*spxWt*spxShock + |ndxExp|*ndxWt*ndxShock) / (|spxExp|*spxWt + |ndxExp|*ndxWt)
+deltaShock  = singleShock - blendedShock
+basisPnL    = -exposure * deltaShock</div>
+        <p>Coverage: <span class="val">${overlapCount}</span> of ${rows.length} names overlap with indices (${absExp?fmtPct.format((absExpOverlap/absExp)*100)+'%':'n/a'} of exposure).</p>
+        <p>Total basis PnL: <span class="${basisPnlTotal<0?'val-bad':'val-good'}">${fmtUsd.format(basisPnlTotal)}</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SOLVE TABLE -->
+  <div style="margin-top:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="margin:0; font-size:14px;">Shock Solver Results</h3>
+      <button class="btn-sm" onclick="copyTableById('advSolveTable')">Copy Table</button>
+    </div>
+    <div class="table-wrap" style="margin-top:6px; max-height:200px;">
+      <table id="advSolveTable">
+        <thead><tr><th>Method</th><th>SPX Shock%</th><th>NDX Shock%</th><th>Implied Net PnL</th></tr></thead>
+        <tbody>${solves.map(r=>`<tr><td>${r.method}</td><td>${Number.isFinite(r.spx)?fmtPct.format(r.spx)+'%':'n/a'}</td><td>${Number.isFinite(r.ndx)?fmtPct.format(r.ndx)+'%':'n/a'}</td><td>${Number.isFinite(r.pnl)?fmtUsd.format(r.pnl):'n/a'}</td></tr>`).join('')}</tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BASIS TABLE -->
+  <div style="margin-top:14px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="margin:0; font-size:14px;">Basis Risk Detail (sorted by impact)</h3>
+      <button class="btn-sm" onclick="copyTableById('advBasisTable')">Copy Table</button>
+    </div>
+    <div class="table-wrap" style="margin-top:6px; max-height:300px;">
+      <table id="advBasisTable">
+        <thead><tr><th>Ticker</th><th>Exposure/1%</th><th>Single PnL</th><th>SPX Wt%</th><th>NDX Wt%</th><th>Blended%</th><th>Delta%</th><th>Basis PnL</th></tr></thead>
+        <tbody>${basisRows.map(r=>`<tr><td>${r.ticker}</td><td>${fmtUsd.format(r.exp)}</td><td>${fmtUsd.format(r.singlePnl)}</td><td>${fmtPct.format(r.spxW)}</td><td>${fmtPct.format(r.ndxW)}</td><td>${fmtPct.format(r.blendedMag)}</td><td>${fmtPct.format(r.deltaShock)}</td><td class="${r.extraPnl<0?'bad':'good'}">${fmtUsd.format(r.extraPnl)}</td></tr>`).join('')}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+//  COPY HELPER
+// ============================================================
+function copyTableById(id){
+  const table=document.getElementById(id);
+  if(!table) return;
+  const rows=[...table.querySelectorAll('tr')];
+  const text=rows.map(r=>[...r.querySelectorAll('th,td')].map(c=>c.textContent.trim()).join('\t')).join('\n');
+  if(navigator.clipboard&&window.isSecureContext) navigator.clipboard.writeText(text);
+  else{ const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove(); }
+}
+
+// ============================================================
+//  RESET DEFAULTS
+// ============================================================
+document.getElementById('resetQuickBtn').addEventListener('click',()=>{
+  document.getElementById('qTargetSpx').value='26';
+  document.getElementById('qTargetNdx').value='35';
+  document.getElementById('qFixedNameShock').value='50';
+  document.getElementById('qFixedTickers').value=`NVDA\nMSFT\nAAPL\nGOOGL\nAMZN\nMETA\nTSLA\nAVGO\nAMD\nCRM\nPLTR\nSNOW\nNOW\nPANW\nCRWD`;
+  runQuickCalibration();
+});
+
+document.getElementById('resetAdvBtn').addEventListener('click',()=>{
+  document.getElementById('singleShock').value='50';
+  document.getElementById('spxShock').value='26';
+  document.getElementById('ndxShock').value='35';
+  document.getElementById('targetNet').value='-3000000';
+  document.getElementById('spxExp').value='0';
+  document.getElementById('ndxExp').value='0';
+  document.getElementById('singleNameInput').value=`NVDA,1250000\nAAPL,1150000\nMSFT,980000\nAMZN,850000\nGOOGL,620000\nMETA,540000\nTSLA,500000`;
+  runAdvancedCalibration();
+});
+
+// ============================================================
+//  EVENT WIRING
+// ============================================================
+document.getElementById('runQuickBtn').addEventListener('click', runQuickCalibration);
+document.getElementById('runAdvBtn').addEventListener('click', runAdvancedCalibration);
+
+// Initialize constituent tables
+refreshConstituentTables();
+</script>
+</body>
+</html>
