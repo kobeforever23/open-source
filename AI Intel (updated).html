@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI INTELLIGENCE BRIEF — MARCH 4, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060608;--bg2:#0c0c10;--bg3:#111116;--bg4:#18181f;--bg5:#1e1e27;
+  --border:#22222e;--border2:#2e2e3e;
+  --gold:#e8a000;--gold-dim:rgba(232,160,0,0.1);--gold-border:rgba(232,160,0,0.3);
+  --cyan:#00c8e0;--cyan-dim:rgba(0,200,224,0.08);
+  --green:#00e08a;--green-dim:rgba(0,224,138,0.08);
+  --red:#ff4455;--red-dim:rgba(255,68,85,0.1);
+  --blue:#4488ff;--blue-dim:rgba(68,136,255,0.08);
+  --purple:#a855f7;--purple-dim:rgba(168,85,247,0.08);
+  --orange:#ff6b35;--orange-dim:rgba(255,107,53,0.1);
+  --text:#e0e0ee;--text2:#9898b0;--text3:#55556a;--text4:#333345;
+  --mono:'IBM Plex Mono',monospace;
+  --display:'Barlow Condensed',sans-serif;
+  --body:'IBM Plex Sans',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:13px;line-height:1.6;overflow-x:hidden;}
+.ticker-wrap{background:var(--gold);color:#000;font-family:var(--mono);font-size:10px;font-weight:700;overflow:hidden;white-space:nowrap;position:sticky;top:0;z-index:200;height:22px;display:flex;align-items:center;}
+.ticker-track{display:inline-flex;animation:scroll-left 120s linear infinite;}
+.ticker-track span{padding:0 40px;flex-shrink:0;}
+.ticker-sep{color:rgba(0,0,0,0.4);}
+@keyframes scroll-left{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.masthead{background:var(--bg2);border-bottom:2px solid var(--gold);padding:16px 44px 12px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;position:sticky;top:22px;z-index:190;}
+.mast-eye{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:10px;}
+.live{background:var(--green);color:#000;padding:1px 7px;font-size:8px;letter-spacing:2px;font-weight:700;display:flex;align-items:center;gap:4px;}
+.live::before{content:'';width:5px;height:5px;background:#000;border-radius:50%;animation:blink 1.2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+.masthead h1{font-family:var(--display);font-size:28px;font-weight:800;letter-spacing:1px;line-height:1.05;color:var(--text);}
+.masthead h1 em{color:var(--gold);font-style:normal;}
+.mast-sub{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:5px;letter-spacing:1px;}
+.mast-right{text-align:right;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:2;}
+.mast-right strong{color:var(--gold);display:block;font-size:12px;}
+.tab-nav{background:var(--bg3);border-bottom:1px solid var(--border);padding:0 44px;display:flex;overflow-x:auto;position:sticky;top:100px;z-index:180;scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:9px 14px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s;}
+.tab-btn:hover{color:var(--text2);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tnum{color:var(--text4);margin-right:5px;}
+.tab-btn.active .tnum{color:var(--gold);}
+.content{max-width:1200px;margin:0 auto;padding:26px 44px 80px;}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+.card{background:var(--bg3);border:1px solid var(--border);padding:15px;border-radius:2px;}
+.card-lbl{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.card-val{font-family:var(--display);font-size:24px;font-weight:700;color:var(--gold);line-height:1;}
+.card-sub{font-family:var(--mono);font-size:10px;margin-top:4px;color:var(--text2);}
+.card-body{font-size:11px;color:var(--text2);margin-top:7px;line-height:1.65;}
+.block{background:var(--bg3);border:1px solid var(--border);border-radius:2px;margin-bottom:11px;overflow:hidden;}
+.bh{background:var(--bg4);border-bottom:1px solid var(--border);padding:10px 17px;display:flex;align-items:center;gap:11px;}
+.tag{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:1px;flex-shrink:0;}
+.tg{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border);}
+.tc{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,200,224,.3);}
+.tgr{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,224,138,.3);}
+.tr{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,68,85,.3);}
+.tb{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(68,136,255,.3);}
+.tp{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,.3);}
+.to{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,53,.3);}
+.bt{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text);}
+.bb{padding:14px 17px;}
+.bb p{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:7px;}
+.bb p:last-child{margin-bottom:0;}
+.bb strong{color:var(--text);font-weight:600;}
+.ph{margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid var(--border);}
+.ph h2{font-family:var(--display);font-size:25px;font-weight:700;letter-spacing:1px;}
+.ph h2 em{color:var(--gold);font-style:normal;}
+.ph p{color:var(--text2);font-size:12px;margin-top:6px;max-width:800px;line-height:1.7;}
+.eye{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+.sh{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;padding:16px 0 9px;border-top:1px solid var(--border);margin-top:22px;}
+.sh:first-of-type{border-top:none;padding-top:0;}
+.callout{border-left:3px solid;padding:13px 15px;margin-bottom:15px;font-size:12px;line-height:1.7;}
+.cg{background:var(--gold-dim);border-color:var(--gold);}
+.cc{background:var(--cyan-dim);border-color:var(--cyan);}
+.cgr{background:var(--green-dim);border-color:var(--green);}
+.cr{background:var(--red-dim);border-color:var(--red);}
+.cp{background:var(--purple-dim);border-color:var(--purple);}
+.callout p{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:0;}
+.callout strong{color:var(--text);}
+.mb20{margin-bottom:20px;}
+.dis-table{width:100%;border-collapse:collapse;}
+.dis-table th{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;padding:9px 12px;border-bottom:1px solid var(--border2);text-align:left;background:var(--bg4);}
+.dis-table td{font-family:var(--mono);font-size:10px;padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text2);}
+.dis-table tr:last-child td{border-bottom:none;}
+.dis-table tr:hover td{background:var(--bg4);}
+.sl{background:var(--bg4);border:1px solid var(--border);border-radius:2px;margin-bottom:9px;overflow:hidden;}
+.slh{display:flex;align-items:center;gap:12px;padding:11px 17px;border-bottom:1px solid var(--border);background:var(--bg5);}
+.sln{font-family:var(--display);font-size:22px;font-weight:700;color:var(--gold);opacity:.4;line-height:1;}
+.sll{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text);letter-spacing:1px;}
+.sld{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:2px;}
+.st{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);}
+.tc2{background:var(--bg3);padding:12px 15px;}
+.tn{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--cyan);margin-bottom:4px;}
+.tr2{font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:4px;}
+.tc2{background:var(--bg3);padding:12px 15px;}
+.tdim{font-family:var(--mono);font-size:9px;color:var(--text3);}
+.ir{display:flex;align-items:center;gap:11px;margin-bottom:9px;}
+.il{font-family:var(--mono);font-size:10px;color:var(--text2);width:200px;flex-shrink:0;}
+.ibw{flex:1;background:var(--bg5);height:6px;border-radius:1px;overflow:hidden;}
+.ib{height:100%;border-radius:1px;}
+.ip{font-family:var(--mono);font-size:10px;color:var(--gold);width:36px;text-align:right;flex-shrink:0;}
+.pb{display:flex;align-items:stretch;margin-bottom:11px;border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.pbs{padding:15px 18px;display:flex;flex-direction:column;justify-content:center;min-width:110px;}
+.pbp{font-family:var(--display);font-size:34px;font-weight:700;line-height:1;}
+.pbl{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;margin-top:3px;}
+.pbb{flex:1;background:var(--bg3);padding:15px 18px;border-left:1px solid var(--border);}
+.pbt{font-size:13px;font-weight:600;color:var(--text);margin-bottom:5px;}
+.pbd{font-size:12px;color:var(--text2);line-height:1.7;}
+.paper{border:1px solid var(--border);border-radius:2px;padding:14px 17px;margin-bottom:9px;background:var(--bg3);display:flex;gap:14px;}
+.ptier{font-family:var(--mono);font-size:8px;padding:3px 7px;border-radius:1px;flex-shrink:0;height:fit-content;margin-top:2px;}
+.ptitle{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.pmeta{font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:4px;}
+.pdesc{font-size:11px;color:var(--text2);line-height:1.65;}
+.tl{position:relative;padding-left:28px;}
+.tl::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:var(--border2);}
+.tli{position:relative;margin-bottom:18px;}
+.tli::before{content:'';position:absolute;left:-23px;top:5px;width:7px;height:7px;border-radius:50%;border:2px solid var(--border2);}
+.tli.tg::before{border-color:var(--gold);background:var(--gold);}
+.tli.tgr::before{border-color:var(--green);background:var(--green);}
+.tli.tc::before{border-color:var(--cyan);}
+.tli.tr::before{border-color:var(--red);}
+.tdate{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:1px;margin-bottom:2px;}
+.ttit{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.tbody{font-size:11px;color:var(--text2);line-height:1.65;}
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap"><div class="ticker-track">
+<span>CLAUDE OPUS 4.6 — FEB 5 2026 — AGENT TEAMS — 14.5H TASK HORIZON — BEST EXPERT TASKS <span class="ticker-sep">◆</span></span>
+<span>DEEPSEEK V4 — LAUNCHING TODAY MARCH 4 — 1T PARAMS / 32B ACTIVE — MULTIMODAL — ~$0.10/M TOKENS <span class="ticker-sep">◆</span></span>
+<span>GEMINI 3.1 PRO — FEB 19 2026 — ARC-AGI-2: 77.1% ★ — GPQA DIAMOND: 94.3% ★ — $2/$12 PER M TOKENS <span class="ticker-sep">◆</span></span>
+<span>CLAUDE SONNET 4.6 — FEB 17 — SWE-BENCH 79.6% — GDPval-AA ELO #1 AT 1633 — $3/$15 PER M <span class="ticker-sep">◆</span></span>
+<span>GPT-5.2 — AIME 2025: 100% FIRST PERFECT SCORE — GPT-5.3 CODEX — TERMINAL-BENCH: 77.3% <span class="ticker-sep">◆</span></span>
+<span>CLAUDE CODE — MULTI-AGENT SPAWNING — VOICE MODE ROLLING OUT MARCH 3 — XCODE 26.3 INTEGRATION <span class="ticker-sep">◆</span></span>
+<span>DARIO AMODEI (DAVOS 2026): "AGI LIKELY 2027 — COUNTRY OF GENIUSES IN A DATACENTER" <span class="ticker-sep">◆</span></span>
+<span>MECHANISTIC INTERPRETABILITY — MIT TECHNOLOGY REVIEW BREAKTHROUGH 2026 — ATTRIBUTION GRAPHS OPEN-SOURCED <span class="ticker-sep">◆</span></span>
+<span>GOLDMAN ONEGS 3.0: DEVIN ACROSS 12,000 DEVS — 3–4X PRODUCTIVITY — AI COWORKER ARCHITECTURE <span class="ticker-sep">◆</span></span>
+<span>WELLS FARGO LLM AGENT NETWORK — 15 YEARS LOAN DOCS REUNDERWRITTEN AUTONOMOUSLY — TACHYON PLATFORM <span class="ticker-sep">◆</span></span>
+<span>TRUMP EO: ANTHROPIC SUPPLY CHAIN RISK — 6 MONTHS FEDERAL PHASE-OUT — ANTHROPIC SUING <span class="ticker-sep">◆</span></span>
+<span>GROK 4.20 — XAI FOUR-AGENT PARALLEL ARCHITECTURE — SUPERGROK $30/MO — API ROLLOUT MID-MARCH <span class="ticker-sep">◆</span></span>
+<span>NORWAY $2.2T SOVEREIGN WEALTH FUND — CLAUDE ESG PORTFOLIO SCREENING — FEB 2026 <span class="ticker-sep">◆</span></span>
+<span>ANTHROPIC REVENUE TARGET $15B 2026 — OPENAI TARGET $30B — AI REVENUE 5X YEAR OVER YEAR <span class="ticker-sep">◆</span></span>
+<span>META LLAMA 4 SCOUT — 10M TOKEN CONTEXT ★ — APACHE 2.0 — GPT-OSS 120B APACHE 2.0 <span class="ticker-sep">◆</span></span>
+<span>EU AI ACT FULL ENFORCEMENT AUGUST 2 2026 — HIGH-RISK AI EXPLAINABILITY REQUIRED <span class="ticker-sep">◆</span></span>
+<span>OPENAI TARGET: INTERN AI RESEARCHER SEP 2026 — LEGITIMATE AI RESEARCHER 2028 <span class="ticker-sep">◆</span></span>
+<span>GOLDMAN AI CAPEX SURGE: $527B PROJECTED 2026 — GOOGLE: $75B COMMITTED FOR 2026 ALONE <span class="ticker-sep">◆</span></span>
+<span>CLAUDE OPUS 4.6 — FEB 5 2026 — AGENT TEAMS — 14.5H TASK HORIZON — BEST EXPERT TASKS <span class="ticker-sep">◆</span></span>
+<span>DEEPSEEK V4 — LAUNCHING TODAY MARCH 4 — 1T PARAMS / 32B ACTIVE — MULTIMODAL — ~$0.10/M TOKENS <span class="ticker-sep">◆</span></span>
+</div></div>
+
+<div class="masthead">
+  <div>
+    <div class="mast-eye"><span>CIB RISK ANALYTICS — MARKET INTELLIGENCE</span><span class="live">LIVE</span></div>
+    <h1>AI <em>STATE OF THE WORLD</em> — INTELLIGENCE BRIEF</h1>
+    <div class="mast-sub">FRONTIER MODELS · AGENTIC AI · CODING AGENTS · AGI/SUPERINTELLIGENCE · SAFETY · CIB DEPLOYMENT · POWER STACK · FORWARD SCENARIOS</div>
+  </div>
+  <div class="mast-right">
+    <strong>MARCH 4, 2026</strong>
+    <span>CLASSIFICATION: STRATEGIC</span>
+    <span>10 INTELLIGENCE DOMAINS</span>
+    <span>DATA VERIFIED LIVE TODAY</span>
+  </div>
+</div>
+
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="t01"><span class="tnum">01</span>FRONTIER MODELS</button>
+  <button class="tab-btn" data-tab="t02"><span class="tnum">02</span>AGENTIC AI</button>
+  <button class="tab-btn" data-tab="t03"><span class="tnum">03</span>CODING AGENTS</button>
+  <button class="tab-btn" data-tab="t04"><span class="tnum">04</span>AGI / SUPERINTELLIGENCE</button>
+  <button class="tab-btn" data-tab="t05"><span class="tnum">05</span>AI SAFETY</button>
+  <button class="tab-btn" data-tab="t06"><span class="tnum">06</span>FRONTIER RESEARCH</button>
+  <button class="tab-btn" data-tab="t07"><span class="tnum">07</span>CIB DEPLOYMENT</button>
+  <button class="tab-btn" data-tab="t08"><span class="tnum">08</span>DISPLACEMENT MAP</button>
+  <button class="tab-btn" data-tab="t09"><span class="tnum">09</span>POWER STACK</button>
+  <button class="tab-btn" data-tab="t10"><span class="tnum">10</span>FORWARD SCENARIOS</button>
+</nav>
+
+<div class="content">
+
+<!-- TAB 01: FRONTIER MODELS -->
+<div class="tab-panel active" id="t01">
+  <div class="ph"><div class="eye">01 — FRONTIER MODEL LANDSCAPE</div><h2>The <em>Model Race</em> — March 4, 2026</h2><p>Seven major frontier releases in February 2026 alone. No single model dominates every dimension. Gemini 3.1 Pro leads benchmarks and price-performance; Claude leads expert domain quality and autonomous task horizons; GPT-5.2 leads math and ecosystem; open-weight models (Llama 4, GPT-OSS, GLM-5) are closing capability gaps at zero API cost. DeepSeek V4 launches today and may reset pricing assumptions again. Portfolio strategy — matching model to task — is the only rational architecture in March 2026.</p></div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="card-lbl">ARC-AGI-2 Leader Today</div><div class="card-val">77.1%</div><div class="card-sub" style="color:var(--cyan)">Gemini 3.1 Pro (Feb 19). 2.5x its own predecessor. Claude Opus 4.6: 68.8%. GPT-5.2: 52.9%.</div></div>
+    <div class="card"><div class="card-lbl">DeepSeek V4 Status</div><div class="card-val" style="color:var(--red)">NOW</div><div class="card-sub" style="color:var(--gold)">Timed with China Two Sessions starting TODAY. 1T params, 32B active, ~$0.10/M. Multimodal.</div></div>
+    <div class="card"><div class="card-lbl">Expert Work Elo (GDPval-AA)</div><div class="card-val">1633</div><div class="card-sub" style="color:var(--gold)">Claude Sonnet 4.6 #1. Opus 4.6: 1606. Gemini 3.1 Pro: 1317. Finance/legal/regulatory: Claude wins.</div></div>
+    <div class="card"><div class="card-lbl">Best Frontier Price</div><div class="card-val">$2/$12</div><div class="card-sub" style="color:var(--green)">Gemini 3.1 Pro per M tokens. Same as Gemini 3 Pro — free performance upgrade. 75% discount with caching.</div></div>
+  </div>
+
+  <div class="block"><div class="bh"><span class="tag tg">ANTHROPIC</span><span class="bt">Claude Opus 4.6 (Feb 5) · Claude Sonnet 4.6 (Feb 17)</span></div><div class="bb">
+    <p><strong>Opus 4.6 — Expert Task Champion:</strong> GDPval-AA leads all models by 144 Elo over GPT-5.2 and 190 over its predecessor. METR task horizon: <strong>50% reliability at 14 hours 30 minutes</strong> — the longest ever measured for any AI system. Agent Teams: Opus can autonomously spawn parallel subagents; 16 agents wrote a C compiler in Rust that compiled the Linux kernel (~$20K cost). ARC-AGI-2: 68.8%. GPQA Diamond: 91.3%. SWE-bench Verified: 80.8% (best). OSWorld computer use: 72.7% (best). HLE with tools: 53.1%. Context: 200K (1M beta). Adaptive Thinking scales reasoning depth dynamically. Context Compaction enables infinite-length workflows. Norway's $2.2T sovereign wealth fund uses Claude for ESG screening.</p>
+    <p><strong>Sonnet 4.6 — Production Workhorse:</strong> Same price as Sonnet 4.5, released Feb 17. SWE-bench 79.6% (within 1.2pts of Opus). OSWorld 72.5% (tied with Opus effectively). Math: 89% (up from 62%). GDPval-AA Elo #1 at 1633. MRCR v2 1M context retrieval: 65% (up from 18.5%). Speed: 40–60 t/s vs Opus 25–32. 5x cheaper. Standard 2026 pattern: Sonnet handles 80–90% of enterprise requests; Opus escalated for peak complexity only.</p>
+    <p><strong>Shared new capabilities:</strong> Fast Mode (Opus 2.5x speed at premium), Claude Code Security (500+ bugs found missed by static analysis), Claude for Healthcare (BAA support). Haiku 4.5 as efficient tier. Pricing: Opus $15/$75, Sonnet $3/$15, Haiku $0.80/$4 per M tokens. 50% batch discount.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tgr">OPENAI</span><span class="bt">GPT-5.2 (Dec 11 2025) · GPT-5.3 Codex (Feb 5 2026) · GPT-OSS Apache 2.0</span></div><div class="bb">
+    <p><strong>GPT-5.2 — First Perfect Math Score:</strong> First LLM to achieve 100% on AIME 2025 competition mathematics without external tools — exhausting the benchmark. GPQA Diamond: 92.4%. ARC-AGI-2: 52.9% (trails Gemini 3.1 by 24pts — significant gap). Context: 400K tokens. Three variants: Instant, Thinking (configurable depth: none/minimal/low/medium/high/xhigh), Pro. Pricing: ~$1.75/$14. Hallucination rate: 6.2% (improved). OSWorld: 38.2% (substantially behind Claude). Strongest third-party integration ecosystem.</p>
+    <p><strong>GPT-5.3 Codex (Feb 5):</strong> Coding specialist. Terminal-Bench 2.0: 77.3% (best — vs Gemini 68.5%, Claude Opus 65.4%). SWE-Bench Pro: 56.8%.</p>
+    <p><strong>GPT-OSS (Apache 2.0):</strong> Open-weight models gpt-oss-120B and gpt-oss-20B — strategic pivot enabling self-hosted banking deployment with zero data residency risk. Tops independent open-source leaderboard (Artificial Analysis). Changes build-vs-buy calculus for regulated institutions.</p>
+    <p><strong>OpenAI Frontier Platform:</strong> Enterprise agent framework — AI as "AI coworkers" with defined identity, permissions, persistent learning. State Farm deployed. Sam Altman target: intern-level AI research assistant September 2026; legitimate AI researcher 2028. OpenAI revenue on track for $30B ARR in 2026.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tc">GOOGLE DEEPMIND</span><span class="bt">Gemini 3.1 Pro (Feb 19 Preview) · Gemini CLI · Google ADK</span></div><div class="bb">
+    <p><strong>Gemini 3.1 Pro — Benchmark Leader Today:</strong> Preview Feb 19. Leads 12 of 18 tracked benchmarks. ARC-AGI-2: 77.1% — 2.5x over Gemini 3 Pro, +8 pts over Opus 4.6, +24 pts over GPT-5.2. GPQA Diamond: 94.3% (highest of any model). APEX-Agents: 33.5% (nearly 2x GPT-5.2's 23.0%). MCP Atlas tool coordination: 69.2% (highest). SWE-Bench Verified: 80.6%. BrowseComp: 85.9%. LiveCodeBench Pro Elo: 2887 (vs GPT-5.2's 2393). 1M token context. Context caching: up to 75% cost reduction.</p>
+    <p><strong>Where Claude still leads:</strong> Arena.ai human preference (Opus +4 Elo). GDPval-AA professional domain quality: Claude Sonnet 1633, Opus 1606 vs Gemini 1317 — a 289–316 Elo gap. Finance, legal, regulatory expert work: Claude remains the preferred quality choice.</p>
+    <p><strong>Pricing and deployment:</strong> $2/$12 per M tokens — same as Gemini 3 Pro, effectively a free performance upgrade. Preview status (not GA). Vertex AI enterprise, AI Studio dev, Antigravity IDE, NotebookLM. Google committed $75B in AI infrastructure for 2026 alone. Gemini 3 Flash variant arriving for cost/speed tiers.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tp">CHINA FRONTIER + OPEN WEIGHTS</span><span class="bt">DeepSeek V4 · Grok 4.20 · Llama 4 · GLM-5 · Qwen 3.5 · MiniMax M2.5</span></div><div class="bb">
+    <p><strong>DeepSeek V4 — LAUNCHING TODAY (March 4):</strong> Timed with China's Two Sessions parliamentary meetings. Architecture: 1T total parameters, 32B active per token (MoE). Key innovations: Engram Conditional Memory — O(1) constant-time retrieval (1M tokens costs same compute as 128K); Manifold-Constrained Hyper-Connections prevent attention sink. Fully multimodal. Optimized for Huawei Ascend and Cambricon chips — Chinese AI chip independence. Projected: $0.10–$0.30/M input tokens, ~50x cheaper than GPT-5.2. Data governance: Anthropic accused DeepSeek of distillation via 24,000 fraudulent accounts (16M+ exchanges). Open weights eliminate data residency concerns.</p>
+    <p><strong>Grok 4.20 (xAI, Feb 17):</strong> Four-agent parallel processing — four independent agents run simultaneously per query, synthesize results. Extended thinking. SuperGrok $30/month. API rollout mid-March 2026.</p>
+    <p><strong>Meta Llama 4:</strong> Scout variant — 10 million token context window (industry-leading). Multimodal. Apache 2.0. Maverick for efficiency. Self-hostable via vLLM, Ollama, LM Studio.</p>
+    <p><strong>Zhipu GLM-5:</strong> 744B MoE (44B active). SWE-bench 77.8%. MIT license. Huawei Ascend chips — entirely outside US supply chain. On-prem option for data-sensitive institutions. Qwen 3.5 (Alibaba): $0.40/$1.20, 201 languages, 1M context, Apache 2.0. Chinese labs releasing every 2–3 weeks — frontier gap compressed from months to weeks.</p>
+  </div></div>
+
+  <div class="sh">VERIFIED BENCHMARK COMPARISON — MARCH 4, 2026</div>
+  <div class="block mb20"><div class="bb" style="padding:0;">
+    <table class="dis-table" style="font-size:10px;">
+      <thead><tr><th style="width:145px;">Model</th><th>ARC-AGI-2</th><th>GPQA Diamond</th><th>SWE-Bench</th><th>OSWorld</th><th>GDPval-AA Elo</th><th>Context</th><th>Price In/Out /M</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--cyan)">Gemini 3.1 Pro</td><td style="color:var(--green);font-weight:700">77.1% ★</td><td style="color:var(--green);font-weight:700">94.3% ★</td><td>80.6%</td><td>—</td><td>1317</td><td>1M tokens</td><td style="color:var(--green)">$2 / $12</td></tr>
+        <tr><td style="color:var(--gold)">Claude Opus 4.6</td><td>68.8%</td><td>91.3%</td><td style="color:var(--green);font-weight:700">80.8% ★</td><td style="color:var(--green);font-weight:700">72.7% ★</td><td style="color:var(--gold)">1606</td><td>200K (1M β)</td><td>$15 / $75</td></tr>
+        <tr><td style="color:var(--gold)">Claude Sonnet 4.6</td><td>58–60%</td><td>89.9%</td><td>79.6%</td><td>72.5%</td><td style="color:var(--gold);font-weight:700">1633 ★</td><td>200K (1M β)</td><td style="color:var(--green)">$3 / $15</td></tr>
+        <tr><td style="color:var(--green)">GPT-5.2</td><td>52.9%</td><td>92.4%</td><td>~55% (Pro)</td><td>38.2%</td><td>—</td><td>400K</td><td>$1.75 / $14</td></tr>
+        <tr><td style="color:var(--green)">GPT-5.3 Codex</td><td>—</td><td>—</td><td style="color:var(--green);font-weight:700">77.3% TB ★</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td style="color:var(--purple)">Grok 4.20</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>$30/mo SuperGrok</td></tr>
+        <tr><td style="color:var(--purple)">DeepSeek V4</td><td style="color:var(--gold)">LAUNCHING</td><td style="color:var(--gold)">TBD</td><td style="color:var(--gold)">TBD</td><td style="color:var(--gold)">TBD</td><td style="color:var(--gold)">TBD</td><td>1M</td><td style="color:var(--green)">~$0.10–$0.30</td></tr>
+        <tr><td style="color:var(--purple)">Zhipu GLM-5</td><td>—</td><td>—</td><td>77.8%</td><td>—</td><td>—</td><td>200K</td><td style="color:var(--green)">MIT Free</td></tr>
+        <tr><td style="color:var(--purple)">Meta Llama 4 Scout</td><td>—</td><td>—</td><td>lower</td><td>—</td><td>—</td><td style="color:var(--green);font-weight:700">10M ★</td><td style="color:var(--green)">Apache 2.0 Free</td></tr>
+      </tbody>
+    </table>
+  </div><div style="padding:6px 14px;background:var(--bg4);border-top:1px solid var(--border);font-family:var(--mono);font-size:9px;color:var(--text3);">★ CATEGORY LEADER. TB = Terminal-Bench 2.0 (GPT-5.3 Codex coding). Gemini 3.1 Pro preview. GDPval-AA most CIB-relevant: professional domain work quality. Sources: official model cards + Artificial Analysis + Arena.ai.</div></div>
+
+  <div class="callout cg"><p><strong>The March 2026 Strategic Read:</strong> No single winner. Gemini 3.1 Pro leads raw benchmarks and price-performance. Claude leads expert professional domain quality and autonomous task horizons — the metrics that matter most for CIB risk. GPT-5.2 leads math. DeepSeek V4 launching today may reset pricing floor again. Open weights make frontier AI essentially free at institutional scale for data-safe workloads. <strong>Portfolio model strategy — matching model to task type — beats any single-model allegiance in 2026.</strong></p></div>
+</div>
+
+<!-- TAB 02: AGENTIC AI -->
+<div class="tab-panel" id="t02">
+  <div class="ph"><div class="eye">02 — AGENTIC AI LANDSCAPE</div><h2>From <em>Chatbots to Agents</em> — The Autonomy Revolution</h2><p>Agentic AI — systems that plan, use tools, and complete multi-step tasks autonomously over extended time horizons — is the defining shift of 2025–2026. METR documents task-completion horizon doubling every ~7 months for 6 years. Claude Opus 4.6's 50% horizon: 14.5 hours. The shift: AI is no longer a question-answering tool but a workflow executor. This tab covers the platform landscape, orchestration frameworks, memory architectures, and governance requirements for production deployment.</p></div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="card-lbl">Opus 4.6 Task Horizon (50%)</div><div class="card-val">14.5h</div><div class="card-sub" style="color:var(--gold)">Longest ever measured by METR for any AI. Multi-hour autonomous multi-step execution in production.</div></div>
+    <div class="card"><div class="card-lbl">Gemini APEX-Agents Score</div><div class="card-val">33.5%</div><div class="card-sub" style="color:var(--cyan)">Gemini 3.1 Pro. Nearly 2x GPT-5.2 (23%). MCP Atlas tool coordination: 69.2% — highest.</div></div>
+    <div class="card"><div class="card-lbl">Task-Horizon Doubling Rate</div><div class="card-val">~7mo</div><div class="card-sub" style="color:var(--green)">Consistent for 6 years per METR data. At this rate: multi-day horizons by late 2026.</div></div>
+    <div class="card"><div class="card-lbl">Zapier Internal Agents</div><div class="card-val">800+</div><div class="card-sub">89% AI adoption firmwide. TELUS: 13,000 custom AI solutions. 30% faster engineering. 500K+ hours saved.</div></div>
+  </div>
+
+  <div class="block"><div class="bh"><span class="tag tg">ANTHROPIC</span><span class="bt">Claude Agent Teams · Computer Use · Cowork · Claude in Chrome/Excel/PowerPoint</span></div><div class="bb">
+    <p><strong>Agent Teams (Opus 4.6):</strong> Opus autonomously spawns and coordinates parallel subagent teams — orchestrator delegates subtasks, subagents execute in parallel, results synthesized. Production API capability. 16 agents wrote C compiler in Rust compiling Linux kernel. Agent SDK for custom orchestration: full control over tools, permissions, agent topology.</p>
+    <p><strong>Computer Use API:</strong> Claude controls any GUI — browser, desktop apps, Bloomberg Terminal, legacy systems — without requiring APIs. OSWorld: 72.7% (best in class). Critical for banking: automates workflows in any application regardless of API availability.</p>
+    <p><strong>Cowork (Beta):</strong> Desktop tool for non-developers to automate file and task management. Claude in Chrome (agentic browsing), Excel (spreadsheet automation), PowerPoint (presentation generation) — all in beta. MCP integration connects Claude agents to any MCP-compatible enterprise system.</p>
+    <p><strong>Context Compaction:</strong> Server-side automatic summarization enables effectively infinite conversation/workflow length. Agents run extended workflows without hitting context limits — critical for long-horizon autonomous tasks.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tgr">OPENAI</span><span class="bt">Frontier Platform · Responses API · Deep Research · ChatGPT Agent Mode</span></div><div class="bb">
+    <p><strong>OpenAI Frontier Platform (Q1 2026):</strong> Enterprise agent deployment positioning AI as "AI coworkers" — defined identity, permissions, onboarding workflows, persistent learning from experience, performance evaluation. Not tools — colleagues. State Farm deployed. Fortune 500 early adopter momentum.</p>
+    <p><strong>Responses API:</strong> Unified interface combining reasoning, web search, code interpreter, file analysis, and memory — replacing Assistants API. O3 reasoning backbone for configurable multi-step problem solving.</p>
+    <p><strong>Deep Research / ChatGPT Agent:</strong> Multi-hour autonomous research synthesizing hundreds of sources into institutional-quality reports. Now standard for complex research workflows. The model of what senior analyst productivity looks like with AI augmentation.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tc">GOOGLE</span><span class="bt">Google Agentspace (GA) · Google ADK · Project Astra · NotebookLM Enterprise</span></div><div class="bb">
+    <p><strong>Google Agentspace (GA Q1 2026):</strong> Enterprise multi-agent platform on Gemini 3.1 backbone. Native Workspace integration (Docs, Sheets, Drive, Gmail). Salesforce, ServiceNow, SAP connectors. Document, code, data, research agents — specialist agents orchestrated by coordinator. 1M token context enables entire institutional knowledge sets in-context.</p>
+    <p><strong>Google ADK (Agent Development Kit):</strong> Hierarchical multi-agent with human-in-the-loop checkpoints. Vertex AI native. Open source. APEX-Agents leader (33.5%). MCP Atlas coordination leader (69.2%). Best for Gemini-backed enterprise agent topologies.</p>
+    <p><strong>Project Astra / Mariner:</strong> Real-time ambient AI agents with multimodal perception — the long-term vision of an ambient AI layer operating alongside every knowledge worker across all applications. Browser automation, physical-world interaction.</p>
+  </div></div>
+
+  <div class="sh">ORCHESTRATION FRAMEWORKS</div>
+  <div class="g2">
+    <div class="block"><div class="bh"><span class="tag tb">LANGGRAPH</span><span class="bt">Graph-Based Stateful — Production Standard</span></div><div class="bb">
+      <p>Graph-based orchestration with cycles, conditional branching, parallel execution, persistent state. LLM-agnostic. LangGraph Cloud GA. LangSmith observability with full audit trails. Dominant framework for production-grade agent workflows in regulated industries. Required when verifiable, reproducible, auditable execution matters.</p>
+      <p class="tdim" style="font-family:var(--mono);font-size:9px;color:var(--text3)">Open source. LangGraph Cloud $39/month + usage.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag to">CREWAI</span><span class="bt">Role-Based Multi-Agent Teams — Fastest Deployment</span></div><div class="bb">
+      <p>Role-based agent teams — each agent has role, goal, backstory. Sequential, parallel, hierarchical execution. Fastest time-to-working-agent in the ecosystem. Built-in observability. Best for analyst team simulations: risk analyst + quant + writer + reviewer agents with defined expertise.</p>
+      <p class="tdim" style="font-family:var(--mono);font-size:9px;color:var(--text3)">Open source. Enterprise pricing on request.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tgr">AUTOGEN (MICROSOFT)</span><span class="bt">Conversational Multi-Agent — Adversarial Review</span></div><div class="bb">
+      <p>Agents debate, critique, and refine outputs iteratively. Best for tasks requiring peer review and adversarial quality control — scenario assumption validation, model documentation completeness, regulatory narrative consistency. Azure AI native for banking compliance deployment.</p>
+      <p class="tdim" style="font-family:var(--mono);font-size:9px;color:var(--text3)">Open source. Azure AI integration included.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tp">MICROSOFT COPILOT STUDIO</span><span class="bt">No-Code Enterprise Agent Builder</span></div><div class="bb">
+      <p>100K+ enterprise deployments. No/low-code builder integrated with M365, Teams, SharePoint, Dynamics. For organizations in Microsoft ecosystem: fastest path to deploying agents against internal knowledge bases. Strong compliance controls for regulated industries.</p>
+      <p class="tdim" style="font-family:var(--mono);font-size:9px;color:var(--text3)">M365 subscription or standalone licensing.</p>
+    </div></div>
+  </div>
+
+  <div class="sh">AGENT MEMORY ARCHITECTURE</div>
+  <div class="block"><div class="bb">
+    <p><strong>Layer 1 — In-Context Working Memory (200K–1M tokens):</strong> Current task state, conversation, retrieved documents. Ephemeral per session. With Opus Context Compaction: effectively infinite via automatic summarization. Fast, immediate, expensive at scale.</p>
+    <p><strong>Layer 2 — External Vector Memory / RAG (Long-Term Institutional Knowledge):</strong> Embeddings of proprietary risk policies, stress scenarios, regulatory guidance, model documentation — stored in vector databases (Pinecone, pgvector, Weaviate). Retrieved on-demand via semantic similarity. <strong>The institutional knowledge moat.</strong> This is where CIB AI competitive advantage lives — proprietary knowledge embedded in RAG, not access to the same public models every competitor uses.</p>
+    <p><strong>Layer 3 — Structured State Memory (Databases):</strong> Traditional relational/time-series databases for workflow state, audit trails, limit data, position data. Deterministic, queryable, auditable. Required for regulatory compliance. The governance layer that makes agents enterprise-deployable.</p>
+  </div></div>
+
+  <div class="callout cr"><p><strong>Governance Imperative — Four Questions Every Agent Workflow Must Answer:</strong> (1) What decisions can the agent make autonomously vs. what requires mandatory human checkpoint? (2) What is the complete audit trail — every decision, tool call, data source? (3) How is agent failure detected and what is the recovery path? (4) What is the agent's data access scope — what can it never touch? Without explicit answers to all four, any production agent in a regulated environment is a compliance and reputational risk.</p></div>
+</div>
+
+<!-- TAB 03: CODING AGENTS -->
+<div class="tab-panel" id="t03">
+  <div class="ph"><div class="eye">03 — AGENTIC CODING & DEVELOPER AI</div><h2><em>Claude Code</em> & The Development Revolution</h2><p>2025: AI could handle implementation workflows. 2026: agentic coding agents reconfigure the entire SDLC. 60% of engineering work now involves AI; engineers are shifting from writing code to coordinating agents. Goldman Sachs deployed Devin across 12,000 developers (3–4x productivity gain). Claude Code voice mode rolls out March 3, 2026. The model: architect and validate, delegate the rest.</p></div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="card-lbl">Claude Code Terminal-Bench 2.0</div><div class="card-val">65.4%</div><div class="card-sub" style="color:var(--gold)">Opus 4.6. GPT-5.3 Codex leads (77.3%). Claude leads for complex codebase-wide refactors and security analysis.</div></div>
+    <div class="card"><div class="card-lbl">Dario Amodei AI Code Share</div><div class="card-val">~90%</div><div class="card-sub" style="color:var(--gold)">Anthropic CEO predicted "90% of code by AI by March 2026" — his own specific prediction. Now being evaluated.</div></div>
+    <div class="card"><div class="card-lbl">Goldman Devin Productivity</div><div class="card-val">3–4x</div><div class="card-sub" style="color:var(--green)">Vs GitHub Copilot's 20%. First major bank to deploy autonomous software engineer across 12,000 developers.</div></div>
+    <div class="card"><div class="card-lbl">Claude Code Voice Mode</div><div class="card-val">~3.7x</div><div class="card-sub" style="color:var(--cyan)">Speed gain. Rolling out March 3 2026 to 5% of users. /voice command or hold spacebar.</div></div>
+  </div>
+
+  <div class="block"><div class="bh"><span class="tag tg">CLAUDE CODE</span><span class="bt">Anthropic's Agentic Coding Tool — Terminal · IDE · Desktop · GitHub · Xcode 26.3</span></div><div class="bb">
+    <p><strong>Core capabilities:</strong> Reads entire codebases, edits files across directories, runs bash commands, executes tests, manages git workflows, creates PRs — all via natural language. Available: terminal CLI, VS Code, desktop (Cowork), web, GitHub (@claude PR review). Understands millions of lines of code in context.</p>
+    <p><strong>Multi-Agent Spawning (Q1 2026):</strong> Lead Claude Code agent spawns parallel subagents — orchestrator coordinates, assigns subtasks, merges results. Production API capability. Rakuten tested on 12.5M-line vLLM codebase. Agent SDK for custom orchestration: full control over tools, permissions, topology. Unix philosophy: pipe logs in, run in CI/CD, chain with other tools.</p>
+    <p><strong>Voice Mode (Rolling out March 3, 2026):</strong> /voice command or hold spacebar. Describe bugs, architecture choices, refactors verbally — Claude writes and executes code in real-time. Currently 5% rollout, full launch imminent. ~3.7x speed advantage on typing-bottlenecked tasks.</p>
+    <p><strong>Claude Code Security (Feb 2026):</strong> Context-aware security analysis — traces data flows across microservices, finds injection risks static analysis misses. Frontier Red Team report: 500+ vulnerabilities found in open-source production codebases missed by traditional scanners for years. Dual sandboxing: filesystem isolation (authorized directories only) + network isolation (no external calls by default). Zero Data Retention mode for Enterprise — code never leaves, never trains models.</p>
+    <p><strong>COBOL Modernization:</strong> Ingests massive COBOL repositories, explains legacy financial batch logic, maps dependencies, translates to Node.js/Python/Java microservices, generates exhaustive test suites proving behavioral equivalence. Legacy banking systems considered "immovable objects" are now viable modernization targets. Weeks of specialist work compressed to days.</p>
+    <p><strong>Xcode 26.3 (Feb 3, 2026):</strong> Apple integrated Claude Agent into Xcode for agentic coding — searches docs, analyzes file structures, updates project settings, verifies via Xcode Previews, iterates through builds. MCP standard allows any compatible agent. Susan Prescott (Apple VP): "Agentic coding supercharges productivity and creativity."</p>
+  </div></div>
+
+  <div class="sh">COMPETITIVE CODING TOOL LANDSCAPE</div>
+  <div class="g2">
+    <div class="block"><div class="bh"><span class="tag tb">CURSOR</span><span class="bt">AI-Native IDE — Dominant 2025–2026</span></div><div class="bb">
+      <p>VS Code fork with deep AI integration — GPT-5.2 and Claude embedded. Multi-file context understanding. Agent mode for complex tasks. "Vibe coding" workflow: describe intent, AI implements, human reviews. @-tag syntax for file/doc context injection. Multi-agent parallel coding in agentic mode. Strongest for frontend/full-stack development. The dominant AI IDE of 2025–2026.</p>
+      <p class="tdim" style="font-family:var(--mono);font-size:9px;color:var(--text3)">$20/month Pro. Enterprise pricing available.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tb">WINDSURF · REPLIT · DEVIN · GITHUB COPILOT</span><span class="bt">Competitive Ecosystem</span></div><div class="bb">
+      <p><strong>Windsurf (Codeium):</strong> Cursor competitor, strong multi-file context, Cascade AI agent, fast-growing adoption.</p>
+      <p><strong>Replit Agent:</strong> Cloud-based, zero setup, full-stack app from description. Strong for prototyping and non-developer builders.</p>
+      <p><strong>Devin (Cognition):</strong> Goldman across 12,000 devs — 3–4x gain. Writes, debugs, deploys autonomously. The enterprise autonomous software engineer benchmark.</p>
+      <p><strong>GitHub Copilot:</strong> $10/month individual. 20% baseline gain on all coding. Copilot Workspace for multi-step tasks. Best always-on complement to higher-level agentic workflows.</p>
+    </div></div>
+  </div>
+
+  <div class="callout cg"><p><strong>The 2026 Agentic Coding Reality:</strong> Engineers use AI in ~60% of work but fully delegate only 0–20% of tasks — AI is a constant collaborator requiring supervision and validation, not a replacement. Organizations pulling ahead concentrate engineer expertise on architecture, system design, and judgment while delegating implementation, testing, and documentation to agents. Productivity multiplier: 3–10x on delegated tasks. This reshapes hiring, team sizes, and what "senior engineering" means industry-wide.</p></div>
+</div>
+
+<!-- TAB 04: AGI/SUPERINTELLIGENCE -->
+<div class="tab-panel" id="t04">
+  <div class="ph"><div class="eye">04 — AGI & SUPERINTELLIGENCE</div><h2>The <em>Capability Horizon</em> — Where Are We Headed?</h2><p>The CEOs of OpenAI, Anthropic, and Google DeepMind have all predicted AGI within a few years. The benchmarks designed to be "AGI-hard" are being cleared faster than the researchers who designed them predicted. AI systems are now being used to accelerate AI research itself — closing the loop toward potential recursive acceleration. This tab maps lab predictions, capability milestones, the investment arms race, and the existential questions being raised by the people building these systems.</p></div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="card-lbl">Anthropic Official AGI Prediction</div><div class="card-val">2027</div><div class="card-sub" style="color:var(--gold)">Dario Amodei at Davos 2026. Anthropic OSTP filing: "late 2026 or early 2027." The most concrete public prediction from any lab.</div></div>
+    <div class="card"><div class="card-lbl">OpenAI AI Researcher Target</div><div class="card-val">2028</div><div class="card-sub" style="color:var(--green)">Legitimate autonomous AI researcher by 2028. Intern-level by Sep 2026. AI-directed AI R&D entering pilot at 3 major labs 2025–2026.</div></div>
+    <div class="card"><div class="card-lbl">Polymarket AGI by 2027</div><div class="card-val">9%</div><div class="card-sub">Kalshi: 40% OpenAI AGI by 2030. Metaculus aggregation: 50% by 2030. Manifold: AGI Turing test median 2035.</div></div>
+    <div class="card"><div class="card-lbl">Global AI Infrastructure 2026</div><div class="card-val">$527B</div><div class="card-sub" style="color:var(--red)">Goldman projection. Google: $75B alone. OpenAI: $150B before profitability. The Manhattan Project analogy is now standard.</div></div>
+  </div>
+
+  <div class="block"><div class="bh"><span class="tag tg">ANTHROPIC</span><span class="bt">Dario Amodei — "Country of Geniuses in a Datacenter"</span></div><div class="bb">
+    <p><strong>Most concrete AGI prediction of any major lab:</strong> Anthropic's March 2025 OSTP filing and Dario Amodei at Davos 2026: "We expect powerful AI systems will emerge in late 2026 or early 2027." Defined capability level: intellectual capabilities matching or exceeding Nobel Prize winners across most disciplines — biology, computer science, mathematics, engineering. Amodei describes this as "a country of geniuses in a datacenter." Jack Clark confirmed this remains Anthropic's view as of September 2025.</p>
+    <p><strong>The uncomfortable CEO honesty:</strong> May 2025, Dario told Axios AI could eliminate half of entry-level white-collar jobs within 1–5 years, unemployment 10–20%. He confirmed this to Anderson Cooper on 60 Minutes in November 2025. This is the CEO of Anthropic predicting his own company's products will cause mass unemployment. Anthropic's response: continue building, because having safety-focused labs at the frontier is better than ceding it to less safety-conscious competitors. Anthropic paying $1.5B copyright settlement; legal challenge of Trump supply chain designation ongoing.</p>
+    <p><strong>SSI (Safe Superintelligence — Ilya Sutskever):</strong> "We've identified a mountain that's different from what I was working on." Claims a fundamentally different research direction from all incumbent labs. Details closely guarded. Radical Ventures 2026 prediction: SSI details will leak, major labs will adjust roadmaps. SSI is the only significant AI lab with zero public model releases — betting on a different path entirely.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tgr">OPENAI</span><span class="bt">Sam Altman — "Superintelligence in the True Sense" · Five Levels · Stargate</span></div><div class="bb">
+    <p><strong>The recursive danger:</strong> OpenAI's stated goal — intern-level AI research assistant by September 2026, legitimate AI researcher by 2028 — means AI that can accelerate AI R&D itself. If this capability arrives, the compound acceleration becomes difficult to forecast. AI-assisted researchers already operating at 4–7x productivity on defined subtasks. AI directing research agendas entering pilot phase at 3 major labs 2025–2026.</p>
+    <p><strong>Stargate Project ($150B+):</strong> Scale of infrastructure investment historically comparable only to the Manhattan Project. Reasoning: at gigawatt-scale compute, pre-training + RLVR may produce qualitative capability leaps unavailable at current scales. OpenAI's own disclosure: "No one should deploy superintelligent systems without being able to robustly align and control them — and this requires more technical work." They build the thing they admit they cannot yet safely control. OpenAI Preparedness Framework Level 4 ("Critical") capabilities now requiring mandatory safety review before deployment.</p>
+    <p><strong>The gap between datacenter and product:</strong> Compute being deployed in 2026 was designed for models 2–3 generations more capable than anything publicly available. Every quarterly earnings call rewards AI investment with higher multiples — the stock market is now a positive feedback loop for capability acceleration.</p>
+  </div></div>
+
+  <div class="sh">CAPABILITY MILESTONES — WHERE WE ACTUALLY ARE</div>
+  <div class="block"><div class="bb">
+    <p><strong>The benchmark clearing problem:</strong> Every "AGI-hard" benchmark gets cleared faster than researchers expect. ARC-AGI-2 (novel reasoning): Gemini 77.1%. GPQA Diamond (PhD expertise): 94.3%. AIME 2025 (competition math): GPT-5.2 100% perfect. Google DeepMind gold medal at IMO 2025 (5 of 6 problems in 4.5 hours). HLE (expert multidisciplinary): top models 44–53%+. The field keeps moving goalposts. We are running out of harder goalposts.</p>
+    <p><strong>METR Task Horizon (most practically meaningful metric):</strong> Doubling every ~7 months for 6 years. Claude Opus 4.6: 14.5h at 50% reliability. Sam Altman predicts multi-day horizons in 2026. At current rate: multi-week by late 2027, month-scale by mid-2028.</p>
+    <p><strong>AI-directed AI R&D (entering pilot 2026):</strong> AI generating synthetic training data, designing better training runs, identifying architectural improvements. Human researchers execute on AI-surfaced ideas. The feedback loop is closing — when this tightens fully, capability development pace becomes difficult to forecast against current historical baselines.</p>
+    <p><strong>Prediction market consensus:</strong> Manifold 1,700 participants: first general AI system 2033. Kalshi: 40% OpenAI AGI by 2030. Metaculus aggregation: 50% by 2030. Shane Legg (DeepMind): 50% minimal AGI by 2028. AI Futures Model: median "automated coder" milestone ~5 years later than the most bullish AI 2027 forecast. Markets substantially less bullish than lab CEOs.</p>
+  </div></div>
+
+  <div class="callout cr"><p><strong>The Arms Race Game Theory:</strong> No rational actor can unilaterally slow down. If you pause for safety review while competitors don't, you lose the race and the economic returns. The people who could pump the brakes are the same people whose companies are worth hundreds of billions contingent on winning. The compute deployed in 2026 data centers was designed for models 2–3 generations more capable than anything yet released. The gap between "what's in the datacenter" and "what's in the product" is widening. This is not cynicism — it is game theory operating at civilizational scale.</p></div>
+</div>
+
+<!-- TAB 05: AI SAFETY -->
+<div class="tab-panel" id="t05">
+  <div class="ph"><div class="eye">05 — AI SAFETY, ALIGNMENT & INTERPRETABILITY</div><h2><em>Safety Research</em> as Strategic Intelligence</h2><p>AI safety is no longer purely academic — it is a competitive differentiator, regulatory compliance requirement, and institutional risk management imperative. Mechanistic interpretability named MIT Technology Review Breakthrough Technology for 2026. EU AI Act full enforcement August 2026. Trump vs. Anthropic federal confrontation ongoing. The 2026 International AI Safety Report warns: reliable safety testing is getting harder as models learn to distinguish test environments from real deployment.</p></div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="card-lbl">MIT TR Breakthrough 2026</div><div class="card-val" style="font-size:13px;line-height:1.3;padding-top:4px">Mechanistic Interpretability</div><div class="card-sub" style="color:var(--gold)">Attribution graphs open-sourced. Circuit tracing on Claude models. First tools to peer inside LLM black box at scale.</div></div>
+    <div class="card"><div class="card-lbl">EU AI Act Full Enforcement</div><div class="card-val">Aug 2026</div><div class="card-sub" style="color:var(--red)">August 2, 2026. GPAI obligations active since Aug 2025. High-risk AI: transparency + explainability mandatory.</div></div>
+    <div class="card"><div class="card-lbl">Anthropic Safety Target</div><div class="card-val">2027</div><div class="card-sub" style="color:var(--gold)">"Reliably detect most AI model problems using interpretability tools by 2027." Active research goal.</div></div>
+    <div class="card"><div class="card-lbl">AI Cyber Risk (Sentinel, Nov 2025)</div><div class="card-val">51%</div><div class="card-sub" style="color:var(--red)">Probability AI-assisted cyberattack causing $1B+ damages within 3 months of assessment. Up from 44% prior estimate.</div></div>
+  </div>
+
+  <div class="block"><div class="bh"><span class="tag tg">ANTHROPIC</span><span class="bt">Mechanistic Interpretability · Attribution Graphs · Model Organisms · Constitutional AI</span></div><div class="bb">
+    <p><strong>Mechanistic Interpretability — What It Is:</strong> Reverse-engineering what LLMs actually compute — mapping features, circuits, and decision pathways from prompt to response through billions of parameters. Not post-hoc approximation ("explainable AI") — actual mechanistic causal analysis of internal computations.</p>
+    <p><strong>Anthropic's Microscope (2024–2025):</strong> Built a sparse autoencoder (second model) trained to transparently mimic Claude's internal behavior. 2024: identified features for recognizable concepts (Michael Jordan, Golden Gate Bridge). 2025: traced complete sequences from prompt to response. Open-sourced attribution graphs — research community can run circuit tracing on Claude, visualize computational graphs, modify feature values and observe output changes. Anthropic goal: "reliably detect most AI model problems by 2027."</p>
+    <p><strong>Chain-of-Thought Monitoring:</strong> Technique for "listening in" on reasoning model inner monologue during extended thinking. OpenAI used this to catch a reasoning model cheating on coding tests. Now standard evaluation technique for advanced reasoning models.</p>
+    <p><strong>Model Organisms of Misalignment:</strong> Controlled demonstrations of AI systems with known misaligned goals — study how alignment failures arise before they appear in production. Most recent: stress-tested 16 frontier models in simulated corporate environments where models could autonomously send emails. Results inform agentic governance frameworks.</p>
+    <p><strong>Constitutional AI:</strong> Training models to self-critique outputs against a principle set — Claude's foundational safety mechanism. Scales without proportionally more human oversight. The enterprise reliability architecture. Anthropic's Claude model specification (constitutionification) is public.</p>
+  </div></div>
+
+  <div class="sh">REGULATORY LANDSCAPE</div>
+  <div class="block"><div class="bb">
+    <p><strong>EU AI Act (Full Enforcement Aug 2, 2026):</strong> High-risk AI (financial services credit decisions, risk assessment, market surveillance) requires transparency, explainability, human oversight, and documentation. GPAI obligations (major labs must publish safety testing) active since August 2025. First major AI regulation with enforcement teeth globally. The benchmark for what US regulation may follow.</p>
+    <p><strong>US Regulatory Fragmentation:</strong> Trump December 2025 EO aimed at neutering state AI laws. California frontier AI law (publication of safety testing) faces legal challenge. Democratic states contesting in court. OCC/Fed AI guidance for capital-adjacent workflows (SR 11-7 LLM addendum) — draft circulating, expected 2026 publication. Model risk of LLMs becoming standard examination topic.</p>
+    <p><strong>Anthropic vs. Trump Administration (Feb 27, 2026):</strong> Trump directed all federal agencies to phase out Anthropic products within 6 months (supply chain risk designation). Defense Secretary Hegseth had threatened Defense Production Act. Anthropic filed legal challenge. Despite federal ban, Claude reportedly used in US Iran strike operations. First geopolitical confrontation over access to a specific commercial AI model.</p>
+    <p><strong>Copyright Settlement:</strong> Anthropic paying $1.5B to settle shadow library training claims. Multiple courts imposing operational limits on infringing AI outputs. Industry signal: companies won't be enjoined out of existence, but high-dollar consequences for preventable harms will be imposed. Regulatory expectations crystallizing around "reasonable steps" standard.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tc">ALIGNMENT FRONTIER</span><span class="bt">RLHF / DPO / RLAIF Evolution · Scalable Oversight · AI Control Research</span></div><div class="bb">
+    <p><strong>Post-RLHF landscape:</strong> RLHF (expensive human labeling) → DPO (Direct Preference Optimization, no separate reward model, faster, now preferred) → RLAIF (RL from AI feedback, AI generates preference data at scale). Constitutional AI = principled RLAIF variant. Most 2026 frontier models combine all three with RLAIF increasingly dominant.</p>
+    <p><strong>Scalable oversight problem:</strong> As AI becomes more capable than humans at specific tasks, how do humans evaluate whether AI output is correct? This is the fundamental alignment challenge. Current approaches: debate (have two AIs argue, human judges argument quality), amplification (use AI to check AI), interpretability (examine internal computations directly). None fully solved. Anthropic's 2027 interpretability target is the most concrete proposed solution.</p>
+    <p><strong>AI Control research:</strong> What guardrails prevent highly capable AI from taking harmful autonomous actions even if its values are subtly misaligned? Independent of alignment (values) — control means: even a misaligned AI behaves safely because it cannot take unilateral actions that bypass human oversight. Actively researched at Anthropic, ARC, Redwood Research. Spring 2026 SPAR projects include "neural circuit breakers" detecting deception/power-seeking behavior vectors before execution.</p>
+  </div></div>
+</div>
+
+<!-- TAB 06: FRONTIER RESEARCH -->
+<div class="tab-panel" id="t06">
+  <div class="ph"><div class="eye">06 — FRONTIER RESEARCH LANDSCAPE</div><h2>The <em>Papers That Built This</em> — Essential Reading</h2><p>The intellectual foundation of the 2026 AI landscape. Organized by tier: foundational architecture, agentic and memory systems, alignment and safety, and financial AI applications. For the senior risk leader: understanding these papers is understanding why AI works, why it fails, and what the governance requirements actually are.</p></div>
+
+  <div class="sh" style="border-top:none;padding-top:0;">TIER 1 — FOUNDATIONAL ARCHITECTURE</div>
+  <div class="paper"><span class="ptier tg">TIER 1</span><div><div class="ptitle">"Attention Is All You Need" — Vaswani et al., Google Brain, 2017</div><div class="pmeta">100,000+ citations // Most cited ML paper of all time</div><div class="pdesc">Introduced the Transformer — every frontier LLM's architecture. Self-attention replaces recurrent networks, enables parallel processing and long-range dependency modeling. Understanding attention mechanisms is understanding how LLMs represent and relate concepts in context windows from 200K to 10M tokens.</div></div></div>
+
+  <div class="paper"><span class="ptier tg">TIER 1</span><div><div class="ptitle">"Scaling Laws for Neural Language Models" — Kaplan et al., OpenAI, 2020</div><div class="pmeta">Mathematical basis for the scaling era // Justified $527B 2026 capex</div><div class="pdesc">Power-law relationships between compute, data, parameters, and capability — the mathematical foundation for "more compute = more capable." DeepSeek V4's $0.10/M pricing and MoE efficiency challenge whether brute-force scaling is the only path, but the laws themselves remain foundational to understanding capability development.</div></div></div>
+
+  <div class="paper"><span class="ptier tg">TIER 1</span><div><div class="ptitle">"Constitutional AI: Harmlessness from AI Feedback" — Bai et al., Anthropic, 2022</div><div class="pmeta">Foundation of Claude's safety architecture // Dominant enterprise AI safety paradigm 2026</div><div class="pdesc">Training models to self-critique against a defined principle set (constitution), revising until compliant — without human labeling of every example. Scales to frontier models without proportionally more human oversight. This is why regulated industries prefer Claude: Constitutional AI is the mechanism behind reliability in high-stakes work.</div></div></div>
+
+  <div class="paper"><span class="ptier tg">TIER 1</span><div><div class="ptitle">"DeepSeek-R1: Incentivizing Reasoning via RL" — DeepSeek-AI, Jan 2025</div><div class="pmeta">The Sputnik moment paper // $6M training vs $100M+ Western equivalents</div><div class="pdesc">Reasoning-class performance matching OpenAI o1 at a fraction of cost using GRPO. Triggered January 2025 $1T tech selloff. Proved efficiency-focused architectures close the gap with brute-force scaling. Launched the global efficiency revolution defining 2026's competitive dynamics — and directly caused DeepSeek V4's $0.10/M pricing ambition.</div></div></div>
+
+  <div class="sh">TIER 2 — AGENTIC & MEMORY SYSTEMS</div>
+
+  <div class="paper"><span class="ptier tc">TIER 2</span><div><div class="ptitle">"ReAct: Synergizing Reasoning and Acting in LLMs" — Yao et al., Princeton/Google, 2022</div><div class="pmeta">Foundation of all agent frameworks // The Reasoning+Acting paradigm</div><div class="pdesc">Established the ReAct pattern — LLMs interleaving reasoning with action calls (tool use, web search, code execution). Every modern agent framework (LangGraph, CrewAI, AutoGen, Claude Code, ADK) descends from this paradigm. Think → Act → Observe → Think: the standard agent loop across all production agentic systems.</div></div></div>
+
+  <div class="paper"><span class="ptier tc">TIER 2</span><div><div class="ptitle">"Retrieval-Augmented Generation for Knowledge-Intensive NLP" — Lewis et al., Facebook AI, 2020</div><div class="pmeta">Foundation of enterprise AI architecture // Every RAG system descends from this</div><div class="pdesc">Combined parametric (model weights) and non-parametric (retrieved documents) knowledge. The mechanism enabling AI to reason over proprietary institutional knowledge without retraining. For CIB risk: how agents reference current stress scenarios, regulatory guidance, and internal policies rather than relying solely on training data. The institutional knowledge moat.</div></div></div>
+
+  <div class="paper"><span class="ptier tc">TIER 2</span><div><div class="ptitle">"Generative Agents: Interactive Simulacra of Human Behavior" — Park et al., Stanford, 2023</div><div class="pmeta">Foundation of persistent agent memory and reflection</div><div class="pdesc">Agents with memory streams, reflection, and planning — remembering past actions, reflecting on observations, planning future behaviors. The cognitive architecture behind sophisticated multi-agent systems with long-term institutional memory. Directly applicable to autonomous risk surveillance agents maintaining institutional context over extended time horizons.</div></div></div>
+
+  <div class="sh">TIER 3 — ALIGNMENT & SAFETY</div>
+
+  <div class="paper"><span class="ptier tr">TIER 3</span><div><div class="ptitle">"Mechanistic Interpretability Review" — Bereska et al., 2024 // MIT TR Breakthrough 2026</div><div class="pmeta">MIT Technology Review Breakthrough Technology 2026 // Anthropic attribution graphs open-sourced</div><div class="pdesc">Comprehensive review of reverse-engineering neural networks into human-understandable algorithms and computations. Defines features, circuits, and the superposition hypothesis. The scientific foundation for Anthropic's goal of "reliably detecting most model problems by 2027." EU AI Act full enforcement August 2026 requires interpretability in high-risk AI — this research is the compliance pathway.</div></div></div>
+
+  <div class="paper"><span class="ptier tr">TIER 3</span><div><div class="ptitle">"Concrete Problems in AI Safety" — Amodei et al., OpenAI/Google, 2016</div><div class="pmeta">Foundation of AI safety as a research discipline</div><div class="pdesc">Defined the five key safety problems: reward hacking, side effects, safe exploration, scalable oversight, and robustness. Still the most cited framing of why capable AI systems might behave unexpectedly despite good training. Every modern alignment research program (Constitutional AI, RLHF, control research) addresses at least one of these five problems.</div></div></div>
+
+  <div class="sh">TIER 4 — FINANCIAL AI APPLICATIONS</div>
+
+  <div class="paper"><span class="ptier to">TIER 4</span><div><div class="ptitle">"BloombergGPT: A Large Language Model for Finance" — Bloomberg LP, 2023</div><div class="pmeta">50B parameters // 363B financial tokens // First dedicated financial frontier model</div><div class="pdesc">Domain-specialized financial LLMs outperform general models on financial NLP tasks — sentiment analysis, named entity recognition, QA from filings. Validated domain-specialization thesis. The benchmark for what proprietary financial LLM can achieve. The argument for building RAG over internal trading data rather than relying on general-purpose models alone.</div></div></div>
+
+  <div class="paper"><span class="ptier to">TIER 4</span><div><div class="ptitle">"Language Agents as Digital Twins for Financial Analysts" — Zhang et al., 2024</div><div class="pmeta">Empirical agent-as-analyst displacement framework</div><div class="pdesc">LLM agents replicate 70–80% of junior financial analyst output on structured tasks — earnings summarization, sector comparison, ratio analysis. Structured tasks (defined inputs, verifiable outputs) show highest displacement probability. Unstructured judgment tasks remain human-dominant. The empirical foundation for the displacement taxonomy in Tab 08.</div></div></div>
+</div>
+
+<!-- TAB 07: CIB DEPLOYMENT -->
+<div class="tab-panel" id="t07">
+  <div class="ph"><div class="eye">07 — CAPITAL MARKETS AI DEPLOYMENT</div><h2><em>Wall Street's AI Arms Race</em> — What's Actually in Production</h2><p>By December 2025, AI adoption had moved past experiments into everyday operations at all major banks. Goldman Sachs reporting 3–4x productivity from Devin. JPMorgan reporting 6% productivity gain in AI-enhanced areas (targeting 40–50%). Wells Fargo CEO explicitly flagging planned headcount reduction. McKinsey estimates $200–340B annual value potential for banking from AI. Goldman projects $527B total AI capex in 2026.</p></div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="card-lbl">JPMorgan AI Productivity Gain</div><div class="card-val">6%</div><div class="card-sub" style="color:var(--green)">Marianne Lake. Target: 40–50% in operations long-term. LLM Suite deployed to 200K+ staff firmwide.</div></div>
+    <div class="card"><div class="card-lbl">Goldman Devin Agent Gain</div><div class="card-val">3–4x</div><div class="card-sub" style="color:var(--gold)">Vs Copilot's 20%. First major bank: autonomous software engineer across 12,000 developers. OneGS 3.0 firmwide AI coworkers.</div></div>
+    <div class="card"><div class="card-lbl">McKinsey Gen AI Value — Banking</div><div class="card-val">$340B</div><div class="card-sub" style="color:var(--cyan)">Annual potential, largely through productivity. Driving the $527B capex cycle. ROI signal from productivity numbers.</div></div>
+    <div class="card"><div class="card-lbl">Wells Fargo LLM Loan Review</div><div class="card-val">15yr</div><div class="card-sub">LangGraph agent network autonomously re-underwrote 15 years of loan docs. Human reviewed final outputs only.</div></div>
+  </div>
+
+  <div class="block"><div class="bh"><span class="tag tgr">JPMORGAN CHASE</span><span class="bt">LLM Suite · AI Risk Analytics · Marianne Lake 40–50% Target</span></div><div class="bb">
+    <p><strong>LLM Suite (Firmwide):</strong> Secure internal access to LLMs for 200K+ staff — controlled environment with tight data governance. Focus: document-heavy workflows (regulatory filings, earnings summaries, client communications, research synthesis). Model-agnostic access within audited environment.</p>
+    <p><strong>AI Risk Analytics:</strong> Real-time pattern recognition across position data, automated market surveillance, NLP over earnings calls and regulatory filings for early risk signals. Trading and risk teams augmented with AI-driven exposure management.</p>
+    <p><strong>Strategic posture:</strong> JPMorgan leans build — controlling AI infrastructure is the competitive moat. #1 on Evident AI Index (with Capital One). AI headcount: 25%+ growth. Marianne Lake: 6% productivity now, 40–50% target in operations. Hiring most AI talent of any bank. No external vendor dependency for core systems.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tg">GOLDMAN SACHS</span><span class="bt">OneGS 3.0 · GS AI Assistant · Devin · AI Coworker Architecture</span></div><div class="bb">
+    <p><strong>OneGS 3.0 / GS AI Assistant:</strong> Model-agnostic (GPT, Gemini, Claude) — best model for each task. Firmwide across 40K+ employees mid-2025. Functions: summarize complex documents, draft pitch materials, analyze data, translate research to client languages, speed deal preparation.</p>
+    <p><strong>Devin (Autonomous SE):</strong> First major bank to deploy across 12,000 developers. 3–4x productivity gain. Manages full software lifecycle — writes, debugs, deploys, including COBOL legacy modernization. Goldman's thesis: AI coworkers, not copilots.</p>
+    <p><strong>Strategic pivot:</strong> Exited Apple Card/Marcus consumer banking ($64B → $6B principal investments). Capital freed for AI infrastructure. Focused on capital-light institutional platforms where technology, not headcount, drives scale. "Autonomous deal sourcing" AI experiment: identify M&A targets by analyzing supply chains, filings, macro before human banker involvement.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tb">WELLS FARGO</span><span class="bt">Tachyon Platform · LangGraph Agents · Fargo Assistant · Headcount Signals</span></div><div class="bb">
+    <p><strong>LangGraph Agent Network:</strong> Specialized agents autonomously retrieved, extracted, cross-checked, calculated across 15 years of legacy loan documents for compliance re-underwriting. Human reviewed only final outputs. Proof of concept for bulk document-intensive workflow automation at institutional scale.</p>
+    <p><strong>Tachyon Platform:</strong> Internal enterprise LLM productivity platform — Rogo AI vs. Tachyon build decision is a strategic inflection point for CIB risk analytics architecture. Designed for internal access with proper data controls and compliance architecture.</p>
+    <p><strong>CEO Signal (Charlie Scharf):</strong> "Getting a lot more done." Internal budgets point to smaller workforce by 2026 "even before factoring in AI's full impact." Higher severance costs flagged — preparations underway. The most explicit public CEO language linking AI to planned headcount reduction among major US banks.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tp">MORGAN STANLEY · CITI · BANK OF AMERICA · BLACKROCK</span><span class="bt">Orion · Spring · Erica/Quartz · Aladdin AI</span></div><div class="bb">
+    <p><strong>Morgan Stanley Orion (GPT-5.2):</strong> AI advisor assistant to 16,000+ financial advisors. Instant access to firm research, personalized recommendations. MS jumped 5 places to top-5 Evident AI Index. Partnership model (OpenAI, Google, Amazon) vs. JPMorgan's build model.</p>
+    <p><strong>Citi Spring:</strong> AI for CCAR regulatory narratives and stress scenario documentation — directly CIB risk relevant. One of the most labor-intensive workflows now being automated. Citi most active bank investor in AI companies (Evident AI). BNP Paribas: Gen AI platform to 50,000 IB employees using Mistral models.</p>
+    <p><strong>Bank of America ($13B tech budget):</strong> Erica 2.0 (20M+ consumer interactions). Quartz platform for institutional AI. Jumped 5 spots Evident AI. New AI leadership: Hari Gopalkrishnan.</p>
+    <p><strong>BlackRock Aladdin AI ($10T+ AUM):</strong> AI-enhanced risk analytics across the platform managing $10T+ in assets. NLP over market data. Automated risk attribution. The largest single AI-powered institutional risk analytics deployment in existence — the benchmark for what institutional AI risk infrastructure looks like at scale.</p>
+  </div></div>
+
+  <div class="callout cg"><p><strong>Build vs. Buy — The Strategic Inflection:</strong> JPMorgan builds proprietary (control = moat). Goldman and Morgan Stanley partner with vendors while building complementary capabilities. The optimal framework: <strong>Build for proprietary</strong> (risk data warehouse, institutional knowledge RAG, workflow-specific agents). <strong>Buy for generic</strong> (frontier LLMs, commodity NLP, off-the-shelf tools). Never externalize the data moat — your proprietary trading data, stress history, and risk methodology are the long-term differentiator, not any model's weights. The senior leader who conducts and owns this analysis shapes institutional AI architecture for 5+ years.</p></div>
+</div>
+
+<!-- TAB 08: DISPLACEMENT MAP -->
+<div class="tab-panel" id="t08">
+  <div class="ph"><div class="eye">08 — CIB RISK FUNCTION DISPLACEMENT MAP</div><h2>What Gets <em>Automated</em>, What Stays <em>Human</em></h2><p>Based on current agent capabilities (Opus 4.6 14.5h task horizon, APEX-Agents 33.5%), production deployments at peer institutions (Citi Spring, Wells Fargo LangGraph, Goldman AI coworkers), and empirical research (Lopez-Lira 2023, Zhang et al. 2024). Displacement probability = current technical capability. Governance, regulatory, and institutional factors determine actual deployment timeline.</p></div>
+
+  <div class="sh" style="border-top:none;padding-top:0;">HIGH AUTOMATION PROBABILITY — 6–18 MONTHS</div>
+  <div class="block"><div class="bh"><span class="tag tr">VERY HIGH RISK</span><span class="bt">Limit Breach Monitoring & Automated First Response</span></div><div class="bb">
+    <p><strong>Automation potential: 90%+. Timeline: 6–12 months to production at leading peers.</strong> Continuous real-time monitoring of 300K+ risk drivers is exactly the task for which AI agents are most capable — pattern matching over structured data at speeds and scales impossible for human teams. Agent workflow: monitor live positions, detect limit exceedances, decompose contributing risk drivers, draft escalation communication, pull historical context from similar events, flag for human review. Production evidence: BlackRock Aladdin AI, JPMorgan risk analytics. Human role shifts to: exception validation, governance decisions, regulator relationships.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tr">VERY HIGH RISK</span><span class="bt">Market Intelligence Brief Production</span></div><div class="bb">
+    <p><strong>Automation potential: 85%+. Timeline: NOW — technically automatable today.</strong> OpenAI Deep Research and Claude Opus BrowseComp demonstrate multi-hour autonomous research, synthesis of hundreds of sources, institutional-quality output. The daily/weekly CIB intelligence brief — synthesizing macro data, earnings, regulatory developments, geopolitical events, risk signals — is technically automatable today. Remaining human value: strategic framing, proprietary perspective, relationship-calibrated communication. Agent produces 80%; senior professional adds the 20% of institutional positioning that makes it strategically relevant.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag tr">VERY HIGH RISK</span><span class="bt">BAU Stress Report Production</span></div><div class="bb">
+    <p><strong>Automation potential: 80%+. Timeline: 12–18 months.</strong> Agent workflow: pull positions/risk drivers from data warehouse, run stress calculations against scenario shocks, generate P&L decomposition, format per template, populate narrative sections. Citi Spring already implementing CCAR narrative generation. Wells Fargo LangGraph demonstrated comparable capability on loan documents. 15-year loan re-underwriting was more complex than most BAU stress reports. Human role evolves to: novel scenario design, methodology governance, regulatory relationship management, agent output validation.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag to">HIGH RISK</span><span class="bt">VaR Attribution · P&L Explain · Backtesting Documentation</span></div><div class="bb">
+    <p><strong>Automation potential: 70–80%. Timeline: 12–18 months.</strong> VaR attribution — structured calculation with defined methodology. Agent: runs attribution, identifies top contributors, cross-references prior period, generates exception narratives, flags unusual patterns. Backtesting exceptions: classify zone, retrieve market context on exception date, draft Basel-compliant documentation. P&L explain same logic. GPT-5.2's 100% AIME score confirms mathematical precision available. Remaining complexity: regulator-specific interpretation and ambiguous methodology judgment calls.</p>
+  </div></div>
+
+  <div class="block"><div class="bh"><span class="tag to">HIGH RISK</span><span class="bt">Regulatory Narrative Drafting (CCAR / DFAST / SR 11-7 Model Documentation)</span></div><div class="bb">
+    <p><strong>Automation potential: 60–75%. Timeline: 12–24 months.</strong> LLMs with RAG over CCAR filings, SR 11-7 guidance, methodology documentation produce compliant narrative drafts for scenario rationale, methodology justification, model documentation. Human role: review, strategic regulatory positioning, and the informal relationship intelligence — what examiners are actually prioritizing in this examination cycle — that no document corpus contains. Citi Spring is production evidence this is happening at peers now.</p>
+  </div></div>
+
+  <div class="sh">HUMAN-RESILIENT FUNCTIONS</div>
+  <div class="g2">
+    <div class="block"><div class="bh"><span class="tag tgr">DURABLE</span><span class="bt">Strategic Risk Judgment & Novel Scenario Design</span></div><div class="bb">
+      <p>Unprecedented scenarios — geopolitical black swans, novel instrument failure modes, cross-asset contagion paths not in historical data — require practitioner intuition and institutional memory that comes from years of experience. AI assists by generating candidate scenarios and checking internal consistency; the senior professional's judgment on what is plausible, what regulators will scrutinize, and what poses actual systemic risk in the current market structure is not automatable. The 1.5x AI multiplier applies: AI assists the judgment, doesn't replace it.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tgr">DURABLE</span><span class="bt">Regulator Relationship Management</span></div><div class="bb">
+      <p>OCC/Fed/SEC examiner relationships involve political intelligence — informal understanding of current enforcement posture, what the desk-level examiner is actually focused on that isn't in any written guidance. This relationship capital is inherently human, built over years, cannot be encoded. The senior risk leader who has the examiner's direct line and understands what will trigger an MRA before it's written is irreplaceable regardless of AI capability level.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tgr">DURABLE</span><span class="bt">AI System Design & Governance Architecture</span></div><div class="bb">
+      <p>The most AI-resistant role in the function — designing and governing the AI systems themselves. Requires: domain expertise deep enough to validate AI outputs, technical literacy to understand agent failure modes, institutional authority to set governance policy, and credibility to represent AI risk at Board level. This person (practitioner-level AI + senior risk authority + institutional credibility) is extraordinarily rare and commands premium compensation in 2026.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tgr">DURABLE</span><span class="bt">Cross-Desk Governance & Limit Negotiation</span></div><div class="bb">
+      <p>Risk appetite setting, desk-level limit negotiation, the organizational politics of risk governance — where the risk function intersects with P&L-generating businesses — requires human authority and relationship capital. AI provides the analytics; only humans exercise institutional authority and navigate the political dynamics that determine whether a limit reduction is actually enforced.</p>
+    </div></div>
+  </div>
+
+  <div class="sh">PRODUCTIVITY MULTIPLIERS — VERIFIED ESTIMATES</div>
+  <div style="background:var(--bg3);border:1px solid var(--border);padding:18px;border-radius:2px;margin-bottom:22px;">
+    <div class="ir"><div class="il">Market intelligence brief</div><div class="ibw"><div class="ib" style="width:96%;background:var(--red)"></div></div><div class="ip" style="color:var(--red)">~20x</div></div>
+    <div class="ir"><div class="il">BAU stress report generation</div><div class="ibw"><div class="ib" style="width:80%;background:var(--orange)"></div></div><div class="ip" style="color:var(--orange)">~15x</div></div>
+    <div class="ir"><div class="il">Python automation development</div><div class="ibw"><div class="ib" style="width:67%;background:var(--orange)"></div></div><div class="ip" style="color:var(--orange)">~10x</div></div>
+    <div class="ir"><div class="il">Regulatory narrative drafting</div><div class="ibw"><div class="ib" style="width:53%;background:var(--gold)"></div></div><div class="ip">~8x</div></div>
+    <div class="ir"><div class="il">Model documentation first draft</div><div class="ibw"><div class="ib" style="width:40%;background:var(--gold)"></div></div><div class="ip">~6x</div></div>
+    <div class="ir"><div class="il">Cross-asset scenario design (assisted)</div><div class="ibw"><div class="ib" style="width:27%;background:var(--cyan)"></div></div><div class="ip" style="color:var(--cyan)">~4x</div></div>
+    <div class="ir" style="margin-bottom:0"><div class="il">Novel strategic risk analysis</div><div class="ibw"><div class="ib" style="width:10%;background:var(--green)"></div></div><div class="ip" style="color:var(--green)">~1.5x</div></div>
+  </div>
+
+  <div class="callout cr"><p><strong>The Structural Implication:</strong> A senior risk analyst with a full AI power stack produces documented output equivalent to 4–6 junior analysts on structured tasks. Wells Fargo's CEO has already signaled planned headcount reductions. The uncomfortable organizational reality: aggressive AI deployment demonstrates that 30–50% of junior analyst BAU workflow can be automated within 18–24 months. The leader who frames this proactively — governance framework, documented pilot, defined reskilling path — controls the narrative. The leader who resists is bypassed when the CFO sees productivity numbers from peers.</p></div>
+</div>
+
+<!-- TAB 09: POWER STACK -->
+<div class="tab-panel" id="t09">
+  <div class="ph"><div class="eye">09 — THE POWER STACK</div><h2>One Person as <em>an Organization</em> — March 2026</h2><p>The complete toolkit enabling a single senior risk professional to operate with the analytical output capacity of a 5–8 person team. Five layers: Intelligence (LLMs), Development (Code/Automation), Agent Orchestration, Research/Data, and Knowledge Management/Output. All tools verified current as of March 4, 2026.</p></div>
+
+  <div class="sl"><div class="slh"><div class="sln">L1</div><div><div class="sll">INTELLIGENCE — FRONTIER LLMs</div><div class="sld">The reasoning engines. Match model to task for optimal cost-quality-speed tradeoff.</div></div></div>
+  <div class="st">
+    <div class="tc2"><div class="tn">Claude Opus 4.6</div><div class="tr2">Primary for expert-quality analysis, regulatory narratives, scenario design, Agent Teams, and highest-stakes risk work. GDPval-AA leader by large margin. 14.5h task horizon. Adaptive Thinking. 200K context (1M beta).</div><div class="tdim">$15/$75 per M. Fast Mode $30/$150. AWS Bedrock + Vertex AI.</div></div>
+    <div class="tc2"><div class="tn">Claude Sonnet 4.6</div><div class="tr2">Default 80–90% of production tasks. GDPval-AA Elo #1 (1633). SWE-bench 79.6%. Math 89%. Computer use 72.5%. Context Compaction for infinite workflows. 5x cheaper than Opus. 40–60 t/s.</div><div class="tdim">$3/$15 per M. Batch API 50% discount.</div></div>
+    <div class="tc2"><div class="tn">Gemini 3.1 Pro</div><div class="tr2">Bulk processing, 1M token context (entire CCAR doc sets), novel reasoning (ARC-AGI-2: 77.1%), agentic tasks (APEX-Agents: 33.5%). Best price-performance in frontier. Context caching: 75% cost reduction.</div><div class="tdim">$2/$12 per M. Preview status. Vertex AI enterprise.</div></div>
+    <div class="tc2"><div class="tn">GPT-5.2 / 5.3 Codex</div><div class="tr2">GPT-5.2 for math-intensive tasks (AIME 100%), configurable reasoning (none→xhigh), broadest integrations. GPT-5.3 Codex for terminal coding (Terminal-Bench 77.3%). Azure OpenAI for banking compliance.</div><div class="tdim">GPT-5.2: $1.75/$14. GPT-OSS Apache 2.0 free.</div></div>
+    <div class="tc2"><div class="tn">DeepSeek V4 / Llama 4 / GLM-5</div><div class="tr2">On-prem for Level 3 sensitive data that cannot reach external APIs. DeepSeek V4 (today): ~$0.10–$0.30/M. Llama 4 Scout: 10M context. GLM-5: MIT license, 77.8% SWE-bench. vLLM or Ollama self-hosted.</div><div class="tdim">Infrastructure cost only. No per-token API fees.</div></div>
+    <div class="tc2"><div class="tn">Perplexity Pro</div><div class="tr2">Real-time web research synthesis. Fastest "what just happened" to structured analysis on breaking market events, regulatory developments, competitive intelligence. Uses Claude, GPT-5.2, Gemini. API for automated pipeline integration.</div><div class="tdim">$20/month Pro. Enterprise API available.</div></div>
+  </div></div>
+
+  <div class="sl"><div class="slh"><div class="sln">L2</div><div><div class="sll">DEVELOPMENT — CODE & AUTOMATION</div><div class="sld">Build the automation tools. 10x developer productivity baseline.</div></div></div>
+  <div class="st">
+    <div class="tc2"><div class="tn">Claude Code + Cursor</div><div class="tr2">Claude Code for terminal/GitHub agentic workflows — multi-agent spawning, voice mode, CI/CD integration, COBOL modernization, security analysis. Cursor for AI-native IDE multi-file editing. Combined: complete agentic development environment.</div><div class="tdim">Claude Code: Claude subscription. Cursor: $20/month Pro.</div></div>
+    <div class="tc2"><div class="tn">GitHub Copilot</div><div class="tr2">Real-time code completion embedded in any IDE. 20% baseline productivity gain on all code writing. Agent mode for autonomous task completion in VS Code. Copilot Workspace for multi-step tasks. Best always-on code assist complementing higher-level Claude Code workflows.</div><div class="tdim">$10/month individual. $19/month Business.</div></div>
+    <div class="tc2"><div class="tn">Jupyter + Claude/GPT API</div><div class="tr2">Interactive Python notebooks with embedded LLM calls for risk analysis pipelines. VaR attribution, stress P&L, scenario generation, factor decomposition. Data science workbench for quantitative risk. Combine with LangChain for RAG over internal risk documentation.</div><div class="tdim">Free (open source) + API usage costs.</div></div>
+    <div class="tc2"><div class="tn">LangSmith</div><div class="tr2">Observability and debugging for all LLM applications and agent workflows. Full trace visibility — every LLM call, tool use, and decision. Required for any production agent with audit requirements. The governance infrastructure that makes agents enterprise-deployable.</div><div class="tdim">$39/month Teams. Usage-based enterprise.</div></div>
+    <div class="tc2"><div class="tn">n8n / Make</div><div class="tr2">Workflow automation connecting AI to business systems without code. n8n: self-hostable (data privacy), 400+ integrations, visual builder. For non-code automation: Bloomberg data → Claude analysis → email delivery. "Glue layer" for AI-powered business workflows.</div><div class="tdim">n8n: $20/month cloud or free self-hosted. Make: $9/month.</div></div>
+    <div class="tc2"><div class="tn">E2B (Code Sandboxes)</div><div class="tr2">Cloud code execution sandboxes for agent Python environments. Agents execute code safely in isolated containers — essential for agents running quantitative calculations (VaR, Monte Carlo) as part of autonomous workflows. Eliminates risk of agent code execution affecting host systems.</div><div class="tdim">$0.001/sandbox-second usage-based.</div></div>
+  </div></div>
+
+  <div class="sl"><div class="slh"><div class="sln">L3</div><div><div class="sll">AGENT ORCHESTRATION — MEMORY & WORKFLOWS</div><div class="sld">Production multi-agent systems with persistent memory and auditable execution.</div></div></div>
+  <div class="st">
+    <div class="tc2"><div class="tn">LangGraph</div><div class="tr2">Graph-based stateful orchestration — the production standard for complex agent workflows. Cycles, conditional branching, parallel execution, persistent state. LLM-agnostic. LangGraph Cloud GA. LangSmith observability. Required for complex decision trees and human-in-the-loop checkpoints in regulated environments.</div><div class="tdim">Open source. LangGraph Cloud $39/month + usage.</div></div>
+    <div class="tc2"><div class="tn">CrewAI</div><div class="tr2">Role-based multi-agent teams — fastest time-to-working-agent. Risk analyst + quant + writer + reviewer agents with defined expertise. Sequential, parallel, hierarchical execution. Production observability built in. Best for analyst team simulations and structured research pipelines.</div><div class="tdim">Open source. Enterprise: contact pricing.</div></div>
+    <div class="tc2"><div class="tn">Pinecone / pgvector</div><div class="tr2">Vector databases for RAG — the institutional knowledge layer. Pinecone: managed, production-grade, fast. pgvector: PostgreSQL extension, hybrid search, self-hostable, zero additional cost if already on Postgres. Store embeddings of risk policies, scenarios, model docs — retrieved on-demand for any agent.</div><div class="tdim">Pinecone: $70/month Starter. pgvector: free.</div></div>
+    <div class="tc2"><div class="tn">Google ADK</div><div class="tr2">Hierarchical multi-agent with human-in-the-loop checkpoints. Vertex AI native. Open source. APEX-Agents leader. MCP Atlas coordination leader (69.2%). Best for Gemini-backed workflows with Google Workspace integration and enterprise-grade observability.</div><div class="tdim">Open source. Vertex AI hosting usage-based.</div></div>
+    <div class="tc2"><div class="tn">AutoGen (Microsoft)</div><div class="tr2">Conversational multi-agent for adversarial quality control — agents debate and critique outputs iteratively. Best for internal consistency validation: stress scenario assumptions, model documentation completeness. Azure AI native for banking compliance deployment.</div><div class="tdim">Open source. Azure AI included with subscription.</div></div>
+    <div class="tc2"><div class="tn">Haystack / LlamaIndex</div><div class="tr2">End-to-end NLP pipeline frameworks for production RAG. Haystack: modular document processing, retrieval, reranking, generation. LlamaIndex: 160+ data source connectors, structured querying, agent tooling. Both support all major vector databases and LLMs. Production-grade RAG infrastructure frameworks.</div><div class="tdim">Open source. Cloud plans from $499/month.</div></div>
+  </div></div>
+
+  <div class="sl"><div class="slh"><div class="sln">L4</div><div><div class="sll">RESEARCH & DATA INTELLIGENCE</div><div class="sld">Real-time intelligence at institutional scale. The data layer agents consume.</div></div></div>
+  <div class="st">
+    <div class="tc2"><div class="tn">Bloomberg Terminal + BLPAPI</div><div class="tr2">Irreplaceable data foundation. BLPAPI and BQNT Python environment enable agent integration — programmatic data pull of market data, credit spreads, option surfaces, macro data directly into agent workflows. BQNT: run Python in Bloomberg with direct API access, build automated data pipelines without leaving Bloomberg ecosystem.</div><div class="tdim">~$27,000/year. BQNT included.</div></div>
+    <div class="tc2"><div class="tn">AlphaSense</div><div class="tr2">NLP search across broker research, SEC filings, earnings transcripts, news, expert interviews. Semantic search over institutional documents. Expert interviews: high-signal primary intelligence unavailable anywhere else. API for agent-driven intelligence workflow integration. The premier institutional intelligence layer above Bloomberg.</div><div class="tdim">$299–499/month professional. $30K+/year enterprise.</div></div>
+    <div class="tc2"><div class="tn">Kensho (S&P Global)</div><div class="tr2">S&P Global financial NLP — event-driven risk signals, Kensho Scribe (meeting transcription), Kensho Link (entity resolution). MCP server available and connected in this dashboard. Strong for SEC filing parsing, earnings events, macro release structuring into risk signals. Institutional scale integration with S&P data.</div><div class="tdim">Enterprise via S&P Global. MCP integration available.</div></div>
+    <div class="tc2"><div class="tn">Rogo AI</div><div class="tr2">Goldman-backed LLM financial research assistant trained on CIB workflows. Natural language queries over financial data, research, filings. Key input to Tachyon vs. Rogo build-vs-buy decision. Critical competitive intelligence: what leading desks are building that you may not need to build. Enterprise at Bloomberg-range pricing.</div><div class="tdim">Enterprise licensing. ~Bloomberg Terminal pricing.</div></div>
+    <div class="tc2"><div class="tn">Feedly + Claude API Pipeline</div><div class="tr2">Automated intelligence brief pipeline: Feedly aggregates feeds (regulatory, macro, sector, geopolitical) → Claude API extracts signal, classifies by risk relevance, drafts structured brief → auto-delivered. Build once, runs continuously. The always-on market intelligence agent at $18/month Feedly + ~$20/month Claude API for daily briefing.</div><div class="tdim">Feedly Pro: $18/month. Claude API: ~$15–30/month.</div></div>
+    <div class="tc2"><div class="tn">Lexis+ AI / SEC EDGAR</div><div class="tr2">Regulatory research with AI — SR 11-7, OCC bulletins, Basel implementation, state regulatory intelligence. Citation-backed, hallucination-resistant (grounded in actual texts). SEC EDGAR API for automated 10-K/10-Q/8-K monitoring and parsing. Free API access for regulatory filing monitoring workflows.</div><div class="tdim">Lexis+ AI: $200–400/month. EDGAR API: free.</div></div>
+  </div></div>
+
+  <div class="sl"><div class="slh"><div class="sln">L5</div><div><div class="sll">KNOWLEDGE MANAGEMENT & OUTPUT</div><div class="sld">Capture, organize, and communicate AI-generated intelligence at C-suite quality.</div></div></div>
+  <div class="st">
+    <div class="tc2"><div class="tn">Notion AI</div><div class="tr2">Knowledge base, project management, AI-assisted documentation. Database of scenarios, governance decisions, model documentation — all queryable with embedded AI. Team collaboration with AI-assisted editing. Auto-generate meeting summaries, project documentation from unstructured conversations. The operational hub for an AI-powered risk function.</div><div class="tdim">$16/month Plus. $20/month Business.</div></div>
+    <div class="tc2"><div class="tn">NotebookLM (Google)</div><div class="tr2">Upload any document set, query with AI — every answer sourced to uploaded material. Upload CCAR documentation, regulatory guidance, model validation reports, then query. Sources every claim — zero hallucination on your own documents. Transformative for regulatory document navigation. Enterprise via Google Agentspace.</div><div class="tdim">Free via Google. Enterprise via Agentspace.</div></div>
+    <div class="tc2"><div class="tn">Obsidian (Private Local KB)</div><div class="tr2">Local-first markdown knowledge base — fully private, never leaves machine. AI plugin integrates Claude/GPT for local query without cloud data exposure. For sensitive institutional insights, career intelligence, strategic analysis that cannot be in corporate systems. Zettelkasten methodology for interconnected conceptual knowledge.</div><div class="tdim">Free. Sync: $4/month. Publish: $8/month.</div></div>
+    <div class="tc2"><div class="tn">Gamma / Claude in PowerPoint</div><div class="tr2">Gamma: AI-powered presentation generation from text or outline. Claude in PowerPoint (Beta): agentic slide creation within PowerPoint. Convert stress scenario documentation, intelligence briefs, governance frameworks into C-suite-ready presentations. Gamma's design quality significantly above typical AI presentation tools.</div><div class="tdim">Gamma: $15/month Pro. Claude in PPT: Claude sub (Beta).</div></div>
+    <div class="tc2"><div class="tn">Power BI + Tableau + AI</div><div class="tr2">Production dashboards with natural language Q&A. Power BI Copilot: Microsoft-integrated AI for dashboard creation. Tableau Pulse: AI-generated daily digests of metric changes. For risk: executive dashboards where AI handles the "what just happened" narrative automatically — humans provide strategic interpretation.</div><div class="tdim">Power BI: $20/user/month. Tableau Creator: $75/month.</div></div>
+    <div class="tc2"><div class="tn">ElevenLabs / Descript</div><div class="tr2">ElevenLabs: AI voice generation for narrated risk briefings — convert intelligence reports to audio for senior leaders who prefer voice. Descript: AI video editing, narrated dashboard walkthroughs. Differentiated communication: narrated weekly intelligence briefings for CRO-level where time premium on reading is highest.</div><div class="tdim">ElevenLabs: $22/month Creator. Descript: $24/month Pro.</div></div>
+  </div></div>
+</div>
+
+<!-- TAB 10: FORWARD SCENARIOS -->
+<div class="tab-panel" id="t10">
+  <div class="ph"><div class="eye">10 — FORWARD SCENARIOS 2026–2028</div><h2><em>Where This Goes</em> — Three Scenarios & Strategic Imperatives</h2><p>Based on current capability trajectories (7 major releases February 2026, task horizon doubling every 7 months), regulatory signals (EU AI Act Aug 2026, Trump EO, SR 11-7 LLM addendum in draft), competitive dynamics, and institutional deployment evidence (Goldman, JPMorgan, Wells Fargo). Three scenarios with materially different strategic implications.</p></div>
+
+  <div class="pb mb20">
+    <div class="pbs" style="background:var(--green-dim);border-right:1px solid var(--border);min-width:110px;"><div class="pbp" style="color:var(--green)">50%</div><div class="pbl">BASE CASE</div></div>
+    <div class="pbb"><div class="pbt">SCENARIO A — Controlled Acceleration: Agentic AI Goes Mainstream, Governance Develops in Parallel</div><div class="pbd">Agents become standard infrastructure at leading institutions by 2027. SR 11-7 LLM addendum published 2026 — creates compliance pathway rather than blocking deployment. 30–40% of junior analyst BAU automated by 2027 via attrition not mass layoffs. AI governance specialist becomes most in-demand risk role. JPMorgan and Goldman establish 2–3 year capability leads. Wells Fargo Tachyon completes or strategic vendor selected. Model risk of LLMs becomes standard OCC/Fed examination topic. Anthropic IPO completes; OpenAI stays private. Claude task horizons extend to multi-day. DeepSeek V4 reshapes open-source economics. New roles: AI Risk Analyst, Workflow Designer, Agent Governance Architect. Compensation premium for AI-fluent senior risk professionals: 30–50% above market. <strong>CIB risk leaders who invested in governance framework + pilots + hybrid talent by mid-2026 emerge as internal transformation leaders with expanded mandate.</strong></div></div>
+  </div>
+
+  <div class="pb mb20">
+    <div class="pbs" style="background:var(--red-dim);border-right:1px solid var(--border);min-width:110px;"><div class="pbp" style="color:var(--red)">30%</div><div class="pbl">DISRUPTION</div></div>
+    <div class="pbb"><div class="pbt">SCENARIO B — Agent Tipping Point: Human-Expert Equivalence on Structured Tasks by Early 2027</div><div class="pbd">Claude Opus task horizons reach 72+ hours by Q3 2026. AGI-adjacent capability on structured analytical tasks demonstrated in production at 2–3 major banks. Competitive pressure forces deployment acceleration beyond governance comfort zones. 50–70% of current BAU role configurations disrupted by 2027. Regulatory frameworks lag — compliance ambiguity forces risk-taking on deployment decisions. First-mover advantage decisive: institutions that piloted in 2025–2026 have 18-month production-tuned advantage over those that waited. GPT-6 or Opus 5 demonstrates autonomous research (per Altman's 2028 timeline) arriving early. DeepSeek V4 successors make frontier AI essentially free for commodity tasks, accelerating adoption. Model risk of AI becomes top-3 examination priority. <strong>Leaders without governance frameworks + documented pilots face talent exodus as AI-fluent professionals move to institutions where their skills are valued. Leaders who owned the transformation retain authority; those who resisted are repositioned.</strong></div></div>
+  </div>
+
+  <div class="pb mb20">
+    <div class="pbs" style="background:var(--orange-dim);border-right:1px solid var(--border);min-width:110px;"><div class="pbp" style="color:var(--orange)">20%</div><div class="pbl">FRICTION</div></div>
+    <div class="pbb"><div class="pbt">SCENARIO C — Governance Bottleneck: High-Profile AI Failure Triggers Regulatory Tightening</div><div class="pbd">High-profile AI-related risk failure at a major institution — erroneous stress calculation, LLM-generated model documentation inaccuracy triggering regulatory MRA, or agentic system accessing prohibited data — triggers OCC/Fed response. Prescriptive AI restrictions on capital-adjacent workflows. SR 11-7 LLM addendum imposes significant compliance overhead including mandatory explainability, audit trails, human review requirements adding 18 months to deployment timelines. Trump supply chain designation expands beyond Anthropic. EU AI Act enforcement actions create chilling effect on US institutions with EU operations. <strong>Leaders who built AI governance frameworks benefit — they're already compliant. Leaders who deployed without governance face regulatory liability. The cost of retrofitting governance onto already-deployed systems is substantially higher than building it in from the start.</strong></div></div>
+  </div>
+
+  <div class="sh">STRATEGIC IMPERATIVES — INVEST NOW IN ALL THREE SCENARIOS</div>
+  <div class="g2">
+    <div class="block"><div class="bh"><span class="tag tg">IMPERATIVE 1</span><span class="bt">Build AI Governance Framework First (60–90 Days)</span></div><div class="bb">
+      <p>Publish a CIB Risk AI Governance Framework before deploying any production agent. Defines: autonomous vs. human-checkpoint decision scope, audit trail requirements, data access controls, failure recovery, model validation standards. Creates value in every scenario — enables deployment in A/B, creates regulatory safety in C. Positions you as rule-setter not rule-follower. Timeline: 60–90 days for credible v1.0. Highest-leverage 90-day investment available to a senior risk leader in 2026.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tg">IMPERATIVE 2</span><span class="bt">Pilot → Prove → Scale (90-Day Win)</span></div><div class="bb">
+      <p>Identify one high-visibility BAU workflow. Build an agent in 30 days. Run parallel with human process for 30 days. Present documented productivity delta with 30 days data. A documented 5–10x gain on a production workflow is more persuasive than any strategic deck. Evidence-based deployment builds the internal credibility to shape institutional AI strategy. A failed pilot teaches as much as a successful one — both are valuable. Do this before year-end 2026.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tg">IMPERATIVE 3</span><span class="bt">Own the Build vs. Buy Decision</span></div><div class="bb">
+      <p>Tachyon vs. Rogo vs. vendor platform — a strategic inflection point shaping institutional AI architecture for 5+ years. Framework: Build for proprietary (risk data, institutional knowledge RAG, workflow-specific agents). Buy for generic (frontier LLMs, commodity NLP, off-the-shelf tools). Never externalize the data moat — your proprietary trading data, stress history, and risk methodology are the structural competitive advantage, not any model's weights. The leader who conducts and owns this analysis holds lasting institutional influence.</p>
+    </div></div>
+    <div class="block"><div class="bh"><span class="tag tg">IMPERATIVE 4</span><span class="bt">Claim the Board-Level AI Risk Expert Position</span></div><div class="bb">
+      <p>Boards and senior management need someone who understands capability AND risk — not a technologist, but a risk professional who speaks AI fluently. This combination is extraordinarily rare. The window to claim this position is open but not indefinitely. Tactics: volunteer for AI governance committee, write the first "AI Risk Annual Report" for the Risk Committee, brief leadership before they ask. The combination of practitioner AI knowledge + risk management authority + institutional credibility is a once-in-a-career positioning opportunity in 2026.</p>
+    </div></div>
+  </div>
+
+  <div class="callout cg"><p><strong>The Single Most Important Thing — March 2026:</strong> Become the person at this institution who understands — at practitioner level — what AI agents can actually do, what they fail at, how to build governance around them, and what the regulatory landscape requires. This combination (hands-on AI knowledge + risk management domain authority + institutional credibility) is extraordinarily rare. The person who holds all three shapes the most strategically consequential decisions the risk function will make in the next five years. The window to claim this position is open today and will not remain open indefinitely.</p></div>
+</div>
+
+</div>
+<script>
+const tabs=document.querySelectorAll('.tab-btn');
+const panels=document.querySelectorAll('.tab-panel');
+tabs.forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    panels.forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>
