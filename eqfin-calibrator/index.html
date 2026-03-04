@@ -195,6 +195,7 @@
   <div class="tabs">
     <div class="tab active" data-pane="quick">Index Shock Solver</div>
     <div class="tab" data-pane="advanced">PnL-Driven Solver</div>
+    <div class="tab" data-pane="names75">75 Names Reference</div>
   </div>
 
   <div class="tab-body">
@@ -230,21 +231,81 @@
         <label>Fixed Names (one per line, optional per-name shock: <code>TICKER,SHOCK%</code>)
           <span class="help-icon" data-tip="List tickers that are shocked at the fixed level above. The tool solves for the residual shock needed on all OTHER index constituents.">?</span>
         </label>
-        <textarea id="qFixedTickers">NVDA
-MSFT
-AAPL
-GOOGL
-AMZN
-META
-TSLA
-AVGO
+        <textarea id="qFixedTickers">ACN
+ADBE
+AEP
+AI
+AMAT
 AMD
+AMZN
+ANET
+ASML
+AUR
+AVGO
+BABA
+BE
+BIDU
+BLDP
+CART
+CAT
+CEG
+CFLT
+CMI
 CRM
-PLTR
-SNOW
+CRWD
+CSCO
+DBX
+DELL
+DLR
+EPAM
+EQIX
+ESTC
+ETN
+FCEL
+GPS
+GLOB
+GOOGL
+HPE
+IBM
+INFY
+INTC
+IRBT
+JCI
+KLAC
+LRCX
+MBLY
+MDB
+META
+MRVL
+MSFT
+MU
+MXL
 NOW
+NVDA
+OKLO
+ORCL
 PANW
-CRWD</textarea>
+PATH
+PGY
+PLTR
+PLUG
+RSKD
+RXRX
+S
+SHOP
+SIEGY
+SMCI
+SNOW
+SNPS
+SOFI
+TEAM
+TSLA
+TSM
+TT
+UPST
+VRT
+ZM
+ZS</textarea>
       </div>
 
       <div class="row" style="gap:10px; margin-bottom:6px;">
@@ -328,6 +389,30 @@ TSLA,500000</textarea>
         <div class="results-placeholder" id="advPlaceholder">
           Fill in your inputs above and click <strong>Run Calibration</strong> to see PnL decomposition, shock solvers, and basis risk.
         </div>
+      </div>
+    </div>
+
+    <!-- ===== 75 NAMES REFERENCE ===== -->
+    <div class="pane" id="pane-names75">
+      <p style="font-size:13px; color:var(--muted); margin:0 0 14px;">
+        The 75 single-name positions used for stress calibration. Shows each ticker's membership and weight in SPX and NDX, sourced from IVV/CNDX holdings as of 2026-02-27.
+      </p>
+      <div class="row" style="margin-bottom:10px;">
+        <div style="flex:2">
+          <input id="names75Filter" placeholder="Filter by ticker or name...">
+        </div>
+        <div style="flex:1">
+          <button class="btn-sm" onclick="copyTableById('names75Table')">Copy Table</button>
+        </div>
+      </div>
+      <div class="table-wrap" style="max-height:600px;">
+        <table id="names75Table">
+          <thead><tr><th>Ticker</th><th>Company</th><th>In SPX</th><th>SPX Wt%</th><th>In NDX</th><th>NDX Wt%</th><th>Price</th></tr></thead>
+          <tbody id="names75Body"></tbody>
+        </table>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="metrics" id="names75Summary"></div>
       </div>
     </div>
 
@@ -865,13 +950,99 @@ function copyTableById(id){
 }
 
 // ============================================================
+//  75 NAMES REFERENCE
+// ============================================================
+const THE_75_NAMES = [
+  'ACN','ADBE','AEP','AI','AMAT','AMD','AMZN','ANET','ASML','AUR',
+  'AVGO','BABA','BE','BIDU','BLDP','CART','CAT','CEG','CFLT','CMI',
+  'CRM','CRWD','CSCO','DBX','DELL','DLR','EPAM','EQIX','ESTC','ETN',
+  'FCEL','GPS','GLOB','GOOGL','HPE','IBM','INFY','INTC','IRBT','JCI',
+  'KLAC','LRCX','MBLY','MDB','META','MRVL','MSFT','MU','MXL','NOW',
+  'NVDA','OKLO','ORCL','PANW','PATH','PGY','PLTR','PLUG','RSKD','RXRX',
+  'S','SHOP','SIEGY','SMCI','SNOW','SNPS','SOFI','TEAM','TSLA','TSM',
+  'TT','UPST','VRT','ZM','ZS'
+];
+
+const DEFAULT_75_TICKERS_TEXT = THE_75_NAMES.join('\n');
+
+function buildNames75Table(filterValue){
+  const q = (filterValue||'').trim().toUpperCase();
+  const spxMap = buildWeightMap(SPX_DATA);
+  const ndxMap = buildWeightMap(NDX_DATA);
+  const spxNameMap = new Map(); SPX_DATA.forEach(r => spxNameMap.set(r.ticker, r));
+  const ndxNameMap = new Map(); NDX_DATA.forEach(r => ndxNameMap.set(r.ticker, r));
+
+  const body = document.getElementById('names75Body');
+  const summary = document.getElementById('names75Summary');
+  let inSpx = 0, inNdx = 0, inBoth = 0, inNeither = 0;
+  let totalSpxWt = 0, totalNdxWt = 0;
+  const frag = [];
+
+  for (const ticker of THE_75_NAMES) {
+    const spxW = spxMap.get(ticker) || 0;
+    const ndxW = ndxMap.get(ticker) || 0;
+    const rec = spxNameMap.get(ticker) || ndxNameMap.get(ticker) || {};
+    const name = rec.name || '';
+    const price = Number.isFinite(rec.adjClose) ? '$' + rec.adjClose.toFixed(2) : '-';
+
+    if (q && !(ticker.includes(q) || name.toUpperCase().includes(q))) continue;
+
+    const hasSpx = spxW > 0;
+    const hasNdx = ndxW > 0;
+    if (hasSpx && hasNdx) inBoth++;
+    else if (hasSpx) inSpx++;
+    else if (hasNdx) inNdx++;
+    else inNeither++;
+    totalSpxWt += spxW;
+    totalNdxWt += ndxW;
+
+    frag.push(`<tr>
+      <td><strong>${ticker}</strong></td>
+      <td>${name}</td>
+      <td style="text-align:center">${hasSpx ? '<span class="good">Yes</span>' : '<span style="color:#ccc">No</span>'}</td>
+      <td>${hasSpx ? fmtPct.format(spxW) + '%' : '-'}</td>
+      <td style="text-align:center">${hasNdx ? '<span class="good">Yes</span>' : '<span style="color:#ccc">No</span>'}</td>
+      <td>${hasNdx ? fmtPct.format(ndxW) + '%' : '-'}</td>
+      <td>${price}</td>
+    </tr>`);
+  }
+  body.innerHTML = frag.join('');
+
+  if (!q) {
+    summary.innerHTML = `
+      <div class="metric"><div class="k">Total Names</div><div class="v">${THE_75_NAMES.length}</div></div>
+      <div class="metric"><div class="k">In SPX Only</div><div class="v">${inSpx}</div></div>
+      <div class="metric"><div class="k">In NDX Only</div><div class="v">${inNdx}</div></div>
+      <div class="metric"><div class="k">In Both</div><div class="v">${inBoth}</div></div>
+      <div class="metric"><div class="k">In Neither</div><div class="v">${inNeither}</div></div>
+      <div class="metric"><div class="k">SPX Wt Coverage</div><div class="v">${fmtPct.format(totalSpxWt)}%</div></div>
+      <div class="metric"><div class="k">NDX Wt Coverage</div><div class="v">${fmtPct.format(totalNdxWt)}%</div></div>
+    `;
+  }
+}
+
+// Generate 75-name exposure data using combined SPX+NDX weight ranking
+function generate75Exposures(){
+  const combined = new Map();
+  for (const r of SPX_DATA) combined.set(r.ticker, (combined.get(r.ticker)||0) + r.weight);
+  for (const r of NDX_DATA) combined.set(r.ticker, (combined.get(r.ticker)||0) + r.weight);
+  // Use only our 75 names, sorted by combined weight descending
+  const entries = THE_75_NAMES
+    .map(t => [t, combined.get(t)||0])
+    .sort((a,b) => b[1] - a[1]);
+  return entries.map(([t,w],i) => `${t},${Math.round((1200000 - i*9000) * (1 + w/100))}`).join('\n');
+}
+
+const DEFAULT_75_EXPOSURES = generate75Exposures();
+
+// ============================================================
 //  RESET DEFAULTS
 // ============================================================
 document.getElementById('resetQuickBtn').addEventListener('click',()=>{
   document.getElementById('qTargetSpx').value='26';
   document.getElementById('qTargetNdx').value='35';
   document.getElementById('qFixedNameShock').value='50';
-  document.getElementById('qFixedTickers').value=`NVDA\nMSFT\nAAPL\nGOOGL\nAMZN\nMETA\nTSLA\nAVGO\nAMD\nCRM\nPLTR\nSNOW\nNOW\nPANW\nCRWD`;
+  document.getElementById('qFixedTickers').value = DEFAULT_75_TICKERS_TEXT;
   runQuickCalibration();
 });
 
@@ -882,7 +1053,7 @@ document.getElementById('resetAdvBtn').addEventListener('click',()=>{
   document.getElementById('targetNet').value='-3000000';
   document.getElementById('spxExp').value='0';
   document.getElementById('ndxExp').value='0';
-  document.getElementById('singleNameInput').value=`NVDA,1250000\nAAPL,1150000\nMSFT,980000\nAMZN,850000\nGOOGL,620000\nMETA,540000\nTSLA,500000`;
+  document.getElementById('singleNameInput').value = DEFAULT_75_EXPOSURES;
   runAdvancedCalibration();
 });
 
@@ -891,9 +1062,14 @@ document.getElementById('resetAdvBtn').addEventListener('click',()=>{
 // ============================================================
 document.getElementById('runQuickBtn').addEventListener('click', runQuickCalibration);
 document.getElementById('runAdvBtn').addEventListener('click', runAdvancedCalibration);
+document.getElementById('names75Filter').addEventListener('input', e => buildNames75Table(e.target.value));
 
-// Initialize constituent tables
+// Initialize
 refreshConstituentTables();
+buildNames75Table();
+
+// Pre-populate advanced mode with 75 names
+document.getElementById('singleNameInput').value = DEFAULT_75_EXPOSURES;
 </script>
 </body>
 </html>
