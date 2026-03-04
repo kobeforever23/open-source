@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI INTELLIGENCE BRIEF — STATE OF THE MARKET 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@300;400;500;600;700;800&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060608;
+  --bg2: #0c0c10;
+  --bg3: #111116;
+  --bg4: #18181f;
+  --bg5: #1e1e27;
+  --border: #22222e;
+  --border2: #2e2e3e;
+  --border3: #3a3a50;
+  --gold: #e8a000;
+  --gold2: #ffbe33;
+  --gold3: #fff0c0;
+  --gold-dim: rgba(232,160,0,0.1);
+  --gold-glow: rgba(232,160,0,0.05);
+  --gold-border: rgba(232,160,0,0.3);
+  --cyan: #00c8e0;
+  --cyan-dim: rgba(0,200,224,0.08);
+  --green: #00e08a;
+  --green-dim: rgba(0,224,138,0.08);
+  --red: #ff4455;
+  --red-dim: rgba(255,68,85,0.1);
+  --blue: #4488ff;
+  --blue-dim: rgba(68,136,255,0.08);
+  --purple: #a855f7;
+  --purple-dim: rgba(168,85,247,0.08);
+  --orange: #ff6b35;
+  --orange-dim: rgba(255,107,53,0.1);
+  --text: #e0e0ee;
+  --text2: #9898b0;
+  --text3: #55556a;
+  --text4: #333345;
+  --mono: 'IBM Plex Mono', monospace;
+  --display: 'Barlow Condensed', sans-serif;
+  --body: 'IBM Plex Sans', sans-serif;
+}
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:13px;line-height:1.6;overflow-x:hidden;}
+
+/* ── TICKER ──────────────────────────────────── */
+.ticker-wrap{background:var(--gold);color:#000;font-family:var(--mono);font-size:10px;font-weight:700;overflow:hidden;white-space:nowrap;position:sticky;top:0;z-index:200;height:22px;display:flex;align-items:center;}
+.ticker-track{display:inline-flex;animation:scroll-left 80s linear infinite;}
+.ticker-track span{padding:0 48px;flex-shrink:0;}
+.ticker-sep{color:rgba(0,0,0,0.4);}
+@keyframes scroll-left{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ── HEADER ──────────────────────────────────── */
+.masthead{background:var(--bg2);border-bottom:2px solid var(--gold);padding:20px 44px 16px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:end;position:sticky;top:22px;z-index:190;}
+.masthead-eyebrow{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:12px;}
+.live-badge{background:var(--green);color:#000;padding:2px 8px;font-size:8px;letter-spacing:2px;font-weight:700;display:flex;align-items:center;gap:5px;}
+.live-badge::before{content:'';width:5px;height:5px;background:#000;border-radius:50%;animation:blink 1.2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.2;}}
+.masthead h1{font-family:var(--display);font-size:32px;font-weight:800;letter-spacing:1px;line-height:1.05;color:var(--text);}
+.masthead h1 em{color:var(--gold);font-style:normal;}
+.masthead-sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:1px;}
+.masthead-right{text-align:right;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:2;}
+.masthead-right strong{color:var(--gold);display:block;font-size:13px;font-weight:700;}
+
+/* ── NAVIGATION ──────────────────────────────── */
+.tab-nav{background:var(--bg3);border-bottom:1px solid var(--border);padding:0 44px;display:flex;gap:0;overflow-x:auto;position:sticky;top:108px;z-index:180;scrollbar-width:none;}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);padding:11px 18px;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s;position:relative;}
+.tab-btn:hover{color:var(--text2);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
+.tab-btn .tab-num{color:var(--text4);margin-right:6px;}
+.tab-btn.active .tab-num{color:var(--gold);}
+
+/* ── CONTENT ─────────────────────────────────── */
+.content{max-width:1200px;margin:0 auto;padding:32px 44px 80px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;}
+
+/* ── SECTION PARTS ───────────────────────────── */
+.panel-header{margin-bottom:28px;padding-bottom:18px;border-bottom:1px solid var(--border);}
+.panel-header h2{font-family:var(--display);font-size:28px;font-weight:700;letter-spacing:1px;color:var(--text);}
+.panel-header h2 em{color:var(--gold);font-style:normal;}
+.panel-header p{color:var(--text2);font-size:12px;margin-top:8px;max-width:800px;line-height:1.7;}
+.panel-eyebrow{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px;}
+
+/* ── CARDS ───────────────────────────────────── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+
+.card{background:var(--bg3);border:1px solid var(--border);padding:18px;border-radius:2px;}
+.card:hover{border-color:var(--border2);}
+.card-label{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.card-value{font-family:var(--display);font-size:26px;font-weight:700;color:var(--gold);line-height:1;}
+.card-delta{font-family:var(--mono);font-size:10px;margin-top:4px;}
+.card-body{font-size:12px;color:var(--text2);margin-top:8px;line-height:1.65;}
+
+/* ── BLOCK ELEMENTS ──────────────────────────── */
+.block{background:var(--bg3);border:1px solid var(--border);border-radius:2px;margin-bottom:12px;overflow:hidden;}
+.block-header{background:var(--bg4);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;gap:12px;}
+.block-tag{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border-radius:1px;flex-shrink:0;}
+.tag-gold{background:var(--gold-dim);color:var(--gold);border:1px solid var(--gold-border);}
+.tag-cyan{background:var(--cyan-dim);color:var(--cyan);border:1px solid rgba(0,200,224,0.3);}
+.tag-green{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,224,138,0.3);}
+.tag-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,68,85,0.3);}
+.tag-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(68,136,255,0.3);}
+.tag-purple{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(168,85,247,0.3);}
+.tag-orange{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,53,0.3);}
+.block-title{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text);letter-spacing:.3px;}
+.block-body{padding:16px 18px;}
+.block-body p{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:8px;}
+.block-body p:last-child{margin-bottom:0;}
+.block-body strong{color:var(--text);font-weight:600;}
+
+/* ── TIMELINE ────────────────────────────────── */
+.timeline{position:relative;padding-left:28px;}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:1px;background:var(--border2);}
+.tl-item{position:relative;margin-bottom:18px;}
+.tl-item::before{content:'';position:absolute;left:-24px;top:6px;width:8px;height:8px;border:1px solid var(--gold);background:var(--bg);border-radius:50%;}
+.tl-item.key::before{background:var(--gold);}
+.tl-date{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:1px;margin-bottom:3px;}
+.tl-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.tl-body{font-size:11px;color:var(--text2);line-height:1.6;}
+
+/* ── PAPER BLOCKS ────────────────────────────── */
+.paper{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--cyan);padding:16px 18px;margin-bottom:10px;border-radius:0 2px 2px 0;}
+.paper-title{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.paper-meta{font-family:var(--mono);font-size:9px;color:var(--text3);margin-bottom:8px;letter-spacing:.5px;}
+.paper-abstract{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:8px;}
+.paper-why{font-family:var(--mono);font-size:10px;color:var(--cyan);padding:6px 10px;background:var(--cyan-dim);border-radius:1px;}
+.paper.tier-1{border-left-color:var(--gold);}
+.paper.tier-1 .paper-why{color:var(--gold);background:var(--gold-dim);}
+.paper.tier-2{border-left-color:var(--green);}
+.paper.tier-2 .paper-why{color:var(--green);background:var(--green-dim);}
+
+/* ── AGENT FRAMEWORK CARDS ───────────────────── */
+.agent-card{background:var(--bg3);border:1px solid var(--border);padding:18px;border-radius:2px;position:relative;}
+.agent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.agent-card.google::before{background:linear-gradient(90deg,#4285f4,#34a853,#fbbc04,#ea4335);}
+.agent-card.anthropic::before{background:linear-gradient(90deg,#cc7700,#e8a000);}
+.agent-card.openai::before{background:linear-gradient(90deg,#10a37f,#00c8a0);}
+.agent-card.microsoft::before{background:linear-gradient(90deg,#0078d4,#00bcf2);}
+.agent-card.oss::before{background:linear-gradient(90deg,#a855f7,#ec4899);}
+.agent-name{font-family:var(--display);font-size:16px;font-weight:700;letter-spacing:.5px;margin-bottom:4px;}
+.agent-maker{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.agent-desc{font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:10px;}
+.agent-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px;}
+.agent-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;background:var(--bg4);border:1px solid var(--border2);color:var(--text3);}
+.agent-verdict{font-family:var(--mono);font-size:10px;padding:8px 10px;background:var(--bg4);border-radius:1px;}
+
+/* ── DISPLACEMENT TABLE ──────────────────────── */
+.dis-table{width:100%;border-collapse:collapse;font-size:11px;}
+.dis-table th{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--border2);color:var(--text3);background:var(--bg4);text-align:left;}
+.dis-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;}
+.dis-table tr:hover td{background:var(--bg4);}
+.dis-table td:first-child{font-family:var(--mono);font-size:10px;color:var(--text);font-weight:600;}
+.dis-table td:nth-child(2){color:var(--text2);}
+.risk-badge{display:inline-block;font-family:var(--mono);font-size:8px;letter-spacing:1px;padding:2px 7px;border-radius:1px;}
+.risk-high{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,68,85,.3);}
+.risk-med{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(255,107,53,.3);}
+.risk-low{background:var(--green-dim);color:var(--green);border:1px solid rgba(0,224,138,.3);}
+.timeline-badge{font-family:var(--mono);font-size:8px;padding:2px 7px;background:var(--bg5);border:1px solid var(--border2);color:var(--text3);}
+
+/* ── POWER STACK ─────────────────────────────── */
+.stack-layer{background:var(--bg3);border:1px solid var(--border);margin-bottom:10px;border-radius:2px;overflow:hidden;}
+.stack-layer-header{background:var(--bg4);border-bottom:1px solid var(--border);padding:10px 18px;display:flex;align-items:center;gap:12px;}
+.stack-layer-num{font-family:var(--display);font-size:20px;font-weight:800;color:var(--gold);width:30px;flex-shrink:0;}
+.stack-layer-title{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;}
+.stack-layer-desc{font-size:11px;color:var(--text3);margin-left:auto;font-family:var(--mono);}
+.stack-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px 18px;}
+.tool-chip{background:var(--bg4);border:1px solid var(--border);padding:10px 12px;border-radius:2px;}
+.tool-chip:hover{border-color:var(--gold-border);}
+.tool-name{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.tool-role{font-size:11px;color:var(--text2);line-height:1.5;}
+.tool-cost{font-family:var(--mono);font-size:9px;color:var(--text3);margin-top:4px;}
+
+/* ── SCENARIO CARDS ──────────────────────────── */
+.scenario{background:var(--bg3);border:1px solid var(--border);padding:20px;border-radius:2px;position:relative;overflow:hidden;}
+.scenario::after{content:attr(data-year);position:absolute;right:16px;top:14px;font-family:var(--display);font-size:40px;font-weight:800;color:var(--text4);line-height:1;}
+.scenario-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.scenario h3{font-family:var(--display);font-size:18px;font-weight:700;letter-spacing:.5px;margin-bottom:10px;}
+.scenario p{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:8px;}
+.scenario-impact{border-top:1px solid var(--border);margin-top:12px;padding-top:12px;}
+.scenario-impact-label{font-family:var(--mono);font-size:8px;letter-spacing:2px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;}
+
+/* ── UTILITIES ───────────────────────────────── */
+.section-divider{border:none;border-top:1px solid var(--border);margin:24px 0;}
+.sub-head{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--gold-dim);}
+.callout{border:1px solid var(--gold-border);background:var(--gold-dim);padding:16px 18px;border-radius:2px;margin:16px 0;}
+.callout p{font-size:12px;color:var(--text);line-height:1.7;}
+.callout strong{color:var(--gold);}
+.callout-warn{border-color:rgba(255,68,85,.35);background:var(--red-dim);}
+.callout-warn p{color:var(--text);}
+.callout-warn strong{color:var(--red);}
+.callout-cyan{border-color:rgba(0,200,224,.3);background:var(--cyan-dim);}
+.callout-cyan strong{color:var(--cyan);}
+p{margin-bottom:10px;}
+p:last-child{margin-bottom:0;}
+strong{color:var(--text);}
+.gold{color:var(--gold);}
+.cyan{color:var(--cyan);}
+.green{color:var(--green);}
+.red{color:var(--red);}
+.dim{color:var(--text3);}
+.mono{font-family:var(--mono);}
+
+/* ── IMPACT BARS ─────────────────────────────── */
+.impact-row{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.impact-label{font-family:var(--mono);font-size:10px;color:var(--text2);width:200px;flex-shrink:0;}
+.impact-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden;}
+.impact-bar{height:100%;border-radius:2px;transition:width .8s ease;}
+.impact-val{font-family:var(--mono);font-size:10px;color:var(--gold);width:40px;text-align:right;flex-shrink:0;}
+
+/* ── FOOTER ──────────────────────────────────── */
+.footer{background:var(--bg2);border-top:1px solid var(--border);padding:14px 44px;display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;}
+
+@media(max-width:900px){
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+  .masthead{padding:16px 20px;grid-template-columns:1fr;}
+  .content{padding:20px;}
+  .tab-nav{padding:0 20px;}
+  .stack-tools{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker">
+    <span>ANTHROPIC RAISES $3.5B SERIES E — VALUATION $61.5B <span class="ticker-sep">◆</span></span>
+    <span>OPENAI O3 REASONING MODEL — ARC-AGI SCORE 87.5% <span class="ticker-sep">◆</span></span>
+    <span>GOOGLE AGENTSPACE ENTERPRISE GA — Q1 2026 <span class="ticker-sep">◆</span></span>
+    <span>DEEPSEEK-R1 — OPEN SOURCE REASONING — DISRUPTS FRONTIER PRICING <span class="ticker-sep">◆</span></span>
+    <span>MICROSOFT COPILOT STUDIO AGENTS — 100K+ ENTERPRISE DEPLOYMENTS <span class="ticker-sep">◆</span></span>
+    <span>JPM LISA: 200M+ INTERACTIONS IN PRODUCTION <span class="ticker-sep">◆</span></span>
+    <span>CLAUDE 3.7 SONNET — EXTENDED THINKING — BEST CODING BENCHMARK <span class="ticker-sep">◆</span></span>
+    <span>MANUS AI — FULLY AUTONOMOUS AGENT DEMO — CHINA FRONTIER <span class="ticker-sep">◆</span></span>
+    <span>GARTNER: 33% OF ENTERPRISE AI DEPLOYMENTS WILL BE AGENTIC BY 2028 <span class="ticker-sep">◆</span></span>
+    <span>LANGGRAPH CLOUD GA — STATEFUL AGENT ORCHESTRATION AT SCALE <span class="ticker-sep">◆</span></span>
+    <span>FED MODEL RISK — SR 11-7 LLM ADDENDUM — DRAFT CIRCULATING <span class="ticker-sep">◆</span></span>
+    <span>GS ROGO AI SERIES B — $50M — FINANCIAL LLM LEADER <span class="ticker-sep">◆</span></span>
+    <span>NVIDIA BLACKWELL B200 — AI COMPUTE DENSITY +4X VS HOPPER <span class="ticker-sep">◆</span></span>
+    <span>META LLAMA 4 — OPEN WEIGHTS — MULTIMODAL — 10M+ DEVELOPERS <span class="ticker-sep">◆</span></span>
+    <span>ANTHROPIC RAISES $3.5B SERIES E — VALUATION $61.5B <span class="ticker-sep">◆</span></span>
+    <span>OPENAI O3 REASONING MODEL — ARC-AGI SCORE 87.5% <span class="ticker-sep">◆</span></span>
+    <span>GOOGLE AGENTSPACE ENTERPRISE GA — Q1 2026 <span class="ticker-sep">◆</span></span>
+    <span>DEEPSEEK-R1 — OPEN SOURCE REASONING — DISRUPTS FRONTIER PRICING <span class="ticker-sep">◆</span></span>
+    <span>MICROSOFT COPILOT STUDIO AGENTS — 100K+ ENTERPRISE DEPLOYMENTS <span class="ticker-sep">◆</span></span>
+    <span>JPM LISA: 200M+ INTERACTIONS IN PRODUCTION <span class="ticker-sep">◆</span></span>
+    <span>CLAUDE 3.7 SONNET — EXTENDED THINKING — BEST CODING BENCHMARK <span class="ticker-sep">◆</span></span>
+    <span>MANUS AI — FULLY AUTONOMOUS AGENT DEMO — CHINA FRONTIER <span class="ticker-sep">◆</span></span>
+    <span>GARTNER: 33% OF ENTERPRISE AI DEPLOYMENTS WILL BE AGENTIC BY 2028 <span class="ticker-sep">◆</span></span>
+    <span>LANGGRAPH CLOUD GA — STATEFUL AGENT ORCHESTRATION AT SCALE <span class="ticker-sep">◆</span></span>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div>
+    <div class="masthead-eyebrow">
+      <span>CIB RISK ANALYTICS // AI INTELLIGENCE BRIEF</span>
+      <span class="live-badge">CURRENT</span>
+    </div>
+    <h1>STATE OF <em>ARTIFICIAL INTELLIGENCE</em><br>MARKET &amp; INDUSTRY INTELLIGENCE BRIEF</h1>
+    <div class="masthead-sub">AGENTIC AI · FRONTIER RESEARCH · WORKFORCE DISPLACEMENT · POWER STACK ARCHITECTURE · FORWARD SCENARIOS // MARCH 2026</div>
+  </div>
+  <div class="masthead-right">
+    <strong>HEAD OF MARKET RISK ANALYTICS</strong>
+    <div>STRATEGIC BRIEFING DOCUMENT</div>
+    <div>8 SECTIONS // ~120 MIN READ</div>
+    <div style="margin-top:8px;color:var(--cyan);">WELLS FARGO CIB</div>
+  </div>
+</div>
+
+<!-- TAB NAV -->
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active" data-tab="t1"><span class="tab-num">01</span>STATE OF AI</button>
+  <button class="tab-btn" data-tab="t2"><span class="tab-num">02</span>FRONTIER RESEARCH</button>
+  <button class="tab-btn" data-tab="t3"><span class="tab-num">03</span>AGENTIC LANDSCAPE</button>
+  <button class="tab-btn" data-tab="t4"><span class="tab-num">04</span>MULTI-AGENT FRAMEWORKS</button>
+  <button class="tab-btn" data-tab="t5"><span class="tab-num">05</span>DISPLACEMENT MAP</button>
+  <button class="tab-btn" data-tab="t6"><span class="tab-num">06</span>HUMAN CAPITAL STRATEGY</button>
+  <button class="tab-btn" data-tab="t7"><span class="tab-num">07</span>POWER STACK</button>
+  <button class="tab-btn" data-tab="t8"><span class="tab-num">08</span>FORWARD SCENARIOS</button>
+</nav>
+
+<div class="content">
+
+<!-- ══════════════════════════════════════════════════
+  TAB 1: STATE OF AI
+══════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="t1">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 01 // State of the Market</div>
+    <h2>THE <em>AI LANDSCAPE</em> — MARCH 2026</h2>
+    <p>A current-as-of-today intelligence snapshot covering frontier model capabilities, major industry deployments, competitive dynamics, and the signal-vs-noise framework for separating transformative developments from hype. This section is the foundation for everything that follows.</p>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="card">
+      <div class="card-label">Frontier Model Params (Est.)</div>
+      <div class="card-value">~1–2T</div>
+      <div class="card-delta" style="color:var(--text3);">GPT-4 / Gemini Ultra class MoE</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Anthropic Valuation (Feb 2026)</div>
+      <div class="card-value">$61.5B</div>
+      <div class="card-delta" style="color:var(--green);">▲ Series E — Google + Amazon backed</div>
+    </div>
+    <div class="card">
+      <div class="card-label">AI Global Investment (2025)</div>
+      <div class="card-value">$320B+</div>
+      <div class="card-delta" style="color:var(--green);">▲ 2.1x vs 2023 — infra + model + apps</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Enterprise AI Adoption (Fortune 500)</div>
+      <div class="card-value">78%</div>
+      <div class="card-delta" style="color:var(--gold);">Active pilots or production — McKinsey 2025</div>
+    </div>
+  </div>
+
+  <div class="sub-head">MODEL FRONTIER — WHO LEADS WHAT</div>
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-gold">ANTHROPIC</span><span class="block-title">Claude 3.7 Sonnet / Claude 4 Opus</span></div>
+      <div class="block-body">
+        <p><strong>Current crown:</strong> Claude 3.7 Sonnet with Extended Thinking is the strongest coding and complex reasoning model available as of Q1 2026. Extended Thinking allows the model to reason through problems with transparent chain-of-thought before responding — a qualitative shift for multi-step analytical tasks.</p>
+        <p><strong>Context window:</strong> 200K tokens — roughly 150,000 words or an entire earnings cycle's worth of filings in a single prompt. For risk functions, this means the entire CCAR documentation set can be in-context simultaneously.</p>
+        <p><strong>Enterprise positioning:</strong> Anthropic's Constitutional AI approach and transparent safety research make it the preferred choice for regulated industries. Goldman Sachs partnership. AWS Bedrock primary provider. No training on customer data by default.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">Key paper: "Claude's Character" — Constitutional AI — Anthropic 2022/2024</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">OPENAI</span><span class="block-title">GPT-4o / o1 / o3 Reasoning Series</span></div>
+      <div class="block-body">
+        <p><strong>The reasoning breakthrough:</strong> The o1/o3 model family represents a paradigm shift — these models "think before they answer" using chain-of-thought reasoning hidden from the user. O3 scored 87.5% on ARC-AGI (a benchmark designed to be hard for LLMs), signaling near-human performance on novel reasoning tasks.</p>
+        <p><strong>Implications for risk analytics:</strong> O3-class reasoning means an LLM can now genuinely work through complex multi-step problems — deriving cross-asset shock vectors, checking internal scenario consistency, evaluating model documentation logic — not just pattern-match to training data.</p>
+        <p><strong>GPT-4o:</strong> Fastest multimodal model — text, code, image, audio — ideal for real-time workflow tools where latency matters. Microsoft Copilot backbone.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">Key paper: "OpenAI o1 System Card" — OpenAI 2024; "Let's Verify Step by Step" — Lightman et al. 2023</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-cyan">GOOGLE DEEPMIND</span><span class="block-title">Gemini 2.0 / Gemini Ultra / Project Astra</span></div>
+      <div class="block-body">
+        <p><strong>Multimodal supremacy:</strong> Gemini 2.0 Flash and Ultra lead on multimodal benchmarks — natively processing text, code, images, audio, and video in a single model. For risk functions: the ability to ingest earnings call audio, chart images, and text simultaneously in one prompt has no peer.</p>
+        <p><strong>1M token context (Gemini 1.5 Pro):</strong> The largest production context window available — enough to hold the entirety of a large bank's stress testing documentation in-context. Validated on hour-long video, 1500-page codebases, and full regulatory examination transcripts.</p>
+        <p><strong>Project Astra / Agentspace:</strong> Google's bet on always-on, real-time AI agents integrated into the full enterprise workflow. Agentspace (see Tab 3) is the enterprise instantiation — live Q1 2026.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">Key paper: "Gemini: A Family of Highly Capable Multimodal Models" — Google DeepMind 2023/2024</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-purple">OPEN SOURCE / CHINA FRONTIER</span><span class="block-title">DeepSeek-R1 / Meta Llama 4 / Mistral</span></div>
+      <div class="block-body">
+        <p><strong>DeepSeek-R1 — the price shock:</strong> In January 2025, DeepSeek released R1 — an open-source reasoning model that matched GPT-4 class performance at a reported training cost of $6M vs. the estimated $100M+ for comparable frontier models. This immediately compressed frontier model pricing across the industry and is the single most important market structure event in AI since ChatGPT's launch.</p>
+        <p><strong>Llama 4 (Meta):</strong> Open weights, multimodal, 10M+ developer adoption. The democratization vector — any institution can run frontier-class inference on-premises. Critical for data-sensitive banking use cases where API calls to external providers create data residency risk.</p>
+        <p><strong>Mistral (Europe):</strong> Lean, fast, open. Best-in-class for inference efficiency. Significant for cost-sensitive production deployments at scale.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">Key paper: "DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via RL" — DeepSeek-AI 2025</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">INDUSTRY DEPLOYMENT LANDSCAPE — CAPITAL MARKETS</div>
+  <div class="block" style="margin-bottom:24px;">
+    <div class="block-body" style="padding:0;">
+      <table class="dis-table" style="font-size:12px;">
+        <thead>
+          <tr>
+            <th style="width:130px;">Institution</th>
+            <th>Primary AI Platform</th>
+            <th>Risk/Analytics Use Cases Live</th>
+            <th style="width:100px;">Scale</th>
+            <th style="width:100px;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>JP Morgan Chase</td>
+            <td>LLM Suite "LISA" (internal GPT); IndexGPT (equity research); DocLLM; Coin (legal doc review); SpectrumGPT (global equities)</td>
+            <td>Risk report automation, regulatory narrative drafting, credit risk signal extraction from earnings, fraud pattern detection, compliance surveillance</td>
+            <td style="color:var(--green);font-family:var(--mono);font-size:10px;">200M+ interactions</td>
+            <td><span class="risk-low">PRODUCTION</span></td>
+          </tr>
+          <tr>
+            <td>Goldman Sachs</td>
+            <td>GS AI Platform (Anthropic Claude partnership); Marquee enhancements; internal coding assistant (80% of devs using)</td>
+            <td>Credit risk model validation support, derivatives documentation, compliance Q&amp;A, developer productivity, risk briefing generation</td>
+            <td style="color:var(--green);font-family:var(--mono);font-size:10px;">~30K employees</td>
+            <td><span class="risk-low">PRODUCTION</span></td>
+          </tr>
+          <tr>
+            <td>Morgan Stanley</td>
+            <td>Orion (OpenAI GPT-4 partnership); AI @ Morgan Stanley Assistant; Next Best Action (wealth)</td>
+            <td>Financial advisor copilot, research synthesis, regulatory briefing generation, risk Q&amp;A (pilot)</td>
+            <td style="color:var(--gold);font-family:var(--mono);font-size:10px;">~16K advisors</td>
+            <td><span class="risk-med">SCALING</span></td>
+          </tr>
+          <tr>
+            <td>Citigroup</td>
+            <td>Citi Spring (internal AI); Citi GPT; CCAR narrative AI</td>
+            <td>Model risk documentation, stress testing narrative, compliance Q&amp;A, regulatory reporting automation</td>
+            <td style="color:var(--gold);font-family:var(--mono);font-size:10px;">~40K users</td>
+            <td><span class="risk-med">SCALING</span></td>
+          </tr>
+          <tr>
+            <td>Bank of America</td>
+            <td>Erica 2.0; internal "Quartz" AI; ML-enhanced AML</td>
+            <td>Risk alert triage, transaction anomaly detection, credit model explainability, customer risk scoring</td>
+            <td style="color:var(--gold);font-family:var(--mono);font-size:10px;">50M+ consumers</td>
+            <td><span class="risk-med">PARTIAL</span></td>
+          </tr>
+          <tr>
+            <td>BlackRock</td>
+            <td>Aladdin AI; Aladdin Copilot (2024); partnership with OpenAI</td>
+            <td>Portfolio risk analytics, factor exposure AI, regulatory reporting assistance, ESG data synthesis</td>
+            <td style="color:var(--green);font-family:var(--mono);font-size:10px;">$10T+ AUM platform</td>
+            <td><span class="risk-low">PRODUCTION</span></td>
+          </tr>
+          <tr>
+            <td>Wells Fargo</td>
+            <td>Tachyon (build); active vendor eval (Rogo, Kensho, others)</td>
+            <td>CIB risk analytics, regulatory reporting support, market intelligence synthesis</td>
+            <td style="color:var(--blue);font-family:var(--mono);font-size:10px;">CIB build phase</td>
+            <td><span class="risk-high">BUILDING</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout">
+    <p><strong>The Strategic Framing that Matters:</strong> The capital markets AI race is no longer about whether to deploy — it's about who builds institutional AI competency as a durable competitive capability vs. who rents vendor solutions that competitors can equally access. JPM and GS's internal-first strategy reflects a bet that proprietary data + proprietary AI = defensible moat. The banks that build now will have 3–5 year capability leads over those that defer. The window to capture this advantage is open but narrowing.</p>
+  </div>
+
+  <div class="sub-head">SIGNAL VS. NOISE — WHAT ACTUALLY MATTERS IN 2026</div>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-label" style="color:var(--green);">HIGH SIGNAL — ACT NOW</div>
+      <div style="margin-top:10px;">
+        <div style="font-size:12px;color:var(--text2);line-height:1.7;">
+          <div style="margin-bottom:6px;color:var(--text);">◆ Agentic AI replacing human workflow loops</div>
+          <div style="margin-bottom:6px;color:var(--text);">◆ Reasoning models (o3/Claude ET) for complex analysis</div>
+          <div style="margin-bottom:6px;color:var(--text);">◆ RAG over proprietary institutional knowledge</div>
+          <div style="margin-bottom:6px;color:var(--text);">◆ Code generation — 10x developer productivity</div>
+          <div style="color:var(--text);">◆ On-prem open-source models for data-sensitive workflows</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label" style="color:var(--gold);">MEDIUM SIGNAL — WATCH CAREFULLY</div>
+      <div style="margin-top:10px;">
+        <div style="font-size:12px;color:var(--text2);line-height:1.7;">
+          <div style="margin-bottom:6px;">◆ Multimodal AI (chart/image + text) in risk workflows</div>
+          <div style="margin-bottom:6px;">◆ Real-time voice AI for trading desk interfaces</div>
+          <div style="margin-bottom:6px;">◆ AI-generated synthetic training data for risk models</div>
+          <div style="margin-bottom:6px;">◆ Small specialized models vs. general frontier models</div>
+          <div>◆ AI governance as a regulatory examination focus</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label" style="color:var(--text3);">NOISE — IGNORE FOR NOW</div>
+      <div style="margin-top:10px;">
+        <div style="font-size:12px;color:var(--text3);line-height:1.7;">
+          <div style="margin-bottom:6px;">◇ AGI timeline speculation — irrelevant to 3-yr planning</div>
+          <div style="margin-bottom:6px;">◇ Individual model benchmark wars — capability parity is real</div>
+          <div style="margin-bottom:6px;">◇ AI regulation as existential concern (near-term impact limited)</div>
+          <div style="margin-bottom:6px;">◇ Crypto/blockchain + AI narratives</div>
+          <div>◇ Consumer AI features — wrong frame for CIB</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  TAB 2: FRONTIER RESEARCH
+══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="t2">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 02 // Frontier Research</div>
+    <h2>TOP WHITEPAPERS &amp; <em>FOUNDATIONAL RESEARCH</em></h2>
+    <p>The papers that actually matter — curated by impact on production AI systems, not citation count. Organized by three tiers: <span class="gold">Foundational</span> (must-know), <span class="cyan">Architectural</span> (defines how systems are built), and <span class="green">Applied</span> (directly relevant to CIB risk functions). These are the intellectual building blocks of every AI system being deployed in capital markets today.</p>
+  </div>
+
+  <div class="sub-head">TIER 1 — FOUNDATIONAL (THE CANON)</div>
+  <div class="paper tier-1">
+    <div class="paper-title">"Attention Is All You Need" — Vaswani et al. (Google Brain, 2017)</div>
+    <div class="paper-meta">VENUE: NeurIPS 2017 // CITATIONS: 100,000+ // STATUS: THE PAPER THAT STARTED EVERYTHING</div>
+    <div class="paper-abstract">Introduced the Transformer architecture — the foundation of every major language model in existence today. Replaced recurrent neural networks with a purely attention-based mechanism, enabling massively parallel training and the scaling laws that make GPT-4 and Claude possible. Understanding attention heads and positional encoding is understanding why LLMs can hold complex multi-document context without "forgetting."</div>
+    <div class="paper-why">WHY IT MATTERS FOR RISK: Every AI tool you evaluate — Claude, GPT, Gemini — runs on this architecture. Understanding attention mechanisms explains both the power (long-range dependencies across a 200K token risk report) and the failure modes (attention dilution, positional bias) of every LLM in production.</div>
+  </div>
+
+  <div class="paper tier-1">
+    <div class="paper-title">"Scaling Laws for Neural Language Models" — Kaplan et al. (OpenAI, 2020)</div>
+    <div class="paper-meta">VENUE: OpenAI Technical Report // IMPACT: Defined the investment thesis for all frontier model development</div>
+    <div class="paper-abstract">Established empirically that model performance scales predictably with compute, parameters, and data — following power laws. This paper is why every major tech company spent the last 5 years in a compute arms race: more FLOPS = better model, reliably, across domains. The "bitter lesson" of AI: scale beats clever engineering.</div>
+    <div class="paper-why">WHY IT MATTERS: Explains why DeepSeek's $6M training efficiency is a genuine inflection point — it suggests we may have been over-parameterizing frontier models, and that smarter architectures can achieve capability gains without proportional compute cost. This has major implications for on-prem deployment economics in banking.</div>
+  </div>
+
+  <div class="paper tier-1">
+    <div class="paper-title">"Constitutional AI: Harmlessness from AI Feedback" — Bai et al. (Anthropic, 2022)</div>
+    <div class="paper-meta">VENUE: Anthropic Technical Report // RELEVANCE: Defines the safety/reliability framework for enterprise AI</div>
+    <div class="paper-abstract">Introduced Constitutional AI (CAI) — training AI models to be helpful, harmless, and honest using a set of principles rather than purely human feedback. Models are trained to evaluate and revise their own outputs against a constitution of principles. This framework is why Claude models exhibit the consistent, governance-friendly behavior that makes them suitable for regulated environments.</div>
+    <div class="paper-why">WHY IT MATTERS FOR RISK: When deploying AI in model-risk-sensitive environments, the consistency and predictability of behavior matters as much as capability. CAI explains why Claude is less likely to hallucinate confidently in risk scenarios — and why it's the preferred choice for Goldman Sachs and other banks that need auditable AI behavior.</div>
+  </div>
+
+  <div class="paper tier-1">
+    <div class="paper-title">"DeepSeek-R1: Incentivizing Reasoning in LLMs via Reinforcement Learning" — DeepSeek-AI (2025)</div>
+    <div class="paper-meta">VENUE: arXiv 2025 // IMPACT: Destabilized frontier pricing; open-sourced reasoning capability</div>
+    <div class="paper-abstract">Demonstrated that a reasoning model matching OpenAI o1 performance could be trained for an estimated $6M using reinforcement learning on chain-of-thought traces — dramatically below the cost structure of Western frontier labs. Released open-source weights. The immediate market reaction: Nvidia lost $590B in market cap in a single day as investors repriced AI compute demand assumptions.</div>
+    <div class="paper-why">WHY IT MATTERS: The strategic implication is that AI capability is commoditizing faster than expected. The moat is no longer "access to frontier models" — it's proprietary data, domain workflow integration, and institutional deployment know-how. For Wells Fargo: the build vs. buy calculus shifted. Open-source reasoning models deployable on-prem eliminate data residency risk while approaching frontier capability.</div>
+  </div>
+
+  <hr class="section-divider">
+  <div class="sub-head">TIER 2 — ARCHITECTURAL (HOW PRODUCTION SYSTEMS ARE BUILT)</div>
+
+  <div class="paper">
+    <div class="paper-title">"ReAct: Synergizing Reasoning and Acting in Language Models" — Yao et al. (Princeton/Google, 2022)</div>
+    <div class="paper-meta">VENUE: ICLR 2023 // CITATION TRAJECTORY: Foundational for all agent frameworks</div>
+    <div class="paper-abstract">Introduced the ReAct paradigm — interleaving reasoning traces (thinking) with action execution (tool use, search, code execution). The model alternates between "thought" and "act" steps, using external tools to gather information before formulating a response. This is the direct ancestor of every modern AI agent framework including LangGraph, AutoGen, and Claude's tool use.</div>
+    <div class="paper-why">WHY IT MATTERS: ReAct is why AI agents can browse the web, execute Python, query databases, and call APIs — and do so with coherent reasoning rather than random action sequences. Every production agent workflow you'll encounter is a descendant of this paper.</div>
+  </div>
+
+  <div class="paper">
+    <div class="paper-title">"Toolformer: Language Models Can Teach Themselves to Use Tools" — Schick et al. (Meta AI, 2023)</div>
+    <div class="paper-meta">VENUE: NeurIPS 2023 // IMPACT: Validated self-supervised tool learning at scale</div>
+    <div class="paper-abstract">Demonstrated that LLMs can learn to use external tools (calculators, search APIs, translation systems) in a self-supervised way — generating their own training data for tool use. Key finding: a 7B parameter model with tools outperforms a 175B parameter model without them on many tasks. The implication: tool access is worth more than raw parameters for complex real-world tasks.</div>
+    <div class="paper-why">WHY IT MATTERS FOR RISK: This is the theoretical basis for why an AI agent with access to your risk data systems, calculation engines, and regulatory databases can outperform a much larger standalone model. Architecture > raw capability for domain-specific deployment.</div>
+  </div>
+
+  <div class="paper">
+    <div class="paper-title">"RAG: Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks" — Lewis et al. (Facebook AI, 2020)</div>
+    <div class="paper-meta">VENUE: NeurIPS 2020 // ADOPTION: Every major enterprise AI deployment uses this architecture</div>
+    <div class="paper-abstract">Introduced RAG — combining a parametric language model with a non-parametric memory (document retrieval). The model retrieves relevant documents at inference time and conditions its response on them. This allows LLMs to reason over private, proprietary, or recently updated information without retraining — solving the knowledge cutoff and data privacy problems simultaneously.</div>
+    <div class="paper-why">WHY IT MATTERS: RAG is the architecture that makes AI useful for institutional knowledge work. The ability to query an LLM over your CCAR documentation, internal stress test history, regulatory correspondence, and risk policies — and get accurate, sourced responses — depends entirely on RAG. This is the most important architectural concept for enterprise AI deployment in banking.</div>
+  </div>
+
+  <div class="paper">
+    <div class="paper-title">"Generative Agents: Interactive Simulacra of Human Behavior" — Park et al. (Stanford, 2023)</div>
+    <div class="paper-meta">VENUE: UIST 2023 // IMPACT: First demonstration of persistent, believable AI agent societies</div>
+    <div class="paper-abstract">Created 25 AI agents with distinct identities, memories, and goals in a simulated town. Agents formed opinions, spread information, made plans, and exhibited emergent social behavior. Introduced three key components now standard in agent architectures: memory streams, reflection synthesis, and plan generation. First rigorous demonstration that LLMs can sustain coherent autonomous behavior over extended time horizons.</div>
+    <div class="paper-why">WHY IT MATTERS: This paper established the cognitive architecture that modern enterprise agents are built on — memory, reflection, and planning. It explains why well-designed AI agents don't lose context across a multi-day risk analysis workflow, and how multi-agent systems can coordinate without explicit human orchestration at every step.</div>
+  </div>
+
+  <div class="paper">
+    <div class="paper-title">"AutoGen: Enabling Next-Gen LLM Applications via Multi-Agent Conversation" — Wu et al. (Microsoft, 2023)</div>
+    <div class="paper-meta">VENUE: arXiv 2023 / ICLR 2024 // ADOPTION: 30K+ GitHub stars; production deployments at Microsoft</div>
+    <div class="paper-abstract">Introduced AutoGen — a framework for building multi-agent systems where LLMs communicate with each other to solve complex tasks. Agents have roles (coder, reviewer, executor, critic), exchange messages, and collectively produce outputs neither could achieve alone. The paper demonstrated that multi-agent conversation significantly outperforms single-agent approaches on complex coding, math, and reasoning tasks.</div>
+    <div class="paper-why">WHY IT MATTERS: AutoGen is one of the two most important open-source agent frameworks (alongside LangGraph) for building production CIB risk AI systems. Its multi-agent conversation model maps directly to how risk teams actually work: analyst drafts scenario → reviewer checks cross-asset consistency → validator checks SR 11-7 compliance → documentation is produced. See Tab 4 for full framework comparison.</div>
+  </div>
+
+  <hr class="section-divider">
+  <div class="sub-head">TIER 3 — APPLIED (DIRECTLY RELEVANT TO CIB RISK)</div>
+
+  <div class="paper tier-2">
+    <div class="paper-title">"Are Large Language Models a Threat to Financial Analysts?" — Lopez-Lira et al. (2023)</div>
+    <div class="paper-meta">VENUE: SSRN 2023 // SCOPE: Largest empirical study of LLM vs. analyst performance on financial tasks</div>
+    <div class="paper-abstract">Empirical study comparing GPT-4 performance against professional equity analysts on earnings forecasting, financial statement analysis, and risk assessment tasks. Findings: LLMs outperformed analysts on structured data tasks (ratio analysis, comparative benchmarking) and matched them on qualitative narrative tasks, but underperformed on novel market structure analysis requiring deep domain intuition. The performance gap correlated with task structuredness — the more structured the task, the larger the LLM advantage.</div>
+    <div class="paper-why">WHY IT MATTERS: This paper maps the displacement frontier. Structured, repeatable analytical tasks — the majority of BAU risk analytics work — are AI-favorable. Unstructured, novel, judgment-intensive tasks (reading market microstructure, novel geopolitical risk) remain human-favorable. The implication for staffing: the boundary between these categories is moving toward human-favorable every 12 months.</div>
+  </div>
+
+  <div class="paper tier-2">
+    <div class="paper-title">"FinGPT: Open-Source Financial Large Language Models" — Yang et al. (Columbia / AI4Finance, 2023)</div>
+    <div class="paper-meta">VENUE: arXiv 2023 // RELEVANCE: Practical framework for domain-specific LLM fine-tuning in finance</div>
+    <div class="paper-abstract">Introduced FinGPT — an open-source framework for fine-tuning LLMs on financial data including news, filings, earnings calls, and market data. Demonstrated that lightweight fine-tuning (LoRA) on domain-specific data significantly improves LLM performance on financial tasks vs. general-purpose models, at a fraction of the cost of full fine-tuning. Includes data pipeline architecture for continuous model updating from real-time financial feeds.</div>
+    <div class="paper-why">WHY IT MATTERS: Provides the technical blueprint for building a Wells Fargo-specific risk analytics LLM — fine-tuned on internal documentation, historical stress results, regulatory correspondence — that outperforms general models on CIB-specific tasks. This is the academic foundation for the "build over buy" argument in risk AI.</div>
+  </div>
+
+  <div class="paper tier-2">
+    <div class="paper-title">"BloombergGPT: A Large Language Model for Finance" — Wu et al. (Bloomberg, 2023)</div>
+    <div class="paper-meta">VENUE: arXiv 2023 // SIGNIFICANCE: First financial domain LLM from a major data provider</div>
+    <div class="paper-abstract">Bloomberg trained a 50B parameter LLM on 363B tokens of financial data (Bloomberg's proprietary dataset) plus general text. BloombergGPT outperformed comparably-sized general models on financial tasks (NLP classification, sentiment analysis, named entity recognition in financial documents) while maintaining competitive general performance. Validates the "domain-specialized model" hypothesis.</div>
+    <div class="paper-why">WHY IT MATTERS: Proof of concept that a financial institution with proprietary data can build a domain-specialized model that outperforms general-purpose frontier models on financial tasks. The lesson is not "Bloomberg did it" — it's that proprietary financial language data is a training asset that general models can't replicate. Whoever builds the first CIB-risk-specialized model wins a durable internal competitive advantage.</div>
+  </div>
+
+  <div class="paper tier-2">
+    <div class="paper-title">"Language Agents as Digital Twins for Finance" — Zhang et al. (2024)</div>
+    <div class="paper-meta">VENUE: NeurIPS Workshop 2024 // RELEVANCE: Directly maps agent architecture to financial risk workflows</div>
+    <div class="paper-abstract">Proposed and demonstrated a framework using LLM-based agents as "digital twins" of human financial analysts — capable of processing news, earnings data, and market signals to generate investment and risk assessments. Demonstrated that properly structured agent workflows (with memory, tool use, and reflection) could replicate 70–80% of a junior analyst's daily output at negligible marginal cost, with measurable accuracy on backtested financial decisions.</div>
+    <div class="paper-why">WHY IT MATTERS: The "digital twin" framing is the most useful mental model for institutional AI deployment. Don't think of AI as a tool — think of it as a parallel analyst workforce that needs the same information access, workflow structure, and quality control that human analysts receive. The implication: AI deployment is an org design problem as much as a technology problem.</div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  TAB 3: AGENTIC LANDSCAPE
+══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="t3">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 03 // Agentic AI</div>
+    <h2>THE <em>AGENTIC AI</em> LANDSCAPE</h2>
+    <p>The shift from LLM-as-tool to LLM-as-autonomous-agent is the most consequential architectural change in enterprise AI since the Transformer itself. This section covers the full landscape: what agents are, who's building the infrastructure, how enterprise platforms compare, and why the agentic paradigm changes the workforce equation fundamentally.</p>
+  </div>
+
+  <div class="callout callout-cyan">
+    <p><strong>What "Agentic AI" Actually Means:</strong> An AI agent is a system where an LLM takes a high-level goal and autonomously decomposes it into sub-tasks, selects tools, executes actions, observes results, and iterates — without requiring human input at each step. The defining characteristics are: <strong>goal-directedness</strong> (acts toward an objective), <strong>tool use</strong> (can interact with external systems), <strong>memory</strong> (maintains context over time), and <strong>autonomy</strong> (makes its own decisions within a defined scope). The paradigm shift: from "LLM responds to prompts" to "LLM pursues objectives."</p>
+  </div>
+
+  <div class="sub-head">GOOGLE AGENTSPACE — ENTERPRISE AGENTIC AI PLATFORM</div>
+  <div class="block" style="margin-bottom:20px;">
+    <div class="block-header">
+      <span class="block-tag tag-cyan">GOOGLE</span>
+      <span class="block-title">Agentspace — Enterprise Agent Platform (GA Q1 2026)</span>
+    </div>
+    <div class="block-body">
+      <div class="grid-2" style="gap:16px;">
+        <div>
+          <p><strong>What it is:</strong> Google Agentspace is an enterprise platform that allows organizations to build, deploy, and orchestrate AI agents connected to their internal data, applications, and workflows. It integrates natively with Google Workspace, Salesforce, ServiceNow, Jira, and major data platforms — and runs on Gemini 2.0 with 1M token context.</p>
+          <p><strong>Core architecture:</strong> Agentspace uses a "multi-agent" model: a central orchestrator agent routes tasks to specialized sub-agents (e.g., a document analysis agent, a code execution agent, a data query agent) — coordinating complex multi-step workflows that span multiple enterprise systems.</p>
+          <p><strong>NotebookLM integration:</strong> NotebookLM — Google's AI knowledge synthesis tool — is embedded in Agentspace, allowing agents to ingest and reason over entire document corpora (risk policies, CCAR documentation, regulatory guidance) without external data exposure.</p>
+        </div>
+        <div>
+          <p><strong>Key capabilities for CIB risk:</strong></p>
+          <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+            <div>◆ Natural language queries over internal risk data — connected to BigQuery, internal databases</div>
+            <div>◆ Document agent for ingesting and synthesizing stress test documentation</div>
+            <div>◆ Code execution agent — runs Python analysis tasks autonomously</div>
+            <div>◆ Email/calendar integration — can monitor and act on workflows in Gmail/Calendar</div>
+            <div>◆ Enterprise search across all internal knowledge — SharePoint, Confluence, internal wikis</div>
+            <div>◆ 1M token context = entire regulatory exam file in-context simultaneously</div>
+          </div>
+          <p style="margin-top:10px;"><strong>Competitive positioning:</strong> Agentspace is Google's direct answer to Microsoft Copilot — enterprise agent infrastructure with deeper AI capability (Gemini 2.0 vs. GPT-4o) but currently narrower enterprise software ecosystem integration.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">AGENT DEVELOPMENT FRAMEWORKS — FULL LANDSCAPE</div>
+  <div class="grid-2" style="margin-bottom:24px;">
+
+    <div class="agent-card google">
+      <div class="agent-name">Google ADK</div>
+      <div class="agent-maker">GOOGLE // Agent Development Kit // GA 2025</div>
+      <div class="agent-desc">Google's open-source framework for building multi-agent systems on Gemini. Native integration with Vertex AI, Google Cloud, and Agentspace. Supports hierarchical agent architectures where a "manager" agent orchestrates specialized "worker" agents. Key differentiator: first-class support for human-in-the-loop checkpoints and streaming agent responses — important for risk governance.</div>
+      <div class="agent-tags"><span class="agent-tag">Multi-agent</span><span class="agent-tag">Gemini-native</span><span class="agent-tag">Vertex AI</span><span class="agent-tag">Human-in-loop</span><span class="agent-tag">Open source</span></div>
+      <div class="agent-verdict" style="color:var(--cyan);">RISK USE: Best for GCP-native deployments; strongest human oversight support for governance-sensitive workflows</div>
+    </div>
+
+    <div class="agent-card anthropic">
+      <div class="agent-name">Claude Tool Use + Computer Use</div>
+      <div class="agent-maker">ANTHROPIC // API-native agentic capabilities</div>
+      <div class="agent-desc">Anthropic's agentic capabilities are built into the Claude API: tool use (structured function calling), computer use (Claude can control a computer — browser, terminal, applications), and extended thinking (transparent multi-step reasoning). Claude's constitutional AI training makes it less likely to take harmful actions autonomously — critical for risk-adjacent workflows where model behavior must be auditable.</div>
+      <div class="agent-tags"><span class="agent-tag">Tool use</span><span class="agent-tag">Computer use</span><span class="agent-tag">Extended thinking</span><span class="agent-tag">Auditable</span><span class="agent-tag">AWS Bedrock</span></div>
+      <div class="agent-verdict" style="color:var(--gold);">RISK USE: Best for workflows requiring transparent reasoning audit trails; strongest governance-by-design</div>
+    </div>
+
+    <div class="agent-card openai">
+      <div class="agent-name">OpenAI Responses API + Assistants</div>
+      <div class="agent-maker">OPENAI // Responses API (2025) replaces Assistants API</div>
+      <div class="agent-desc">OpenAI's new Responses API provides a unified interface for building agents with built-in tools: web search, code interpreter, file search. The agent maintains state via threads. O1/O3 models available for reasoning-intensive agent steps. Strong function calling ecosystem with the largest developer community — most third-party integrations target OpenAI first.</div>
+      <div class="agent-tags"><span class="agent-tag">Responses API</span><span class="agent-tag">Code interpreter</span><span class="agent-tag">O3 reasoning</span><span class="agent-tag">Largest ecosystem</span><span class="agent-tag">Azure OpenAI</span></div>
+      <div class="agent-verdict" style="color:var(--green);">RISK USE: Best ecosystem breadth; o3 reasoning for complex analytical tasks; Azure deployment for banking compliance</div>
+    </div>
+
+    <div class="agent-card microsoft">
+      <div class="agent-name">Microsoft Copilot Studio + Azure AI Foundry</div>
+      <div class="agent-maker">MICROSOFT // 100K+ enterprise deployments as of Q1 2026</div>
+      <div class="agent-desc">Copilot Studio is Microsoft's low/no-code agent builder — drag-and-drop workflows, SharePoint integration, Teams deployment, Power Platform connection. Azure AI Foundry is the pro-code version for sophisticated multi-agent systems. Deep integration with Microsoft 365 (Outlook, Teams, SharePoint) makes it the default choice for organizations already in the Microsoft ecosystem — which includes most major banks.</div>
+      <div class="agent-tags"><span class="agent-tag">Low-code</span><span class="agent-tag">M365 native</span><span class="agent-tag">Teams integration</span><span class="agent-tag">SharePoint RAG</span><span class="agent-tag">Enterprise-ready</span></div>
+      <div class="agent-verdict" style="color:var(--blue);">RISK USE: Fastest time-to-value for M365-heavy organizations; strongest enterprise governance and compliance packaging</div>
+    </div>
+
+    <div class="agent-card oss">
+      <div class="agent-name">LangGraph (LangChain)</div>
+      <div class="agent-maker">LANGCHAIN // Open source // LangGraph Cloud GA 2025</div>
+      <div class="agent-desc">LangGraph is the dominant open-source framework for building stateful, production-grade agent workflows. Uses a graph-based architecture where nodes are agent steps and edges are conditional transitions — allowing complex branching logic, loops, and human interrupts. Unlike linear chains, LangGraph supports cycles (the agent can retry, revise, and backtrack). LangGraph Cloud handles deployment, scaling, and observability.</div>
+      <div class="agent-tags"><span class="agent-tag">Graph-based</span><span class="agent-tag">Stateful</span><span class="agent-tag">Cycles/loops</span><span class="agent-tag">LLM agnostic</span><span class="agent-tag">Production-ready</span></div>
+      <div class="agent-verdict" style="color:var(--purple);">RISK USE: Best for complex multi-step workflows with conditional logic; model-agnostic — works with Claude, GPT, Llama; highest flexibility</div>
+    </div>
+
+    <div class="agent-card oss">
+      <div class="agent-name">CrewAI</div>
+      <div class="agent-maker">CREWAI INC. // Open source + Enterprise // 2024</div>
+      <div class="agent-desc">CrewAI introduces the "crew" metaphor — teams of AI agents with defined roles, goals, and delegation patterns. An "analyst" agent, "reviewer" agent, "writer" agent, and "fact-checker" agent form a crew that collaborates on a task. Closest open-source analog to how human risk teams actually work: roles → tasks → outputs → review cycles. Enterprise version adds observability, RBAC, and compliance logging.</div>
+      <div class="agent-tags"><span class="agent-tag">Role-based</span><span class="agent-tag">Team metaphor</span><span class="agent-tag">Sequential/parallel</span><span class="agent-tag">Task delegation</span><span class="agent-tag">Observability</span></div>
+      <div class="agent-verdict" style="color:var(--purple);">RISK USE: Most intuitive mapping to human team workflows; easiest to explain to non-technical stakeholders; strong for doc generation pipelines</div>
+    </div>
+
+  </div>
+
+  <div class="sub-head">PIONEERING AGENT DEMONSTRATIONS — 2024-2026</div>
+  <div class="grid-2">
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-red">CHINA FRONTIER</span><span class="block-title">Manus AI — Fully Autonomous Agent (March 2025)</span></div>
+      <div class="block-body">
+        <p>Manus AI demonstrated a fully autonomous agent that could complete multi-hour complex tasks without human intervention: booking travel, conducting research, writing reports, managing files, browsing the web, executing code. What distinguished Manus from prior demos: it used a computer as a human would — switching between applications, handling errors, adapting in real time. Within 48 hours of release, it had a 3-month waitlist.</p>
+        <p><strong>The signal:</strong> Autonomous multi-hour task execution without checkpoints is now demonstrated capability. The gap between "AI assistant" and "AI autonomous worker" has closed for structured knowledge work tasks. For risk analytics: the question is not whether an agent can conduct a multi-step stress analysis — it's whether we trust it to and can audit what it did.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">OPENAI</span><span class="block-title">Deep Research — Autonomous Analyst Agent</span></div>
+      <div class="block-body">
+        <p>OpenAI's Deep Research agent conducts autonomous multi-hour research: browsing hundreds of sources, reading full documents, synthesizing findings, and producing institutional-quality research reports on complex topics. The output quality on financial and scientific topics was assessed by users as matching or exceeding junior analyst work on well-defined research tasks.</p>
+        <p><strong>The signal:</strong> Autonomous document-intensive research — the core workflow of CIB risk analytics — is already at production quality for well-defined tasks. The bottleneck is no longer capability; it's integration, governance, and institutional trust. The function that once required a team of 5 junior analysts can now be initiated by one senior person and orchestrated by agents.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-cyan">GOOGLE</span><span class="block-title">Project Mariner / Astra — Real-Time Ambient Agents</span></div>
+      <div class="block-body">
+        <p>Project Astra (Google DeepMind) demonstrated an always-on AI assistant with real-time multimodal perception — seeing through a camera, hearing audio, and responding in real time. Project Mariner showed a browser agent that navigates the web on behalf of a user, filling forms and completing tasks. These represent the "ambient agent" paradigm: AI as always-present, contextually aware assistant, not a discrete query tool.</p>
+        <p><strong>The signal:</strong> The future interface is ambient — always listening, always contextually aware, proactively surfacing relevant information. For risk management: imagine an agent monitoring live market data streams that proactively surfaces scenario implications before you ask.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-gold">ANTHROPIC</span><span class="block-title">Computer Use — GUI Automation at Scale</span></div>
+      <div class="block-body">
+        <p>Anthropic's Computer Use (Claude 3.5 Sonnet, October 2024) enabled Claude to directly control a computer: move a mouse, click buttons, type text, navigate applications — in the same way a human would. This is fundamentally different from API-based tool use: it works with any software, including legacy systems with no API. Claude can navigate Bloomberg Terminal, Excel, proprietary risk systems, and web interfaces.</p>
+        <p><strong>The signal:</strong> Legacy banking infrastructure — the systems that run risk analytics at most major banks — can now be automated by AI agents without building APIs. The barrier to AI automation of existing workflows just dropped by an order of magnitude. Every manual GUI-based workflow in a risk function is now a candidate for agent automation.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  TAB 4: MULTI-AGENT FRAMEWORKS
+══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="t4">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 04 // Multi-Agent Architecture</div>
+    <h2>MULTI-AGENT <em>FRAMEWORK</em> DEEP DIVE</h2>
+    <p>Understanding multi-agent systems is the single most important architectural concept for AI deployment in CIB risk analytics. This section explains the patterns, the building blocks, the current best implementations, and how to think about designing agent workflows for institutional risk functions.</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>Why Multi-Agent Over Single Agent:</strong> Complex institutional workflows — stress scenario generation, regulatory submission preparation, limit breach triage — require multiple distinct capabilities: data retrieval, quantitative calculation, qualitative reasoning, compliance checking, documentation generation, approval routing. No single LLM call does all of these well simultaneously. Multi-agent systems decompose the problem: each agent specializes in one capability, and an orchestrator coordinates them. The result is higher quality, more auditable, and more reliable than asking one LLM to do everything at once.</p>
+  </div>
+
+  <div class="sub-head">THE CORE AGENT ARCHITECTURE PATTERNS</div>
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-gold">PATTERN 01</span><span class="block-title">Orchestrator → Subagent (Hierarchical)</span></div>
+      <div class="block-body">
+        <p><strong>Structure:</strong> A central "orchestrator" LLM receives a high-level goal, decomposes it into tasks, delegates each task to a specialized subagent, synthesizes the results, and produces a final output. The orchestrator doesn't execute tasks — it routes, coordinates, and integrates.</p>
+        <p><strong>Risk analytics example:</strong> Orchestrator receives "generate AI bubble correction stress scenario." Delegates to: (1) Data Agent — pull current market levels; (2) Shock Calibration Agent — derive cross-asset shocks using historical analogs; (3) Consistency Agent — check internal shock logic; (4) Narrative Agent — produce regulatory-grade written scenario. Orchestrator synthesizes all outputs.</p>
+        <p><strong>Best framework:</strong> LangGraph (explicit graph edges), Google ADK (hierarchical agents), CrewAI (manager crew)</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-cyan">PATTERN 02</span><span class="block-title">Peer Collaboration (Debate / Review)</span></div>
+      <div class="block-body">
+        <p><strong>Structure:</strong> Multiple agents with different "perspectives" or roles tackle the same problem and critique each other's outputs. A "generator" agent produces work; a "critic" agent evaluates it; a "resolver" agent integrates the critique. Can iterate multiple rounds. Research shows this significantly outperforms single-agent output on reasoning-intensive tasks.</p>
+        <p><strong>Risk analytics example:</strong> Scenario Generator Agent proposes stress shocks → Cross-Asset Consistency Critic Agent evaluates whether equity, rates, FX, and credit shocks are internally consistent → SR 11-7 Compliance Agent checks documentation language → Resolver synthesizes final scenario. Each "round" of debate improves quality.</p>
+        <p><strong>Best framework:</strong> AutoGen (native multi-agent conversation), custom LangGraph implementations</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">PATTERN 03</span><span class="block-title">Plan-Execute (Reasoning + Action)</span></div>
+      <div class="block-body">
+        <p><strong>Structure:</strong> Agent first generates a detailed plan for completing a task (using a reasoning model like o3 or Claude ET), then executes each step, observing results and re-planning as needed. The planning and execution phases may use different models — expensive reasoning model for planning, fast efficient model for execution.</p>
+        <p><strong>Risk analytics example:</strong> Human asks for "comprehensive VaR attribution for fixed income desks this week." Agent plans: what data to pull, what calculations to run, what format to produce, what review steps are needed. Executes each step against risk data systems. Re-plans if data is incomplete or calculations surface anomalies requiring investigation.</p>
+        <p><strong>Best framework:</strong> OpenAI Responses API + o3 for planning; LangGraph for execution graph; Anthropic for auditable reasoning</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-purple">PATTERN 04</span><span class="block-title">Event-Driven (Reactive Agent Networks)</span></div>
+      <div class="block-body">
+        <p><strong>Structure:</strong> Agents are triggered by events — a market data signal, a limit breach, a news item, a regulatory filing — and autonomously initiate analysis and alert workflows without human prompting. Events flow through a message bus; agents subscribe to relevant event types and respond. Persistent background agents that never sleep.</p>
+        <p><strong>Risk analytics example:</strong> Market data feed detects SPX moves -3% intraday → Triggers Scenario Assessment Agent → Agent computes implied stress impact across all 19 desks → Generates preliminary breach risk report → Alerts risk officer if any desk shows >20% VaR limit utilization spike → Prepends historical context from past similar events via RAG.</p>
+        <p><strong>Best framework:</strong> Kafka/Redis event streaming + LangGraph agents; Amazon Bedrock event agents; Azure Event Grid + Copilot agents</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">AGENT MEMORY ARCHITECTURE — THE CRITICAL DESIGN ELEMENT</div>
+  <div class="block" style="margin-bottom:24px;">
+    <div class="block-body">
+      <div class="grid-3">
+        <div style="padding-right:12px;border-right:1px solid var(--border);">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--cyan);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">IN-CONTEXT (Working Memory)</div>
+          <p>Everything in the current LLM context window. Ephemeral — disappears when the session ends. For frontier models: 200K tokens (Claude) or 1M tokens (Gemini) — enough to hold entire workflows, documents, and data in working memory simultaneously. The limiting factor is cost and latency at maximum context length.</p>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px;">Use: current task context, immediate conversation history, document under analysis</div>
+        </div>
+        <div style="padding:0 12px;border-right:1px solid var(--border);">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">EXTERNAL VECTOR (Long-Term Memory)</div>
+          <p>Embeddings stored in a vector database (Pinecone, Weaviate, pgvector). Retrieved at runtime via semantic similarity search and injected into context. This is the RAG layer — allows agents to "remember" across sessions, access institutional knowledge, and reason over large corpora that exceed context window limits.</p>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px;">Use: historical stress scenarios, risk policies, regulatory guidance, past CCAR submissions</div>
+        </div>
+        <div style="padding-left:12px;">
+          <div style="font-family:var(--mono);font-size:10px;color:var(--green);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">STRUCTURED (State Memory)</div>
+          <p>Traditional databases and key-value stores that agents read and write to. Provides deterministic, queryable state — critical for tracking workflow progress, storing intermediate results, maintaining audit logs, and enabling human review checkpoints. LangGraph's state graph is a structured memory implementation purpose-built for agent workflows.</p>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px;">Use: workflow state, approval status, calculation results, risk limits, audit trail</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">SKILLS &amp; TOOL USE — THE AGENT'S CAPABILITY SURFACE</div>
+  <div class="block" style="margin-bottom:24px;">
+    <div class="block-body">
+      <p style="margin-bottom:14px;color:var(--text2);">An agent's capability is determined by its <strong>tool set</strong> — the external systems it can interact with. Tool design is the most important architectural decision in agent deployment. Well-designed tools produce consistent, parseable outputs; poorly designed tools cause agent failure cascades. For CIB risk, the critical tool categories are:</p>
+      <div class="grid-3">
+        <div class="card" style="padding:12px;">
+          <div class="card-label">DATA RETRIEVAL TOOLS</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.7;">Market data APIs (Bloomberg, Refinitiv), internal risk data warehouse queries (SQL), VaR engine calls, position downloads, limit table reads. These are the "eyes" of the risk agent — without accurate, real-time data access, all downstream analysis is garbage-in.</div>
+        </div>
+        <div class="card" style="padding:12px;">
+          <div class="card-label">COMPUTATION TOOLS</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.7;">Python execution environments (sandbox), financial calculation libraries (QuantLib, NumPy), scenario engine calls, Monte Carlo simulation runners. Critical design rule: agents should never do arithmetic themselves — always delegate to code execution with verifiable results.</div>
+        </div>
+        <div class="card" style="padding:12px;">
+          <div class="card-label">KNOWLEDGE RETRIEVAL (RAG)</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.7;">Vector search over institutional documentation: risk policies, historical scenarios, regulatory guidance, CCAR submissions, desk-level limit documentation. The quality of the RAG corpus determines the quality of agent knowledge — this is the most important long-term investment in agent infrastructure.</div>
+        </div>
+        <div class="card" style="padding:12px;">
+          <div class="card-label">COMMUNICATION TOOLS</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.7;">Email/Teams APIs for routing alerts and reports, document generation (Word, PDF, HTML), ticket creation in workflow systems, Slack/Teams notifications. These are the "hands" — agents that can analyze but can't communicate or route are limited to human-initiated workflows only.</div>
+        </div>
+        <div class="card" style="padding:12px;">
+          <div class="card-label">EXTERNAL INTELLIGENCE</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.7;">Web search, news APIs, regulatory publication feeds (FDIC, OCC, Fed), earnings call transcripts, regulatory filing parsers (SEC EDGAR). Allows agents to stay current without human research cycles — critical for geopolitical risk monitoring and regulatory change management.</div>
+        </div>
+        <div class="card" style="padding:12px;">
+          <div class="card-label">HUMAN-IN-LOOP TOOLS</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:6px;line-height:1.7;">Approval request interfaces, escalation routing, uncertainty flags, confidence scoring. The most important governance tools — allow agents to stop, report state, and request human judgment at defined decision points. Non-negotiable for SR 11-7 compliant agent deployment in capital decisions.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <p><strong>The Governance Design Imperative:</strong> Every agentic workflow deployed in a risk function requires explicit answers to four questions before production: (1) <strong>What decisions can the agent make autonomously?</strong> (2) <strong>What triggers a mandatory human checkpoint?</strong> (3) <strong>What is the full audit trail of agent actions?</strong> (4) <strong>How is agent failure detected and recovered?</strong> Systems that don't answer these questions explicitly are not production-ready for capital-sensitive workflows regardless of capability. This is the governance wrapper that distinguishes an AI toy from an institutional tool.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  TAB 5: DISPLACEMENT MAP
+══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="t5">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 05 // Workforce Displacement Analysis</div>
+    <h2>CIB RISK <em>DISPLACEMENT MAP</em></h2>
+    <p>A function-by-function analysis of where agentic AI will — and should — replace human workflows in CIB risk analytics. Organized by displacement probability, timeline, and the value of the human work that gets freed up. This is the most operationally important section for a Head of Risk Analytics making staffing and capability decisions.</p>
+  </div>
+
+  <div class="callout">
+    <p><strong>The Framework:</strong> Displacement probability correlates with three factors: (1) <strong>Task structuredness</strong> — how clearly defined are the inputs, process, and expected outputs? (2) <strong>Data accessibility</strong> — can an agent access the required data programmatically? (3) <strong>Tolerance for error</strong> — what is the consequence of a wrong answer, and how detectable is it? High structure + accessible data + detectable errors = high displacement probability. The inverse = human-resilient role.</p>
+  </div>
+
+  <div class="sub-head">FUNCTIONS WITH HIGHEST DISPLACEMENT PROBABILITY</div>
+  <div class="block" style="margin-bottom:20px;">
+    <div class="block-body" style="padding:0;">
+      <table class="dis-table">
+        <thead>
+          <tr>
+            <th style="width:180px;">Function / Role</th>
+            <th style="width:280px;">What Agent Does Better</th>
+            <th>Value of Human Work Released</th>
+            <th style="width:90px;">Disp. Risk</th>
+            <th style="width:100px;">Timeline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>BAU Stress Report Production</td>
+            <td>Agent pulls data, runs standard shock calculations, generates formatted reports, routes for review — continuously, without error, overnight</td>
+            <td>Senior analysts re-focused on scenario design, exception analysis, and methodology improvement — not template-filling</td>
+            <td><span class="risk-badge risk-high">VERY HIGH</span></td>
+            <td><span class="timeline-badge">12–18 MO</span></td>
+          </tr>
+          <tr>
+            <td>Limit Breach Monitoring &amp; First Alert</td>
+            <td>Continuous monitoring vs. end-of-day; instant breach detection; automated first-response report with driver decomposition; human escalation routing</td>
+            <td>Risk officers focus on breach resolution and pattern analysis instead of detection and documentation</td>
+            <td><span class="risk-badge risk-high">VERY HIGH</span></td>
+            <td><span class="timeline-badge">6–12 MO</span></td>
+          </tr>
+          <tr>
+            <td>Regulatory Narrative Drafting (CCAR/DFAST)</td>
+            <td>LLM generates scenario rationale, methodology justification, and plausibility narrative from structured inputs — consistent, SR 11-7 language-compliant</td>
+            <td>Senior risk writers focus on review, regulatory strategy, and examiner relationship management instead of first-draft production</td>
+            <td><span class="risk-badge risk-high">HIGH</span></td>
+            <td><span class="timeline-badge">12–24 MO</span></td>
+          </tr>
+          <tr>
+            <td>Market Intelligence Compilation</td>
+            <td>Real-time synthesis of news, filings, macro data — structured into briefing format — continuously updated without human research cycles</td>
+            <td>Risk analysts produce higher-level analysis and strategic insight instead of information aggregation</td>
+            <td><span class="risk-badge risk-high">VERY HIGH</span></td>
+            <td><span class="timeline-badge">NOW</span></td>
+          </tr>
+          <tr>
+            <td>VaR Attribution &amp; P&amp;L Explain</td>
+            <td>Automated calculation + driver decomposition + plain-English explanation — delivered on demand for any desk, any time period</td>
+            <td>Analysts focus on anomalies and methodology questions, not routine attribution calculations</td>
+            <td><span class="risk-badge risk-high">HIGH</span></td>
+            <td><span class="timeline-badge">12–18 MO</span></td>
+          </tr>
+          <tr>
+            <td>Backtesting Exception Documentation</td>
+            <td>Automatic exception classification (model error vs. market event), context synthesis, Basel zone narrative generation — faster and more consistent than manual</td>
+            <td>Model validators focus on systemic exception patterns and methodology improvements instead of exception write-ups</td>
+            <td><span class="risk-badge risk-high">HIGH</span></td>
+            <td><span class="timeline-badge">12–18 MO</span></td>
+          </tr>
+          <tr>
+            <td>Model Documentation First Draft</td>
+            <td>LLM generates structured SR 11-7 compliant documentation from model specifications — consistent format, no omissions, regulatory language built-in</td>
+            <td>Model validators focus on conceptual soundness and assumption testing instead of documentation structuring</td>
+            <td><span class="risk-badge risk-med">MEDIUM</span></td>
+            <td><span class="timeline-badge">18–24 MO</span></td>
+          </tr>
+          <tr>
+            <td>Data Quality Surveillance</td>
+            <td>Continuous monitoring of risk data feeds — anomaly detection, missing data flags, cross-system reconciliation — 24/7 without human monitoring cycles</td>
+            <td>Data teams focus on root cause resolution and infrastructure improvement instead of daily surveillance</td>
+            <td><span class="risk-badge risk-high">VERY HIGH</span></td>
+            <td><span class="timeline-badge">6–12 MO</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sub-head">FUNCTIONS WITH LOWER DISPLACEMENT PROBABILITY — THE HUMAN MOAT</div>
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">HUMAN-RESILIENT</span><span class="block-title">Strategic Risk Judgment &amp; Novel Scenario Design</span></div>
+      <div class="block-body">
+        <p>Recognizing that a geopolitical event creates a novel market structure regime that historical analogs can't calibrate — and knowing which assumptions to override — requires deep market intuition, institutional memory, and judgment under uncertainty that AI cannot replicate in 2026. The value of a 20-year risk veteran is disproportionately in exactly the moments where AI is least reliable: unprecedented scenarios.</p>
+        <p><strong>The flip side:</strong> AI dramatically amplifies this human judgment by handling all the mechanical execution — the senior risk professional focuses 100% on the strategic call, not the spreadsheet.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">HUMAN-RESILIENT</span><span class="block-title">Regulator Relationship Management</span></div>
+      <div class="block-body">
+        <p>OCC/Fed examination relationships, regulatory dialogue, and the informal understanding of examiner priorities require political intelligence, trust, and judgment that cannot be automated. The value of knowing an examiner's actual concern before it's formally raised — and the ability to navigate that relationship — is irreplaceable. AI can prepare you for every examiner question; only a human can read the room.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">HUMAN-RESILIENT</span><span class="block-title">Cross-Desk Risk Governance &amp; Negotiation</span></div>
+      <div class="block-body">
+        <p>Setting risk limits, negotiating appetite with trading desks, and navigating the organizational politics of risk oversight require authority, trust, and relationship capital. An AI can tell you the analytically optimal limit level; only a human can get a desk head to accept a limit that constrains their P&amp;L. Organizational influence is the most durable human advantage in risk management.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">HUMAN-RESILIENT</span><span class="block-title">AI System Design &amp; Governance Architecture</span></div>
+      <div class="block-body">
+        <p>Ironically, the most AI-resistant role in a risk function is the person who designs and governs the AI systems themselves. Understanding what agents can and can't be trusted with, designing governance frameworks, evaluating model risk of AI workflows, and making the strategic deployment decisions — this is entirely human work. The displacement of junior analytical roles creates demand for senior AI-governance roles that didn't exist before.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">PRODUCTIVITY LEVERAGE — THE 1-PERSON TEAM ANALYSIS</div>
+  <div class="block" style="margin-bottom:24px;">
+    <div class="block-body">
+      <p style="margin-bottom:16px;color:var(--text2);">The most important quantitative question for a Head of Risk Analytics: what is the actual productivity multiple that well-deployed AI creates per senior analyst? Based on current production deployments and practitioner benchmarks:</p>
+      <div class="impact-row"><div class="impact-label">Market intelligence brief production</div><div class="impact-bar-wrap"><div class="impact-bar" style="width:95%;background:linear-gradient(90deg,var(--gold),var(--gold2));"></div></div><div class="impact-val">~20x</div></div>
+      <div class="impact-row"><div class="impact-label">BAU stress report generation</div><div class="impact-bar-wrap"><div class="impact-bar" style="width:90%;background:linear-gradient(90deg,var(--gold),var(--gold2));"></div></div><div class="impact-val">~15x</div></div>
+      <div class="impact-row"><div class="impact-label">Python automation development</div><div class="impact-bar-wrap"><div class="impact-bar" style="width:85%;background:linear-gradient(90deg,var(--gold),var(--gold2));"></div></div><div class="impact-val">~10x</div></div>
+      <div class="impact-row"><div class="impact-label">Regulatory narrative drafting</div><div class="impact-bar-wrap"><div class="impact-bar" style="width:80%;background:linear-gradient(90deg,var(--gold),var(--gold2));"></div></div><div class="impact-val">~8x</div></div>
+      <div class="impact-row"><div class="impact-label">Model documentation first draft</div><div class="impact-bar-wrap"><div class="impact-bar" style="width:75%;background:linear-gradient(90deg,var(--gold),var(--gold2));"></div></div><div class="impact-val">~6x</div></div>
+      <div class="impact-row"><div class="impact-label">Cross-asset scenario design</div><div class="impact-bar-wrap"><div class="impact-bar" style="width:60%;background:linear-gradient(90deg,var(--gold),var(--gold2));"></div></div><div class="impact-val">~4x</div></div>
+      <div class="impact-row"><div class="impact-label">Novel strategic risk analysis</div><div class="impact-bar-wrap"><div class="impact-bar" style="width:20%;background:linear-gradient(90deg,var(--text3),var(--text3));"></div></div><div class="impact-val">~1.5x</div></div>
+      <div class="callout callout-cyan" style="margin-top:16px;">
+        <p><strong>The Implications Are Structural:</strong> A senior risk analyst operating with the full AI power stack (see Tab 7) can produce the documented output of a team of 4–6 junior analysts on structured analytical tasks. This is not incremental efficiency — it is a structural change in the team size required to run a risk analytics function. The strategic question for a Head of Analytics is whether this translates into: (A) a smaller team with the same output, (B) the same team with dramatically higher output, or (C) a redeployment of human capital toward higher-value risk governance work that AI cannot do.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  TAB 6: HUMAN CAPITAL STRATEGY
+══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="t6">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 06 // Human Capital Strategy</div>
+    <h2>HUMAN CAPITAL STRATEGY <em>FOR SENIOR LEADERS</em></h2>
+    <p>For a Head of Risk Analytics navigating the AI transition, the human capital question is the most consequential and politically sensitive one they will face. This section provides a strategic framework for thinking about how to position the function, how to respond to senior management pressure on headcount, and how to build the AI-augmented team architecture of 2027–2028.</p>
+  </div>
+
+  <div class="callout callout-warn">
+    <p><strong>The Uncomfortable Reality:</strong> If a senior leader in risk analytics deploys AI aggressively, they will be able to demonstrate — in concrete, documented terms — that 30–50% of their current junior analyst headcount could be replaced with AI agents on structured analytical tasks within 18–24 months. Senior management will see those numbers. The question is not whether this conversation happens, but who frames it first and how. The leader who proactively shapes the narrative controls the outcome; the leader who waits to be asked is responding to someone else's framing.</p>
+  </div>
+
+  <div class="sub-head">STRATEGIC POSITIONS AVAILABLE TO A HEAD OF RISK ANALYTICS</div>
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-gold">POSITION A — CONTROLLED TRANSFORMATION</span><span class="block-title">The Proactive Architect</span></div>
+      <div class="block-body">
+        <p><strong>The stance:</strong> "I am building the AI-augmented risk function of the future. I'm leading this transformation, defining the governance, and controlling the timeline. Headcount decisions will be mine to make, in service of the business, with my team retrained and repositioned — not imposed on me from outside."</p>
+        <p><strong>What this requires:</strong> A clear AI deployment roadmap with 6/12/24-month milestones. An honest capability assessment of current staff — who can grow into AI-adjacent roles, who can't. A reskilling program that moves high-potential analysts toward AI oversight, model governance, and strategic risk roles. Demonstrated productivity gains that justify the investment in AI infrastructure.</p>
+        <p><strong>The advantage:</strong> You control the narrative, protect your best people, and emerge as the AI transformation leader in CIB. The most coveted senior risk roles in 2027–2028 will be people who successfully ran this playbook.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-red">POSITION B — REACTIVE DEFENSE</span><span class="block-title">The Resistor</span></div>
+      <div class="block-body">
+        <p><strong>The stance:</strong> "The risk function requires human judgment, regulatory scrutiny of AI is real, and we should be cautious about deploying unproven technology in capital-sensitive workflows."</p>
+        <p><strong>Why this fails:</strong> Every true statement in this position is also a temporary one. The regulatory scrutiny argument weakens as governance frameworks mature. The "unproven" argument weakens as JPM and GS publish deployment results. The human judgment argument is correct for 20% of the work — but someone will note it doesn't apply to the other 80%. The leader who resists loses the narrative to the CFO or COO who sees the productivity numbers and asks the question themselves — except in that scenario, the head of risk doesn't shape the answer.</p>
+        <p><strong>The risk:</strong> Being bypassed. A technologically aggressive CFO or COO who sees AI productivity numbers — at peers or in published research — will eventually ask why the risk function hasn't captured equivalent value. Not having an answer is a career-defining moment.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">THE RESKILLING TAXONOMY — WHO SURVIVES &amp; THRIVES</div>
+  <div class="block" style="margin-bottom:24px;">
+    <div class="block-body">
+      <div class="grid-3">
+        <div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--green);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">HIGH GROWTH — DOUBLE DOWN</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.8;">
+            <div style="color:var(--text);margin-bottom:4px;">◆ AI Governance Specialists</div>
+            <div style="font-size:11px;margin-bottom:10px;">Design and enforce AI deployment policies; model risk for LLMs; SR 11-7 compliance for agent workflows. This role doesn't exist formally yet — it will within 2 years, and demand will far outstrip supply.</div>
+            <div style="color:var(--text);margin-bottom:4px;">◆ Risk + AI Hybrid Practitioners</div>
+            <div style="font-size:11px;margin-bottom:10px;">Domain experts who can design agent workflows, evaluate AI outputs critically, and bridge the gap between AI engineering and risk management. The rarest skill combination in capital markets today.</div>
+            <div style="color:var(--text);margin-bottom:4px;">◆ Prompt &amp; Workflow Engineers</div>
+            <div style="font-size:11px;">Risk professionals who understand how to structure AI workflows, evaluate output quality, debug agent failures, and build RAG systems over institutional knowledge. Technical enough to build, domain-fluent enough to validate.</div>
+          </div>
+        </div>
+        <div style="padding:0 12px;border-left:1px solid var(--border);border-right:1px solid var(--border);">
+          <div style="font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">TRANSITION PATH — RETRAIN</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.8;">
+            <div style="color:var(--text);margin-bottom:4px;">◆ Junior Data Analysts</div>
+            <div style="font-size:11px;margin-bottom:10px;">Current BAU report producers and data pullers. High displacement risk for the pure data-processing component. Retrain toward: AI quality control, exception analysis, and workflow oversight. Those who develop AI fluency quickly will outperform pre-AI seniors.</div>
+            <div style="color:var(--text);margin-bottom:4px;">◆ Model Documentation Writers</div>
+            <div style="font-size:11px;margin-bottom:10px;">LLMs will produce first drafts; value shifts to review, strategic framing, and regulatory positioning. Retrain toward: AI-assisted documentation workflow design; examiner relationship strategy.</div>
+            <div style="color:var(--text);margin-bottom:4px;">◆ Quant Modelers (Junior)</div>
+            <div style="font-size:11px;">AI-accelerated code generation changes the math: one experienced quant + AI tools produces as much as three pure junior quants. Retrain toward: model design and validation, not implementation.</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:9px;color:var(--red);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;">AT RISK — PLAN CAREFULLY</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.8;">
+            <div style="color:var(--text);margin-bottom:4px;">◆ BAU Report Production Roles</div>
+            <div style="font-size:11px;margin-bottom:10px;">Roles whose primary value is producing standard reports from structured data. Timeline: 12–18 months to significant automation. Honest assessment: most of this work will be agent-automated within 2 years in an aggressively AI-forward function.</div>
+            <div style="color:var(--text);margin-bottom:4px;">◆ Junior Market Surveillance</div>
+            <div style="font-size:11px;margin-bottom:10px;">Routine monitoring, alert triage, first-pass anomaly flagging — classic event-driven agent territory. Continuous, rule-based, data-intensive. High automation probability within 12 months.</div>
+            <div style="color:var(--text);margin-bottom:4px;">◆ Regulatory Report Compilers</div>
+            <div style="font-size:11px;">Data aggregation, formatting, and template completion for regulatory submissions. The mechanical assembly of regulatory reports is almost entirely automatable with current technology.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">HOW TO MAKE WAVES — THE SENIOR LEADER PLAYBOOK</div>
+  <div class="grid-2">
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-cyan">MOVE 01</span><span class="block-title">Establish the AI Governance Framework First</span></div>
+      <div class="block-body">
+        <p>Before deploying any agent, publish a CIB Risk AI Governance Framework: what AI can be used for, what requires human approval, what the audit and documentation requirements are, and how model risk of AI workflows is assessed. This does three things: establishes your authority as the rule-setter (not the rule-follower), creates the safe infrastructure for aggressive deployment, and positions you as the governance expert in a domain where none currently exists institutionally.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">TIMELINE: 60–90 days to publish a credible v1.0 framework. The framework itself becomes the governance moat.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-gold">MOVE 02</span><span class="block-title">Pilot → Prove → Scale (The 90-Day Win)</span></div>
+      <div class="block-body">
+        <p>Identify one high-visibility, well-defined workflow that currently consumes significant analyst time and has a clearly measurable output quality: BAU stress report production, backtesting exception documentation, or market intelligence briefings. Build an AI agent for this workflow in 30 days. Run it in parallel with the human process for 30 days. Present the productivity delta with measured output quality in 30 days. A documented 5–10x productivity gain on a real workflow is more persuasive than any strategic deck.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">OUTCOME: Internal credibility, budget for the next phase, and a replicable deployment template.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-purple">MOVE 03</span><span class="block-title">Own the Build vs. Buy Decision</span></div>
+      <div class="block-body">
+        <p>The Tachyon vs. vendor (Rogo, Kensho, Bloomberg AI) decision is a strategic inflection point. The leader who conducts and owns this analysis — with a published framework for the decision, clear criteria, and a recommendation — shapes the institution's AI architecture for the next 5 years. The leader who waits for IT or procurement to own it loses strategic influence over the single most important capability investment the function will make.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">FRAME: Build for what's proprietary (risk data, institutional knowledge, workflow integration). Buy for what's generic (language models, common NLP tasks). Never externalize your data moat.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-green">MOVE 04</span><span class="block-title">Position as the Board-Level AI Risk Expert</span></div>
+      <div class="block-body">
+        <p>As AI deployment accelerates across the bank, the Board and senior management will need someone who understands both the capability and the risk of AI systems — not a technologist, but a risk professional who speaks AI fluently. The Head of Risk Analytics is uniquely positioned for this role: the domain expertise, the risk management framework, and the operational deployment experience combine into a rare and valuable perspective. This is an opportunity to expand mandate, not just defend territory.</p>
+        <p class="dim" style="font-family:var(--mono);font-size:10px;">TACTIC: Volunteer to contribute to the bank's AI governance committee. Write the first "AI Risk Annual Report." Brief the Risk Committee on AI model risk — before they ask.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  TAB 7: POWER STACK
+══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="t7">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 07 // The Power Stack</div>
+    <h2>THE <em>POWER STACK</em> — ONE PERSON AS AN ORGANIZATION</h2>
+    <p>The complete, curated toolkit that allows a single senior risk professional to operate with the analytical output capacity of a team of 5–8. Organized by function layer. Every tool listed has been validated in production use in financial or adjacent domains. This is not aspirational — every item on this list is deployable today.</p>
+  </div>
+
+  <div class="callout callout-cyan">
+    <p><strong>The Architecture Principle:</strong> The power stack is not a collection of tools — it's a layered system where each layer builds on the one below it. The foundation (data + compute) enables the intelligence layer (LLMs + RAG), which enables the automation layer (agents + workflows), which enables the interface layer (how you consume and distribute the output). A tool dropped into the wrong layer creates friction instead of leverage. <strong>Design the architecture first, then select the tools.</strong></p>
+  </div>
+
+  <div class="stack-layer">
+    <div class="stack-layer-header">
+      <div class="stack-layer-num">L1</div>
+      <div class="stack-layer-title">INTELLIGENCE LAYER — Core LLMs</div>
+      <div class="stack-layer-desc">The Reasoning Engine</div>
+    </div>
+    <div class="stack-tools">
+      <div class="tool-chip">
+        <div class="tool-name">Claude 3.7 Sonnet (Anthropic)</div>
+        <div class="tool-role">Primary workhorse for complex reasoning, code generation, document synthesis, and extended analytical tasks. Extended Thinking mode for multi-step problems. 200K context. Strongest for governance-sensitive work due to Constitutional AI training.</div>
+        <div class="tool-cost">API: ~$3/M input tokens // AWS Bedrock for enterprise</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">OpenAI o3 / GPT-4o</div>
+        <div class="tool-role">O3 for complex reasoning tasks where step-by-step logic matters (scenario consistency checking, model documentation review). GPT-4o for speed-sensitive tasks, multimodal inputs (charts + text), and workflows requiring the widest third-party integration ecosystem.</div>
+        <div class="tool-cost">O3: ~$15/M tokens // GPT-4o: ~$5/M tokens // Azure OpenAI for banking</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Gemini 2.0 Pro (Google)</div>
+        <div class="tool-role">For tasks requiring 1M+ token context — ingesting entire CCAR documentation sets, full regulatory examination files, or year-long trading desk histories in a single prompt. Also best-in-class for multimodal tasks (chart interpretation, presentation analysis).</div>
+        <div class="tool-cost">~$3.50/M tokens // Vertex AI enterprise deployment</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Llama 4 / Mistral (On-Prem)</div>
+        <div class="tool-role">Open-weight models deployable on internal infrastructure — zero data residency risk. For any workflow involving Level 3 sensitive data that cannot leave the institution. Capability: approaching GPT-4 class for most structured tasks. Infrastructure: Ollama (local) or vLLM (server deployment).</div>
+        <div class="tool-cost">Infrastructure cost only — no per-token API charge at scale</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">DeepSeek-R1 (Open Source)</div>
+        <div class="tool-role">Reasoning-class model at open-source pricing. For cost-sensitive high-volume reasoning tasks where data residency allows API calls. Chinese-origin — data governance consideration for institutional deployment; on-prem self-hosting resolves this.</div>
+        <div class="tool-cost">API: ~$0.55/M tokens (via together.ai) // Self-hostable</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Perplexity Pro</div>
+        <div class="tool-role">Real-time web-connected research synthesis. For rapidly synthesizing current market events, regulatory developments, and competitive intelligence without manual research cycles. The fastest path from "what just happened" to "here's a structured analysis" in the market intelligence workflow.</div>
+        <div class="tool-cost">$20/month Pro // Enterprise API available</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack-layer">
+    <div class="stack-layer-header">
+      <div class="stack-layer-num">L2</div>
+      <div class="stack-layer-title">DEVELOPMENT LAYER — Code &amp; Automation Accelerators</div>
+      <div class="stack-layer-desc">10x Developer</div>
+    </div>
+    <div class="stack-tools">
+      <div class="tool-chip">
+        <div class="tool-name">Cursor</div>
+        <div class="tool-role">AI-native code editor — GPT-4/Claude embedded in the IDE. Understands your entire codebase, generates context-aware code, explains existing code, and debugs with full project understanding. The single highest-leverage tool for a quantitative risk professional who writes Python — turns hours into minutes on complex automation tasks.</div>
+        <div class="tool-cost">$20/month Pro. ROI: obvious within first hour of use.</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">GitHub Copilot</div>
+        <div class="tool-role">Real-time code completion and generation directly in VSCode/IDE of choice. Complementary to Cursor — Copilot excels at line-by-line completion speed; Cursor excels at whole-file and project-context generation. Best practice: use both, choose by task type.</div>
+        <div class="tool-cost">$10/month individual // $19/month Business with enterprise controls</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Jupyter + Claude/GPT API</div>
+        <div class="tool-role">Interactive notebook environment with LLM API calls for on-demand analysis generation. The standard stack for quant risk work — build Python notebooks where cells can call LLMs for narrative generation, anomaly explanation, or scenario design, and execute quantitative calculations locally.</div>
+        <div class="tool-cost">Free + API costs</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">LangSmith (LangChain)</div>
+        <div class="tool-role">Observability and evaluation platform for LLM applications. Track every LLM call, debug agent failures, evaluate output quality systematically, and maintain audit trails of AI-assisted workflows. Non-negotiable for production deployments in risk — you cannot govern what you cannot observe.</div>
+        <div class="tool-cost">Free tier available // $39/month for Teams</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Replit / E2B</div>
+        <div class="tool-role">Cloud code execution environments for agent sandboxing. Agents that write and execute Python need a secure, isolated execution environment — never your production systems. E2B provides containerized sandboxes purpose-built for AI code execution with millisecond spin-up times.</div>
+        <div class="tool-cost">E2B: usage-based, ~$0.001/sandbox-second</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Make (Integromat) / n8n</div>
+        <div class="tool-role">Workflow automation platforms for connecting AI tools to business systems without custom code. n8n is self-hostable (important for sensitive data). Trigger agents on schedules, route outputs to email/Teams/Slack, connect to databases and APIs. The glue layer that makes AI output actionable in existing workflows.</div>
+        <div class="tool-cost">n8n: $20/month cloud or free self-hosted // Make: $9/month</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack-layer">
+    <div class="stack-layer-header">
+      <div class="stack-layer-num">L3</div>
+      <div class="stack-layer-title">AGENT ORCHESTRATION LAYER</div>
+      <div class="stack-layer-desc">The Autonomous Workforce</div>
+    </div>
+    <div class="stack-tools">
+      <div class="tool-chip">
+        <div class="tool-name">LangGraph</div>
+        <div class="tool-role">Graph-based stateful agent orchestration — the production standard for complex multi-step agent workflows. Define nodes (agent steps) and edges (transitions, conditionals, loops) in Python. Full support for human-in-loop checkpoints, state persistence, and parallel execution. LLM-agnostic — works with any model.</div>
+        <div class="tool-cost">Open source // LangGraph Cloud: $39/month + usage</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">CrewAI</div>
+        <div class="tool-role">Role-based multi-agent teams for document-intensive workflows. Fastest time-to-working-agent for workflows that map to human team structures: analyst → reviewer → writer → QA. Best for: stress scenario generation pipelines, regulatory documentation workflows, market intelligence brief production.</div>
+        <div class="tool-cost">Open source // CrewAI Enterprise: contact pricing</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">AutoGen (Microsoft)</div>
+        <div class="tool-role">Conversational multi-agent framework where agents debate, critique, and refine each other's outputs. Strongest for quality-intensive tasks where peer review matters: scenario consistency checking, model documentation validation, regulatory narrative quality control. Human agents can be inserted into any conversation loop.</div>
+        <div class="tool-cost">Open source // Azure AI integration</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Pinecone / pgvector</div>
+        <div class="tool-role">Vector databases for the RAG memory layer. Pinecone is fully managed and production-ready in hours. pgvector is PostgreSQL-native — ideal for institutions already running Postgres with data governance controls. Store embeddings of all institutional knowledge: risk policies, historical scenarios, regulatory guidance, internal documentation.</div>
+        <div class="tool-cost">Pinecone: $70/month starter // pgvector: free (infra cost only)</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Weaviate</div>
+        <div class="tool-role">Open-source vector database with hybrid search (semantic + keyword) — critical for financial document retrieval where exact term matching (CCAR, VaR, SR 11-7) matters as much as semantic similarity. Self-hostable for data governance compliance. Best for large-scale institutional knowledge bases.</div>
+        <div class="tool-cost">Open source self-hosted // Weaviate Cloud: usage-based</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Haystack (deepset)</div>
+        <div class="tool-role">End-to-end NLP pipeline framework for building RAG systems and document Q&amp;A. Excellent for complex document processing pipelines: ingest → chunk → embed → retrieve → generate. Strong financial document support. Often preferred over LangChain for pure RAG use cases due to cleaner pipeline abstractions.</div>
+        <div class="tool-cost">Open source // deepset Cloud: $499/month enterprise</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack-layer">
+    <div class="stack-layer-header">
+      <div class="stack-layer-num">L4</div>
+      <div class="stack-layer-title">RESEARCH &amp; INTELLIGENCE LAYER</div>
+      <div class="stack-layer-desc">Real-Time Market Intelligence</div>
+    </div>
+    <div class="stack-tools">
+      <div class="tool-chip">
+        <div class="tool-name">AlphaSense</div>
+        <div class="tool-role">NLP-powered search across broker research, SEC filings, earnings call transcripts, news, and expert interviews. Smart Summaries feature distills thousands of documents to key insights on any company or theme. Best-in-class for credit analysis workflows and competitive intelligence. Enterprise API for agent integration.</div>
+        <div class="tool-cost">$299–499/month individual // Enterprise: $30K+/year</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Kensho (S&amp;P Global)</div>
+        <div class="tool-role">Financial NLP for event-driven risk signals: classifying news events, extracting entities, mapping earnings surprises to historical market reactions. Scribe (earnings transcripts) + Link (entity resolution). Deep S&amp;P data integration. Primary use: automated news-to-risk-signal pipelines and event-driven scenario triggering.</div>
+        <div class="tool-cost">Enterprise licensing via S&amp;P Global. API available.</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Rogo AI</div>
+        <div class="tool-role">LLM-powered financial research platform — natural language queries over financial filings, market data, and research. Goldman Sachs-backed. Strongest for: rapid company/sector analysis, earnings synthesis, credit risk assessment from public filings. CIB-focused feature roadmap. Best candidate for buy-side of the build vs. buy decision for research-heavy workflows.</div>
+        <div class="tool-cost">Enterprise licensing. Comparable to Bloomberg terminal range.</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Bloomberg Terminal + BQNT</div>
+        <div class="tool-role">The irreplaceable data foundation. Bloomberg's Python API (BQNT) enables programmatic data access for agent tool integration — pull market data, run functions, access news directly into agent workflows. Bloomberg's own AI layer is developing but remains limited. The data infrastructure that all other tools in this stack should be connected to.</div>
+        <div class="tool-cost">$27K/year terminal // BQNT included</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Feedly + Claude API</div>
+        <div class="tool-role">Feedly's AI-powered news aggregation + Claude API for synthesis = automated intelligence brief pipeline. Configure Feedly to monitor regulatory feeds, macro news, geopolitical developments. Claude synthesizes and structures the output into risk-relevant intelligence. A 2-hour manual market monitoring process becomes a fully automated continuous feed.</div>
+        <div class="tool-cost">Feedly Pro: $18/month // + Claude API costs</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Lexis+ AI / CaseText (Legal/Reg)</div>
+        <div class="tool-role">AI-powered regulatory and legal research — natural language queries over regulatory publications, examination guidance, enforcement actions, and legal precedent. Critical for: SR 11-7 compliance research, regulatory change monitoring, regulatory exam preparation. Significantly reduces the research overhead of regulatory risk management.</div>
+        <div class="tool-cost">Enterprise licensing // ~$200–400/month professional tier</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stack-layer">
+    <div class="stack-layer-header">
+      <div class="stack-layer-num">L5</div>
+      <div class="stack-layer-title">KNOWLEDGE MANAGEMENT &amp; OUTPUT LAYER</div>
+      <div class="stack-layer-desc">The Institutional Brain</div>
+    </div>
+    <div class="stack-tools">
+      <div class="tool-chip">
+        <div class="tool-name">Notion AI</div>
+        <div class="tool-role">Knowledge base, project management, and document creation with embedded AI. For building and maintaining the institutional knowledge corpus that feeds the RAG layer. Notion AI can synthesize across pages, generate documentation from notes, and manage complex multi-phase project workflows. The personal institutional knowledge management system.</div>
+        <div class="tool-cost">$16/month Plus // $20/month Business with AI included</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">NotebookLM (Google)</div>
+        <div class="tool-role">Upload any documents (PDFs, regulatory filings, research papers, internal docs) and query them with AI. Best-in-class for synthesizing across multiple large documents simultaneously — entire regulatory exam files, stress test documentation sets. Sources every answer with citations. Free for professional use via Google.</div>
+        <div class="tool-cost">Free (Google account) // Agentspace enterprise version</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Obsidian (Local)</div>
+        <div class="tool-role">Local-first markdown knowledge base with powerful graph visualization. For sensitive institutional thinking that should never touch external servers — strategy notes, regulatory intelligence, organizational analysis. Obsidian's plugin ecosystem (Dataview, Templater) plus local AI plugins (Ollama integration) creates a fully private AI knowledge management system.</div>
+        <div class="tool-cost">Free // Sync: $4/month</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Gamma / Beautiful.ai</div>
+        <div class="tool-role">AI-powered presentation generation — turn structured text or outlines into polished slide decks automatically. For rapid production of CRO briefings, board risk committee presentations, and regulatory preparation documents. Output quality has surpassed "adequate" into "good" territory for standard institutional presentations.</div>
+        <div class="tool-cost">$15/month Pro</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Descript / ElevenLabs</div>
+        <div class="tool-role">AI voice and video — for producing audio/video briefings, narrated dashboards, and training materials. Increasingly relevant as risk communication evolves beyond static PDF: an AI-narrated market risk briefing is more engaging and accessible than a 40-page document. Leading edge but deployable today.</div>
+        <div class="tool-cost">Descript: $24/month // ElevenLabs: $22/month Creator</div>
+      </div>
+      <div class="tool-chip">
+        <div class="tool-name">Tableau / Power BI + AI</div>
+        <div class="tool-role">Both platforms now have embedded AI Q&amp;A and anomaly detection. For production-grade risk dashboard visualization that non-technical stakeholders can query in natural language. Power BI's Copilot integration enables natural language dashboard generation; Tableau's Einstein AI provides automated insight discovery. The reporting layer that makes agent output consumable at scale.</div>
+        <div class="tool-cost">Power BI: $20/user/month // Tableau: $75/month Creator</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+  TAB 8: FORWARD SCENARIOS
+══════════════════════════════════════════════════ -->
+<div class="tab-panel" id="t8">
+  <div class="panel-header">
+    <div class="panel-eyebrow">Section 08 // Forward Scenarios</div>
+    <h2>FORWARD SCENARIOS <em>2026 – 2028</em></h2>
+    <p>Three scenarios for how AI development and deployment in capital markets risk analytics unfolds over the next 24–36 months. Not predictions — structured thinking tools for strategic planning. For a Head of Risk Analytics, these scenarios define the decision space: what investments to make now, what capabilities to build, and what organizational changes to prepare for across the plausible range of outcomes.</p>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:28px;">
+    <div class="scenario" data-year="26–28" style="border-color:var(--gold-border);">
+      <div class="scenario-label" style="color:var(--gold);">SCENARIO A — BASE CASE (55%)</div>
+      <h3 style="color:var(--gold);">Controlled Acceleration</h3>
+      <p>AI deployment in CIB risk functions accelerates at a manageable pace — governance frameworks develop in parallel with capabilities. Regulatory clarity on SR 11-7/LLM emerges. Banks that started building now (JPM, GS, Citi, BlackRock) establish 2-3 year capability leads. Wells Fargo completes Tachyon build or makes a strategic vendor acquisition.</p>
+      <div class="scenario-impact">
+        <div class="scenario-impact-label">Key Implications for Risk Analytics</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.8;">
+          <div>◆ 30–40% of junior analyst BAU work automated by 2027</div>
+          <div>◆ New roles: AI governance specialist, workflow designer, model risk for LLMs</div>
+          <div>◆ Headcount pressure is real but manageable through attrition</div>
+          <div>◆ Competitive differentiation visible — early movers outperform</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario" data-year="26–28" style="border-color:rgba(255,68,85,.3);">
+      <div class="scenario-label" style="color:var(--red);">SCENARIO B — RAPID DISRUPTION (30%)</div>
+      <h3 style="color:var(--red);">Agent Tipping Point</h3>
+      <p>Reasoning models (o4/o5 class) reach human-expert equivalence on structured analytical tasks by early 2027. Agentic systems demonstrate >90% automation of BAU risk workflows in production at leading firms. Regulatory frameworks lag, creating compliance ambiguity. Competitive pressure forces acceleration beyond governance comfort zones.</p>
+      <div class="scenario-impact">
+        <div class="scenario-impact-label">Key Implications for Risk Analytics</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.8;">
+          <div>◆ 50–70% of current headcount configurations disrupted by 2027</div>
+          <div>◆ Firms without AI-capable senior leadership face talent exodus</div>
+          <div>◆ Model risk of AI becomes a regulatory examination priority</div>
+          <div>◆ First-mover advantage is decisive; gap is too large to close quickly</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario" data-year="26–28" style="border-color:rgba(0,224,138,.3);">
+      <div class="scenario-label" style="color:var(--green);">SCENARIO C — FRICTION CEILING (15%)</div>
+      <h3 style="color:var(--green);">Governance Bottleneck</h3>
+      <p>Regulatory scrutiny of AI in risk functions intensifies after a high-profile AI-related risk failure at a major bank. OCC/Fed impose restrictions on AI use in capital-adjacent workflows. SR 11-7 addendum creates significant compliance overhead. AI deployment slows, and early investments are partially stranded pending regulatory clarity.</p>
+      <div class="scenario-impact">
+        <div class="scenario-impact-label">Key Implications for Risk Analytics</div>
+        <div style="font-size:11px;color:var(--text2);line-height:1.8;">
+          <div>◆ Leaders with strong AI governance frameworks benefit — they're compliant</div>
+          <div>◆ Uncontrolled AI deployment becomes a regulatory liability</div>
+          <div>◆ AI governance expertise becomes even more valuable than AI deployment expertise</div>
+          <div>◆ Window for capability building narrows before regulatory clarity returns</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">CRITICAL UNCERTAINTIES — THE VARIABLES THAT DETERMINE WHICH SCENARIO MATERIALIZES</div>
+  <div class="grid-2" style="margin-bottom:24px;">
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-gold">UNCERTAINTY 01</span><span class="block-title">Reasoning Model Capability Trajectory</span></div>
+      <div class="block-body">
+        <p><strong>The question:</strong> Do reasoning models (o3, o4+, Claude 5+) achieve reliable human-expert performance on unstructured financial judgment tasks in the 2026–2028 window, or do they plateau at structured-task automation?</p>
+        <p><strong>Why it matters:</strong> If models plateau at structured tasks, the human moat (strategic judgment, novel scenario design, regulatory relationships) remains intact. If models break through to unstructured judgment, the displacement timeline compresses significantly and the skills that protect senior risk professionals change fundamentally.</p>
+        <p><strong>Current signal:</strong> Reasoning models are progressing faster than expected. O3's ARC-AGI score suggests novel problem-solving capability approaching human performance. The realistic horizon for structured financial analysis automation is 12–18 months, not 36+.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-red">UNCERTAINTY 02</span><span class="block-title">Regulatory Response to AI in Risk Functions</span></div>
+      <div class="block-body">
+        <p><strong>The question:</strong> Does the Fed/OCC publish prescriptive guidance on AI use in capital-adjacent risk workflows within 12–18 months, and if so, does it enable or constrain deployment?</p>
+        <p><strong>Why it matters:</strong> Prescriptive guidance that creates a clear compliance pathway enables aggressive deployment (Scenario A/B). Prescriptive guidance that requires full model validation for every AI touchpoint near capital decisions significantly slows the timeline (Scenario C).</p>
+        <p><strong>Current signal:</strong> Draft SR 11-7 LLM addendum is circulating. Early indications suggest a tiered framework — higher scrutiny for decision-proximate AI, lighter framework for information/support AI. This is the best outcome: enables deployment with governance, rather than blocking it.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-cyan">UNCERTAINTY 03</span><span class="block-title">Open-Source Model Quality Curve</span></div>
+      <div class="block-body">
+        <p><strong>The question:</strong> Do open-source models (Llama 4, Mistral, DeepSeek successors) reach frontier-equivalent quality at a pace that makes on-premises deployment the preferred option for data-sensitive banking workflows?</p>
+        <p><strong>Why it matters:</strong> If on-prem open-source reaches frontier quality, the data residency barrier to AI deployment in banking largely disappears. Every workflow involving sensitive position data, client information, or proprietary risk models can be automated without API data exposure. The build vs. buy decision also shifts dramatically — infrastructure cost replaces per-token cost.</p>
+        <p><strong>Current signal:</strong> DeepSeek-R1 demonstrated reasoning-class performance at dramatically reduced compute cost, suggesting the gap between open-source and frontier is closing faster than most expected 12 months ago.</p>
+      </div>
+    </div>
+    <div class="block">
+      <div class="block-header"><span class="block-tag tag-purple">UNCERTAINTY 04</span><span class="block-title">Institutional Governance Maturity Speed</span></div>
+      <div class="block-body">
+        <p><strong>The question:</strong> Do financial institutions develop AI governance frameworks fast enough to enable aggressive deployment, or does governance lag create a capability gap that competitors fill?</p>
+        <p><strong>Why it matters:</strong> AI capabilities are advancing faster than institutional governance frameworks. Banks that develop governance infrastructure quickly will deploy aggressively and safely. Banks where governance development lags will either deploy recklessly (regulatory risk) or not at all (competitive risk). The governance function is the strategic bottleneck.</p>
+        <p><strong>Current signal:</strong> JPM and GS are 18–24 months ahead of most peers on governance infrastructure, having deployed production AI systems and iterated governance frameworks based on real operational experience. The gap between governance leaders and laggards is growing, not closing.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-head">STRATEGIC IMPERATIVES — WHAT TO DO NOW REGARDLESS OF SCENARIO</div>
+  <div class="block">
+    <div class="block-body">
+      <div class="grid-2">
+        <div>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">INVEST IN NOW — STRATEGY-INDEPENDENT</p>
+          <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+            <div style="color:var(--text);margin-bottom:2px;">1. BUILD THE AI GOVERNANCE FRAMEWORK</div>
+            <div style="margin-bottom:10px;">This is value-creating in every scenario. In A and B, it enables deployment. In C, it creates regulatory safety margin. Zero downside.</div>
+            <div style="color:var(--text);margin-bottom:2px;">2. INVEST IN RAG INFRASTRUCTURE OVER INSTITUTIONAL KNOWLEDGE</div>
+            <div style="margin-bottom:10px;">The proprietary knowledge corpus is the durable competitive asset. Embedding institutional knowledge in a retrievable vector store has value regardless of which model is the best performer in 18 months.</div>
+            <div style="color:var(--text);margin-bottom:2px;">3. DEVELOP HYBRID AI/RISK TALENT IN-HOUSE</div>
+            <div style="margin-bottom:10px;">The people who can design agent workflows, validate AI outputs, and govern AI deployment are already scarce. The external market for this talent will only tighten. Identify and accelerate development of the 2–3 people in your function who are genuinely AI-fluent today.</div>
+            <div style="color:var(--text);margin-bottom:2px;">4. RUN CONTROLLED PILOTS WITH DOCUMENTED RESULTS</div>
+            <div>Evidence-based deployment decisions require empirical evidence. A pilot that fails teaches you as much as one that succeeds. Build the institutional learning infrastructure now.</div>
+          </div>
+        </div>
+        <div>
+          <p style="font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;">WATCH AND DECIDE — SCENARIO-DEPENDENT</p>
+          <div style="font-size:12px;color:var(--text2);line-height:1.9;">
+            <div style="color:var(--text);margin-bottom:2px;">A. HEADCOUNT DECISIONS</div>
+            <div style="margin-bottom:10px;">Defer structural headcount decisions until pilot productivity evidence is institutional, not theoretical. Do not promise headcount reduction until you have empirical data from your specific workflows and data environment.</div>
+            <div style="color:var(--text);margin-bottom:2px;">B. FULL AGENTIC PRODUCTION DEPLOYMENT</div>
+            <div style="margin-bottom:10px;">Scale cautiously from pilot to production. The failure modes in production are different from controlled testing — particularly in risk functions where downstream consumers depend on output accuracy. Human oversight at production launch is non-negotiable.</div>
+            <div style="color:var(--text);margin-bottom:2px;">C. BUILD VS. BUY FINAL DECISION</div>
+            <div>The optimal decision depends on open-source model trajectory, regulatory environment, and Tachyon's actual capability delivery. Make this decision with 12-month evidence, not today's assumptions.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <p><strong>The Single Most Important Thing a Head of Risk Analytics Can Do in 2026:</strong> Become the person in your institution who understands — at a practitioner level, not a briefing level — what AI agents can actually do, what they fail at, and how to build governance around them. This combination of hands-on AI knowledge + risk management authority + institutional credibility is extraordinarily rare. The person who holds it shapes the most important strategic decisions the function will make in the next five years. The window to claim that position is open. It will not remain open indefinitely.</p>
+  </div>
+
+</div>
+<!-- END ALL PANELS -->
+
+</div><!-- /content -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>AI INTELLIGENCE BRIEF — CIB RISK ANALYTICS // WELLS FARGO // MARCH 2026 // CONFIDENTIAL</span>
+  <span>8 SECTIONS // FRONTIER RESEARCH + AGENTIC LANDSCAPE + WORKFORCE DISPLACEMENT + POWER STACK</span>
+</div>
+
+<script>
+// Tab navigation
+const tabs = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.tab-panel');
+
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.tab;
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(target).classList.add('active');
+    // scroll to top of content
+    document.querySelector('.content').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+// Animate impact bars on tab 5 activation
+const t5btn = document.querySelector('[data-tab="t5"]');
+t5btn.addEventListener('click', () => {
+  setTimeout(() => {
+    document.querySelectorAll('.impact-bar').forEach(bar => {
+      const w = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => { bar.style.width = w; }, 50);
+    });
+  }, 100);
+});
+</script>
+
+</body>
+</html>
