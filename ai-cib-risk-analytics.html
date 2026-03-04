@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI CIB Risk Analytics Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .content p {
+            margin-bottom: 15px;
+            text-align: justify;
+            line-height: 1.8;
+        }
+        
+        .content h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .content h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .metadata {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .page-break {
+            page-break-after: always;
+            margin: 40px 0;
+            border-top: 3px dashed #ddd;
+            padding-top: 40px;
+        }
+        
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            border-top: 1px solid #ddd;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI CIB Risk Analytics</h1>
+            <p>Risk Preparation and Management Guide</p>
+        </header>
+        
+        <div class="content">
+            <div class="metadata">
+                <strong>Document Generated:</strong> March 04, 2026<br>
+                <strong>Source:</strong> PDF Conversion<br>
+                <strong>Pages:</strong> 14
+            </div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+CONFIDENTIAL PREP MEMO
+AI IN CIB RISK ANALYTICS
+High-stakes conversation prep for Wells Fargo CIB Head of Risk Analytics
+Prepared for Mo | Current through March 4, 2026
+Executive view
+Core thesis: The highest-value AI strategy for a CIB risk organization is not replacing validated quantitative engines with
+black-box LLMs. It is wrapping AI around the risk stack - scenario design, risk explain, limit triage, intelligence synthesis,
+and governance - so the function moves faster, covers more surface area, and communicates better while the core
+numbers remain anchored in controlled models.
+How to use this document
+Read sections 1, 3, 5, and 8 first. Sections 2 and 4 are where you build edge. The goal is not to sound like an AI
+evangelist; it is to sound like a risk practitioner who understands where AI is actually useful inside a controlled banking
+environment.
+Conversation objective
+Make him conclude three things quickly: (1) you already think at the right altitude for senior risk leadership; (2) you are not naively
+hyping AI, you understand controls and production reality; and (3) you have already built credible prototypes and operating
+concepts inside the exact domain he cares about.
+Positioning sentence to keep in your head all meeting:
+"I am not pitching AI as magic. I am arguing that it can materially improve
+the speed, breadth, and quality of risk work if it is deployed around the
+quantitative stack with discipline."
+Prepared for internal conversation use - not for external distribution Page 1</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+1 OPENING MOVES - FIRST 2 TO 3 MINUTES
+Opening line 1 - Current market stress + risk analytics angle
+"Given how quickly the Iran shock has moved from geopolitics into oil,
+inflation expectations, and cross-asset positioning this week, I think the
+real AI opportunity in risk is compressing time-to-scenario - not just
+writing commentary, but generating disciplined, desk-specific shock maps in
+hours."
+Signals you are anchored in today's market, not in generic AI hype. Also frames AI in the language of scenario speed, discipline, and decision
+support. [S23]
+Opening line 2 - Senior strategic framing
+"What feels different to me now versus even six months ago is that the
+industry has moved from generic copilots to agentic, domain-specific
+workflows - Bloomberg's ASKB, Goldman's Anthropic agents, JPM's expanding
+production use cases. The question for risk is no longer 'is AI real'; it's
+'where in the stack can it improve decisions without creating new model
+risk?'"
+Shows current awareness of vendor and bank moves, then pivots immediately to the real issue a senior risk leader cares about: controlled
+deployment. [S1][S2][S4][S8]
+Opening line 3 - Governance-aware practitioner frame
+"My working view is that AI belongs around the quantitative stack before it
+belongs inside it - first in scenario generation, explain, triage, and
+governance; later, if ever, in the actual numerical risk engines. That seems
+like the highest-ROI path that still respects SR 11-7 discipline."
+This is probably the strongest line if you want to sound senior immediately. It shows ambition without sounding reckless. [S15][S16][S18][S19]
+Bridge line
+After your opener, pivot with: "That's how I've been thinking about my own work as well - using AI to accelerate scenario
+construction, stress attribution, and CRO-level synthesis, but always with explicit controls, validation, and human
+judgment."
+Tone discipline
+(cid:127) Speak calmly, a little slower than normal, and in the language of controls, tradeoffs, and production reality.
+(cid:127) Do not front-run him with a monologue. Use the opener to establish credibility, then pull him in with a strategic observation or
+question.
+(cid:127) Sound like someone who has already done the work, not like someone who just discovered the technology.
+Prepared for internal conversation use - not for external distribution Page 2</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+2 INDUSTRY LANDSCAPE BRIEFING
+State of play: large banks are no longer debating whether to use AI. They are moving from broad employee copilots into
+domain-specific, workflow-embedded systems. The frontier has shifted from text generation to reasoning, retrieval, longer context,
+and agent orchestration; in finance, that means faster research, better workflow compression, and more pressure on governance,
+data entitlements, and model-risk discipline. [S2][S8][S13][S14]
+Top-bank activity
+Bank What they are doing now Why it matters for your conversation
+JPMorgan JPM's CIB disclosed 175+ AI use cases in production in May JPM is the clearest proof that AI in a large CIB is already
+2025, spanning predictive analytics, operations, risk operational, not experimental. Use JPM as evidence that
+decisioning, and portfolio management; management said in the question is industrialization, prioritization, and control.
+February 2026 that total production use cases doubled year
+over year. [S1][S2]
+Goldman Goldman launched GS AI Assistant firmwide in June 2025 Goldman is moving beyond assistance into supervised
+after roughly 10,000 employees were already using it, and in agentic workflows. That is the right benchmark for where
+Sachs
+February 2026 confirmed work with Anthropic on agents for capital-markets AI is heading.
+trade/accounting workflows, due diligence, and onboarding.
+[S3][S4]
+Morgan Morgan Stanley's AskResearchGPT supports Investment MS is the best example of AI embedded in client-facing
+Banking, Sales & Trading, and Research staff against 70,000+ information workflows with citations and control. Their
+Stanley
+proprietary research reports, while the firmwide AI team playbook is highly relevant for risk-intelligence and
+emphasizes human-centric design, controls, and oversight. explain use cases.
+[S5][S6]
+Citi Jane Fraser said Citi's GenAI tools are already boosting Citi shows that broad workforce enablement can coexist
+efficiency for more than 150,000 colleagues, alongside with a transformation agenda. The implication: adoption
+developer tooling and a push to become one of the industry's capacity matters as much as model capability.
+first 'AI-ready' workforces. [S7]
+Vendor and platform landscape
+Vendor landscape: the market is splitting into four layers. One, frontier model providers (OpenAI, Anthropic). Two, finance-specific
+workflow vendors (Rogo, Hebbia). Three, premium-content intelligence platforms (Bloomberg, AlphaSense, S&P; Global / Kensho).
+Four, internal orchestration and governance platforms inside banks. The strategic implication is important: models are
+commoditizing faster than workflow integration, entitlement management, evaluation, and controls.
+Vendor / Current signal Read-through for Wells / CIB risk
+platform
+Rogo Rogo announced a $75 million Series C on January 28, Rogo is the strongest current signal that finance-specific
+2026 with participation from Wells Fargo and J.P. Morgan, 'AI analyst' tooling is getting real distribution. Useful
+positioning itself as an agentic AI system for financial benchmark in any build-vs-buy discussion.
+workflows. [S9]
+Bloomberg ASKB Bloomberg's new ASKB interface coordinates parallel AI This matters because the Terminal itself is becoming
+agents against Bloomberg data, news, research, and agentic. Your internal tools will increasingly be judged
+analytics, with transparent attribution and BQL output. [S8] against the speed and explainability of terminal-native
+AI.
+AlphaSense AlphaSense launched Deep Research in June 2025 and AlphaSense is a strong example of retrieval-grounded,
+Financial Data in October 2025, combining premium citation-rich, enterprise-safe research synthesis.
+content, structured datasets, and domain-specific AI for Particularly relevant for CRO briefings and scenario
+high-stakes workflows. [S10][S11] intelligence.
+S&P; Global / Kensho introduced new financial 'skills' for AI agents in This points to an emerging architecture where
+Kensho February 2026, including future capabilities for valuation specialized data and tool plugins matter as much as
+modeling and M&A; analysis. [S12] base-model IQ.
+Prepared for internal conversation use - not for external distribution Page 3</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+Vendor / Current signal Read-through for Wells / CIB risk
+platform
+Anthropic / OpenAI Anthropic built a financial-services package with source Treat these firms as infrastructure layers, not complete
+verification, Excel integration, real-time market-data banking solutions. The differentiator will be how well a
+connectors, and pre-built agent skills; OpenAI has pushed bank wraps controls, data access, and workflow logic
+enterprise agent-building primitives and reasoning-oriented around them.
+workflows. [S13][S14]
+Hebbia Hebbia markets an AI platform for finance with transparent Hebbia is a good reminder that workflow UX matters.
+multi-step workflow execution and enterprise security Adoption often depends less on raw model quality than
+aimed at regulated institutions. [S20] on whether the tool feels native to analysts and bankers.
+2 INDUSTRY LANDSCAPE BRIEFING (CONT.)
+Regulatory posture - what he will care about
+Regulatory posture: U.S. banking supervisors have not created a separate AI exception regime. Their message has been: existing
+legal, conduct, technology, third-party, and model-risk frameworks still apply; AI just makes disciplined implementation harder and
+more important.
+(cid:127) SR 11-7 remains the anchor. It applies to models used for identifying and measuring risk, valuing exposures, stress testing, capital
+assessment, internal limits, and regulatory reporting. [S15]
+(cid:127) The OCC's updated Model Risk Management handbook explicitly contemplates AI and machine learning use cases in banks, and
+the OCC's Spring 2025 Semiannual Risk Perspective says GenAI can help in enterprise risk management and data analysis but
+can also introduce model, cybersecurity, and compliance risks. [S16][S17]
+(cid:127) Barr said in April 2025 that banks using GenAI must manage the risk, demand transparency from fintech partners, and pay close
+attention to data quality, training, and bias; in November 2025 he added that GenAI used in financial models must be well
+controlled, numerically and legally precise, explainable, and replicable. [S18][S19]
+(cid:127) Bowman likewise argued that AI does not sit outside the existing legal and regulatory framework, citing fair lending, cybersecurity,
+data privacy, and third-party risk management. [S21]
+(cid:127) Treasury's December 2024 AI-in-financial-services report and the sector risk plan that followed make clear that policymakers are
+focusing heavily on operational risk, cyber risk, fraud, cloud concentration, and resilience. [S22][S23A]
+Your crisp regulatory take
+The correct posture is: use AI to accelerate analysis, synthesis, and workflow orchestration around validated risk
+processes; be much more cautious about letting LLMs drive the numerical engines themselves. That is not a formal
+regulatory quote - it is the practical inference from SR 11-7, OCC guidance, and recent Fed speeches.
+[S15][S16][S17][S18][S19][S21]
+Three trends that matter most for banking
+Trend 1 - Copilot to controlled agent
+The industry is moving from generic chat assistants to domain-specific, supervised agents that can execute multi-step
+workflows against trusted tools and data. In banking, that is the difference between 'write me a summary' and 'triage a
+breach, pull precedent, draft an escalation note, and link every claim to source evidence.' [S4][S8][S12][S13][S14]
+Trend 2 - The moat is no longer the base model
+Base-model quality still matters, but durable differentiation is shifting toward proprietary data, permissions, workflow
+integration, citations, evaluation, and control architecture. In risk terms: the winners will not be those with the flashiest
+model, but those that can produce faster decisions with cleaner audit trails. [S8][S10][S11][S13][S14]
+Prepared for internal conversation use - not for external distribution Page 4</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+Trend 3 - ROI discipline is replacing experimentation theater
+The market narrative is shifting from exuberance to measurable productivity and business value. That matters for a risk
+organization because the next wave of funding will go to use cases that either improve decision quality, reduce control
+failure, or materially compress cycle time. [S2][S7][S11][S24]
+3 MY STORY - TALKING POINTS
+Deliver these in a measured, matter-of-fact tone. Each is meant to sound like a practitioner speaking from lived work, not like a pitch
+deck.
+1. AI-generated severe scenario design
+I built an AI-assisted severe stress scenario from scratch with mathematically derived equity shocks, cross-asset credit
+overlays, and volatility-surface calibration. What mattered was not that AI 'picked' the scenario; it accelerated the
+iteration loop so I could get to a coherent, defendable shock architecture much faster. The lesson was that AI is
+strongest as a structured design partner, not as a substitute for market judgment.
+2. Python automation for core risk workflows
+I used AI to accelerate development of Python tooling for stress P&L; attribution, VaR explain, and driver-level
+decomposition, and it materially compressed build time. The real value was not just speed; it was being able to
+prototype, test, and refine analytics much more aggressively. I learned that AI's highest ROI shows up in scoped
+technical workflows where the data logic is precise and the human can validate fast.
+3. Scenario generation wizard with governance
+I designed a stress-scenario generation wizard concept with embedded governance and approval workflows so
+scenario creation could scale across desks without becoming a free-for-all. That matters because in risk, generation is
+only half the problem; the other half is traceability, challenge, approval, and repeatability. What I learned is that the best
+AI products in banking are workflow-and-control systems, not just model wrappers.
+4. CRO-level intelligence briefs
+I have used AI to assemble CRO-level intelligence briefs that combine live market context, geopolitical developments,
+and cross-asset contagion mapping - including Iran-related scenarios - in hours rather than weeks. That matters
+because senior leaders do not need more data; they need compressed signal and clean structure under time pressure.
+The lesson was that retrieval, synthesis, and editorial discipline are where LLMs become institutionally useful.
+5. Interactive risk visualization
+I built interactive HTML dashboards with a Bloomberg Terminal aesthetic for internal risk visualization. That sounds
+cosmetic, but it is not - adoption goes up when the output feels native to how decision-makers already process
+information. I learned that AI in risk is partly a UX problem: insight only matters if the consumer can absorb it quickly.
+6. Build-vs-buy perspective with technical grounding
+I have been evaluating Rogo versus our internal Tachyon path while also finishing Penn's MCIT part-time, so I think
+about this from both a workflow and systems perspective. The key takeaway for me is that frontier models will keep
+improving and commoditizing; the durable edge for a bank will be proprietary data, entitlements, orchestration, control
+design, and how tightly the tooling maps to actual desk workflows.
+Prepared for internal conversation use - not for external distribution Page 5</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+Unifying line if he asks how you think about AI overall
+"I use Claude, GPT, and other models every day, but always with a simple
+framework: let AI compress the search, synthesis, coding, and structuring
+work; let validated models and human judgment own the actual risk decision."
+Prepared for internal conversation use - not for external distribution Page 6</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+4 TEN KILLER IDEAS AND USE CASES
+These are intentionally not 'automate reports' ideas. Each is meant to make a senior risk leader pause and think.
+1. News-to-scenario compiler
+Idea: Build an AI layer that ingests major news, policy, and geopolitics flows and proposes desk-specific shock vectors,
+historical analogs, and likely second-order contagion channels.
+Value: This compresses time-to-scenario when markets move faster than committee cycles, especially in cross-asset
+events where narrative travels before clean market consensus exists.
+Feasibility: Feasible now if grounded in trusted market data, internal exposure maps, and human approval; the AI should generate candidate
+scenarios, not authorize them.
+2. LLM-powered limit breach triage
+Idea: When a desk breaches a limit, have an agent automatically classify the driver, compare it with historical breach
+episodes, identify likely benign versus structural causes, and draft the first escalation pack.
+Value: Value comes from speed, consistency, and freeing senior analysts for judgment rather than repetitive assembly.
+Feasibility: Feasible in the near term because the workflow is document-heavy, citation-friendly, and can remain fully human-approved.
+3. Scenario coverage gap mapper
+Idea: Embed the existing stress library and compare it against live portfolio exposures to identify where current
+scenarios under-cover concentrations, basis risk, or new product structures.
+Value: This upgrades scenario design from periodic craftsmanship to continuous coverage management.
+Feasibility: Feasible if you can access position metadata, risk-factor mappings, and the scenario inventory in a clean retrieval layer.
+4. VaR explain hypothesis engine
+Idea: When VaR explain looks odd, let an agent run a structured hypothesis tree across new trades, vol moves, curve
+shape changes, basis shifts, and mapping anomalies before handing the analyst a ranked explanation set.
+Value: This reduces analyst time spent on brute-force debugging and can shorten the latency between anomaly
+detection and credible root cause.
+Feasibility: Feasible if the system is constrained to controlled internal data sources and produces evidence-backed hypotheses rather than
+final answers.
+5. Desk-level risk appetite calibration
+Idea: Use AI to compare approved risk appetite versus realized risk-taking, P&L; efficiency, stress losses, and
+escalation frequency by desk, then suggest where limits may be too loose, too tight, or poorly designed.
+Value: This turns AI from a reporting aid into a decision-quality tool for management governance.
+Feasibility: Feasible as an analytics co-pilot, not an autonomous recommender; the output should be framed as challenge material for
+leadership.
+Prepared for internal conversation use - not for external distribution Page 7</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+4 TEN KILLER IDEAS AND USE CASES (CONT.)
+6. Generative stress narratives for regulators and senior committees
+Idea: Create a system that can draft scenario narratives, methodology notes, and impact summaries linked to actual
+data lineage and prior governance artifacts.
+Value: This is valuable because the bottleneck in high-stakes stress work is often explanatory packaging rather than
+numeric computation.
+Feasibility: Feasible today if every claim is retrieval-grounded and the workflow keeps an analyst and approver in the loop.
+7. Cross-desk contagion graph
+Idea: Build an AI-assisted graph of hidden linkages across desks - shared issuers, funding channels, hedge proxies,
+volatility regimes, and wrong-way risk patterns - to surface where a localized shock could travel non-linearly.
+Value: Senior management cares about where risks stop being siloed. This helps convert desk views into enterprise
+views.
+Feasibility: Feasible if you start narrow around one asset class or event family and use AI primarily for entity resolution and narrative synthesis.
+8. Model-change radar
+Idea: Create an agent that scans market-structure changes, benchmark reforms, new product features, vendor
+methodology changes, and internal model changes to flag models or assumptions that may need review.
+Value: This shifts model risk from reactive validation to proactive surveillance.
+Feasibility: Feasible because the challenge is mostly information monitoring, relevance ranking, and workflow routing.
+9. Unstructured document risk extraction
+Idea: Use AI to parse term sheets, structured notes, muni disclosures, warehouse agreements, or securitization
+documents to identify embedded optionality, triggers, covenants, or basis exposures that standard fields miss.
+Value: The value is in surfacing hidden risk mechanics before they become 'surprises' in stress or P&L; explain.
+Feasibility: Feasible for bounded document sets with strong citation requirements; less feasible for fully autonomous interpretation.
+10. AI-assisted scenario challenge function
+Idea: Instead of generating scenarios only, build an adversarial challenger that attacks an existing scenario set: what is
+missing, what is too consensus, what assumptions are inconsistent, and which portfolios it fails to meaningfully stress.
+Value: This is clever because it uses AI to improve challenge quality, not just production speed.
+Feasibility: Feasible now if you treat the model as a structured critic and require analysts to accept or reject each challenge with written
+rationale.
+Prepared for internal conversation use - not for external distribution Page 8</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+5 SMART QUESTIONS TO ASK HIM
+Ask only the questions that fit how the conversation is unfolding. The point is not to get through all of them; the point is to ask one or
+two that move the discussion up a level.
+Where in the CIB risk stack do you think AI can add the most value first: upstream in intelligence and triage, midstream
+in scenario design and explain, or downstream in governance and communication?
+How are you thinking about the boundary between AI that augments analyst judgment and AI that materially influences
+a numerical risk decision under SR 11-7 expectations?
+In your view, what is the real bottleneck to scaling AI in risk at a large bank today - model capability, data architecture,
+governance throughput, or management attention?
+Do you think the durable edge for banks will come from proprietary internal platforms, selective vendor adoption, or a
+hybrid architecture where internal control layers sit on top of external model capabilities?
+If you were funding one AI pilot in CIB risk that had to prove meaningful value in 90 days, what problem would you put
+chips behind and what metric would you judge it on?
+How do you think about explainability in practice for LLM-enabled workflows: is the right standard full model
+interpretability, or is it process transparency, citation quality, and reproducible outputs?
+What capability do you think risk analytics teams will need most over the next two years that traditional quant or
+reporting skill sets do not fully cover today?
+Best sequencing
+Start with a strategic architecture question. Then, once he gives you his view, connect it back to your own work. That
+creates a genuine exchange rather than a quiz.
+Prepared for internal conversation use - not for external distribution Page 9</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+6 LANDMINES TO AVOID
+(cid:127) Do not say or imply that AI should directly replace core pricing, Greeks, VaR, capital, or stress engines anytime soon.
+(cid:127) Do not talk about public LLM usage in a way that sounds casual about confidential information, entitlements, or governance.
+(cid:127) Do not say 'hallucinations are basically solved.' A senior risk leader will hear that as naivete.
+(cid:127) Do not reduce the opportunity to 'automating reports.' That sounds junior and misses the decision-quality angle.
+(cid:127) Do not pitch black-box autonomy in production risk systems. Emphasize supervised workflows, evidence, reproducibility, and
+human accountability.
+(cid:127) Do not sound impressed by vendor demos alone. Speak in terms of integration effort, evaluation, controls, workflow fit, and data
+entitlements.
+(cid:127) Do not call governance a blocker. Frame it as the mechanism that makes adoption durable.
+Phrases that sound junior
+"AI is a game changer."
+"We can just fine-tune a model."
+"The model seemed accurate."
+"We should automate everything."
+"It's only a pilot, so controls can come later."
+"Everyone else is already doing it."
+One-line correction if you feel yourself drifting into hype
+Say: "To be clear, I am not arguing for autonomous black-box risk decisions. I am arguing for better analyst leverage,
+better coverage, and cleaner governance."
+Prepared for internal conversation use - not for external distribution Page 10</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+7 CLOSING AND FOLLOW-UP
+Last 60 seconds
+Close with something like: "My own bias is that the best near-term use of AI in risk is to wrap it around the quantitative
+stack rather than place it inside the core numbers - scenario construction, explain, triage, governance, and senior-level
+synthesis. That feels like the wedge where we can get real productivity and better risk signal without taking uncontrolled
+model risk. If helpful, I'd be glad to sketch what a tightly scoped pilot in that zone could look like."
+After the meeting
+Same day follow-up: send a short note with three bullets - one insight you took from him, one area where your work overlaps with
+his priorities, and one tightly scoped idea worth exploring further. Do not send a manifesto. Send signal.
+Suggested follow-up note
+Subject: Great discussion today - AI in CIB Risk Analytics
+Thank you for the time today. I especially found your point on [insert his point] useful.
+The conversation sharpened my view that the most practical near-term AI opportunities in risk are around [scenario design / explain / triage /
+governance], rather than inside the core numerical engines.
+Given my recent work on AI-assisted stress scenario design, risk attribution automation, and senior-level market intelligence synthesis, I would
+be glad to share a concise pilot concept if useful.
+Best,
+Mo
+Optional extra move
+If the conversation goes well, mention that you could outline a tightly scoped 90-day pilot in one of three areas: scenario
+generation, breach triage, or risk-intelligence synthesis. Offer the concept only if it feels invited.
+Prepared for internal conversation use - not for external distribution Page 11</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+8 QUICK-REFERENCE CHEAT SHEET
+Top opening line Key current facts
+"My working view is that AI belongs around the quantitative stack (cid:127) JPM CIB: 175+ AI use cases in production disclosed in May
+before it belongs inside it - first in scenario generation, explain, 2025; firm said production use cases doubled by Feb 2026.
+triage, and governance; later, if ever, in the actual numerical risk [S1][S2]
+engines. That seems like the highest-ROI path that still respects
+SR 11-7 discipline." (cid:127) Goldman: GS AI Assistant launched firmwide in Jun 2025 after
+about 10,000 employees were already using it; Anthropic-based
+agents disclosed Feb 2026. [S3][S4]
+Top 3 talking points
+(cid:127) Morgan Stanley: AskResearchGPT serves IB, S&T;, and
+(cid:127) AI-assisted severe scenario design with mathematically Research against 70,000+ proprietary research reports. [S5]
+structured shocks and cross-asset calibration.
+(cid:127) Citi: GenAI tools boosting efficiency for 150,000+ colleagues. [S7]
+(cid:127) Python automation for stress attribution, VaR explain, and driver
+decomposition at materially faster build speed. (cid:127) Bloomberg: ASKB coordinates parallel AI agents with transparent
+attribution and BQL output. [S8]
+(cid:127) CRO-level intelligence briefs and governance-aware scenario
+tooling that turn AI into an institutional workflow, not a gimmick. (cid:127) Rogo: $75m Series C in Jan 2026 with Wells Fargo participation.
+[S9]
+Top phrases to use
+Best question to ask
+(cid:127) AI around the risk stack, not inside the capital stack.
+How are you thinking about the boundary between AI that
+(cid:127) Compress time-to-scenario. augments analyst judgment and AI that materially influences a
+numerical risk decision under SR 11-7 expectations?
+(cid:127) Retrieval-grounded, auditable, reproducible.
+(cid:127) Human judgment plus machine compression. Core thesis to repeat
+(cid:127) Workflow and controls are the product. AI should accelerate scenario design, explain, triage, and
+governance before it touches validated numerical risk engines.
+(cid:127) The moat is data, entitlements, and evaluation - not just the
+model.
+Five-minute pre-call reset
+Speak in the language of risk architecture, not tool enthusiasm. Lead with one sharp opening line. Tell two stories, not
+six. Ask one strategic question. End with a controlled thesis: AI around the stack, not inside the core numbers.
+Prepared for internal conversation use - not for external distribution Page 12</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+SELECTED SOURCE NOTES
+Human-readable source notes for current market, bank, vendor, and regulatory references used in this document.
+S1 JPMorgan Chase, 2025 Investor Day - CIB transcript, May 19, 2025.
+https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/events/2025/jpmc-2025-investor-day/cib.pdf
+S2 JPMorgan Chase, 2026 Company Update transcript, Feb. 23, 2026.
+https://www.jpmorganchase.com/content/dam/jpmc/jpmorgan-chase-and-co/investor-relations/documents/2026-company-updates/company-update-full-event-transcri
+pt.pdf
+S3 Reuters, 'Goldman Sachs launches AI assistant firmwide, memo shows,' June 23, 2025.
+https://www.reuters.com/business/goldman-sachs-launches-ai-assistant-firmwide-memo-shows-2025-06-23/
+S4 Reuters, 'Goldman Sachs teams up with Anthropic to automate banking tasks with AI agents,' Feb. 6, 2026.
+https://www.reuters.com/business/finance/goldman-sachs-teams-up-with-anthropic-automate-banking-tasks-with-ai-agents-cnbc-2026-02-06/
+S5 Morgan Stanley, 'Morgan Stanley Research Announces AskResearchGPT Powered by OpenAI,' Oct. 23, 2024.
+https://www.morganstanley.com/press-releases/morgan-stanley-research-announces-askresearchgpt
+S6 Morgan Stanley, 'Artificial Intelligence: Firmwide Team,' accessed Mar. 4, 2026.
+https://www.morganstanley.com/about-us/technology/artificial-intelligence-firmwide-team
+S7 Citigroup, Remarks by CEO Jane Fraser at Citi's 2025 Annual Stockholders' Meeting, Apr. 29, 2025.
+https://www.citigroup.com/global/news/perspectives/2025/remarks-ceo-jane-fraser-citi-2025-annual-stockholders-meeting
+S8 Bloomberg Professional Services, 'AI at Bloomberg / ASKB,' accessed Mar. 4, 2026.
+https://professional.bloomberg.com/solutions/ai/
+S9 Rogo, 'Scaling Rogo to Build the Future of Finance: Our $75M Series C and European Expansion,' Jan. 28, 2026.
+https://rogo.ai/news/scaling-rogo-to-build-the-future-of-investment-banking-our-75m-series-c-and-european-expansion
+S10 AlphaSense, 'AlphaSense Launches Deep Research,' June 10, 2025.
+https://www.alpha-sense.com/press/alphasense-launches-deep-research-automating-in-depth-analysis-with-agentic-ai-on-high-value-content/
+S11 AlphaSense, 'AlphaSense Launches Financial Data,' Oct. 8, 2025.
+https://www.alpha-sense.com/press/alphasense-launches-financial-data/
+S12 Kensho / S&P; Global, 'S&P; Global Brings Financial Skills to AI Agents with New Plugin,' Feb. 24, 2026.
+https://blog.kensho.com/s-p-global-brings-financial-skills-to-ai-agents-with-new-plugin-bc8aef47c476
+S13 Anthropic, 'Claude for Financial Services,' July 15, 2025, and 'Advancing Claude for Financial Services,' Oct. 27, 2025.
+https://www.anthropic.com/news/claude-for-financial-services
+S14 OpenAI, 'OpenAI for Developers in 2025,' Dec. 30, 2025.
+https://developers.openai.com/blog/openai-for-developers-2025/
+S15 Federal Reserve Board, SR 11-7: Guidance on Model Risk Management, Apr. 4, 2011.
+https://www.federalreserve.gov/supervisionreg/srletters/sr1107.htm
+S16 Office of the Comptroller of the Currency, Comptroller's Handbook - Model Risk Management, Nov. 2025.
+https://www.occ.treas.gov/publications-and-resources/publications/comptrollers-handbook/files/model-risk-management/pub-ch-model-risk.pdf
+S17 Office of the Comptroller of the Currency, Semiannual Risk Perspective, Spring 2025.
+https://occ.treas.gov/publications-and-resources/publications/semiannual-risk-perspective/files/pub-semiannual-risk-perspective-spring-2025.pdf
+S18 Federal Reserve Board, Michael Barr speech, 'Artificial Intelligence and Banking,' Apr. 4, 2025.
+https://www.federalreserve.gov/newsevents/speech/barr20250404a.htm
+S19 Federal Reserve Board, Michael Barr speech, 'Artificial Intelligence and Innovation,' Nov. 11, 2025.
+https://www.federalreserve.gov/newsevents/speech/barr20251111a.htm
+S20 Hebbia, product site, accessed Mar. 4, 2026.
+https://www.hebbia.com/
+S21 Federal Reserve Board, Michelle Bowman speech, 'Artificial Intelligence in the Financial System,' Nov. 22, 2024.
+https://www.federalreserve.gov/newsevents/speech/bowman20241122a.htm
+S22 U.S. Department of the Treasury, 'Uses, Opportunities, and Risks of Artificial Intelligence in Financial Services,' Dec. 19, 2024.
+https://home.treasury.gov/news/press-releases/jy2760
+Prepared for internal conversation use - not for external distribution Page 13</p>
+            <div class="page-break"></div>
+            <p>AI / CIB RISK ANALYTICS / CONVERSATION PREP WELLS FARGO CIB
+S23A U.S. Department of the Treasury, Financial Services Sector Risk Management Plan, Jan. 14, 2025.
+https://home.treasury.gov/system/files/216/Financial-Services-Sector-Risk-Management-Plan.pdf
+S23 Reuters, 'Goldman CEO says markets may take a couple of weeks to digest Iran war impact,' Mar. 4, 2026.
+https://www.reuters.com/business/finance/goldman-ceo-says-markets-may-take-couple-weeks-digest-iran-war-impacts-2026-03-04/
+S24 AlphaSense, 'Looking Back on AI in 2025 & What to Expect in 2026,' Dec. 5, 2025.
+https://www.alpha-sense.com/resources/research-articles/ai-lookback-2025/
+Prepared for internal conversation use - not for external distribution Page 14</p>
+        </div>
+        
+        <footer>
+            <p>AI CIB Risk Analytics Guide | Generated from PDF Document</p>
+            <p>&copy; 2026. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
