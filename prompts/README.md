@@ -23,6 +23,7 @@ This folder is the canonical prompt operating system for CIB Risk workflows.
 | `00_system` | CIB Risk OS Master Operator | [cib_risk_os_master_operator.md](00_system/cib_risk_os_master_operator.md) |
 | `00_system` | CIB Risk Output Quality Gate | [cib_risk_output_quality_gate.md](00_system/cib_risk_output_quality_gate.md) |
 | `01_executive` | CRO Weekly Risk Intelligence Brief | [cro_weekly_risk_intelligence_brief.md](01_executive/cro_weekly_risk_intelligence_brief.md) |
+| `01_executive` | CRO Weekly Risk Intelligence Brief (Full Template) | [cro_weekly_risk_intelligence_brief_full_template.md](01_executive/cro_weekly_risk_intelligence_brief_full_template.md) |
 | `01_executive` | CRO Morning Risk Flash | [cro_morning_risk_flash.md](01_executive/cro_morning_risk_flash.md) |
 | `01_executive` | Risk Committee Pack Generator | [risk_committee_pack_generator.md](01_executive/risk_committee_pack_generator.md) |
 | `02_market_risk` | Market Risk Daily Monitor | [market_risk_daily_monitor.md](02_market_risk/market_risk_daily_monitor.md) |

@@ -60,6 +60,7 @@ Output rules:
 - Are assumptions explicit and bounded?
 - Are owners and due dates specified for each action?
 - Is escalation logic concrete and testable?
+
 ## Advanced prompt controls
 - **Decision lens:** capital depletion slope
 - **Non-negotiable control:** every recommendation must include owner, due date, trigger, and fallback.
