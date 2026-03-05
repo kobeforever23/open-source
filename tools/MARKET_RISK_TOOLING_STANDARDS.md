@@ -22,6 +22,7 @@ Ensure market-risk tools are defensible under senior quant and risk management s
 - Fast operation during live-event windows.
 
 ## Current conforming tools
+- `market-risk-terminal/`
 - `cross-asset-risk-monitor/`
 - `stress-scenario-studio/`
 - `eqfin-shock-calibrator/`

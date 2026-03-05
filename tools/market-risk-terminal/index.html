@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Market Risk Terminal</title>
+  <style>
+    :root {
+      --bg: #050910;
+      --panel: #0c1420;
+      --panel-2: #111d2c;
+      --ink: #d8e4f2;
+      --muted: #8198b1;
+      --line: #23374d;
+      --accent: #27c0ff;
+      --accent2: #5ff3b0;
+      --warn: #ffaf3e;
+      --bad: #ff5f86;
+      --good: #57efb1;
+      --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "IBM Plex Sans", "Inter", sans-serif;
+      background:
+        radial-gradient(1200px 700px at 92% -20%, rgba(22, 86, 142, 0.34) 0%, transparent 65%),
+        radial-gradient(920px 620px at -10% 12%, rgba(13, 77, 88, 0.22) 0%, transparent 60%),
+        linear-gradient(180deg, #04070d, #060b13 48%, #08111d);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1500px; margin: 0 auto; padding: 22px 22px 40px; }
+    h1 { margin: 0; font-size: 34px; letter-spacing: 0.2px; }
+    .sub {
+      margin: 8px 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 1200px;
+    }
+    .sub a { color: var(--accent); text-decoration: none; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .chip {
+      font-size: 11px;
+      border-radius: 999px;
+      border: 1px solid #2d4a66;
+      padding: 3px 9px;
+      color: #a6c7e8;
+      background: #0f2135;
+      letter-spacing: 0.2px;
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 12px;
+      align-items: start;
+    }
+    .stack { display: grid; gap: 12px; }
+
+    .card {
+      background: linear-gradient(180deg, #0d1521, #0a1320);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 12px 26px rgba(0, 0, 0, 0.34);
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      color: #b6cae0;
+      font-weight: 700;
+    }
+    label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+    }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid #2e455e;
+      border-radius: 8px;
+      background: #08121d;
+      color: #d9e8f8;
+      padding: 8px 10px;
+      font: inherit;
+    }
+    textarea {
+      min-height: 180px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.34;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: 2px solid #2ca8e255;
+      border-color: #35b5ec;
+    }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .row > * { flex: 1 1 130px; }
+    button {
+      border: 1px solid #2c9fd4;
+      background: linear-gradient(180deg, #1aa4db, #116e98);
+      color: #e8f7ff;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.alt {
+      border-color: #334b61;
+      background: #111d2e;
+      color: #c9daec;
+      font-weight: 600;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 8px;
+    }
+    .metric {
+      border: 1px solid #24374b;
+      border-radius: 10px;
+      background: #0a1522;
+      padding: 10px;
+    }
+    .metric .k {
+      font-size: 10px;
+      color: #8ca5be;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .metric .v {
+      margin-top: 4px;
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 760;
+    }
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .table-wrap {
+      max-height: 420px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #08121d;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 7px 8px;
+      border-bottom: 1px solid #1b2b3c;
+      text-align: right;
+      font-family: var(--mono);
+      white-space: nowrap;
+    }
+    th:first-child, td:first-child,
+    th:nth-child(2), td:nth-child(2) { text-align: left; }
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #112136;
+      color: #a7bfd8;
+      font-size: 11px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    .mid {
+      margin-top: 12px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+
+    .warning-box {
+      border: 1px solid #62411f;
+      background: #2a1e0f;
+      border-radius: 8px;
+      color: #ffd3a6;
+      padding: 8px;
+      font-size: 12px;
+      white-space: pre-wrap;
+      display: none;
+    }
+    .warning-box.show { display: block; }
+
+    .method {
+      font-size: 12px;
+      color: #9ab1c8;
+      line-height: 1.45;
+    }
+    .code { font-family: var(--mono); color: #c8e6ff; }
+
+    @media (max-width: 1220px) {
+      .top { grid-template-columns: 1fr; }
+      .mid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Market Risk Terminal</h1>
+    <div class="sub">
+      Institutional-grade analytics surface for VaR/ES, Monte Carlo, historical backtesting, scenario decomposition, and correlation stress sensitivity.
+      Designed for quant scrutiny and risk governance defensibility.
+      <a href="../index.html">Back to tools suite</a>
+    </div>
+    <div class="chips">
+      <span class="chip">Parametric VaR/ES</span>
+      <span class="chip">Monte Carlo VaR/ES</span>
+      <span class="chip">Historical VaR/ES</span>
+      <span class="chip">Kupiec Backtest</span>
+      <span class="chip">Scenario D/G/V Decomposition</span>
+      <span class="chip">Correlation Stress Sweep</span>
+    </div>
+
+    <div class="top">
+      <div class="stack">
+        <div class="card">
+          <h3>Factor Exposure Inputs</h3>
+          <label>CSV (factor,desk,delta_usd_per_unit,gamma_usd_per_unit2,daily_vol_unit,stress_shock_unit,unit)</label>
+          <textarea id="factorCsv">factor,desk,delta_usd_per_unit,gamma_usd_per_unit2,daily_vol_unit,stress_shock_unit,unit
+UST10Y,Rates,-185000,-900,6.5,45,bp
+IG_Spread,Credit,-92000,-250,8.0,120,bp
+SPX,Equities,260000,-12000,1.35,-6.5,pct
+DXY,FX,130000,5000,0.55,2.2,pct
+Brent,Commodities,75000,-4000,2.40,12,pct</textarea>
+          <div class="row" style="margin-top:8px">
+            <div>
+              <label>Confidence level (%)</label>
+              <input id="confidence" type="number" value="99" step="0.1" min="90" max="99.9" />
+            </div>
+            <div>
+              <label>Horizon (days)</label>
+              <input id="horizon" type="number" value="1" min="1" max="20" step="1" />
+            </div>
+            <div>
+              <label>Monte Carlo simulations</label>
+              <input id="sims" type="number" value="12000" min="2000" max="200000" step="1000" />
+            </div>
+            <div>
+              <label>Concentration alert threshold (%)</label>
+              <input id="threshold" type="number" value="35" min="5" max="100" step="1" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Correlation Matrix</h3>
+          <label>CSV matrix (first column `factor`, remaining columns matching factor names)</label>
+          <textarea id="corrCsv">factor,UST10Y,IG_Spread,SPX,DXY,Brent
+UST10Y,1.00,-0.25,-0.35,-0.20,-0.15
+IG_Spread,-0.25,1.00,0.55,0.20,0.35
+SPX,-0.35,0.55,1.00,0.15,0.25
+DXY,-0.20,0.20,0.15,1.00,0.30
+Brent,-0.15,0.35,0.25,0.30,1.00</textarea>
+          <div class="row" style="margin-top:8px">
+            <button onclick="runAll()">Run Full Terminal</button>
+            <button class="alt" onclick="symmetrizeCorr()">Symmetrize Corr</button>
+            <button class="alt" onclick="exportSnapshot()">Export Snapshot JSON</button>
+          </div>
+          <div id="warnings" class="warning-box" style="margin-top:8px"></div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <h3>Historical PnL (1 line = 1 day PnL USD)</h3>
+          <textarea id="pnlHistory">-850000
+1200000
+-420000
+250000
+-1330000
+480000
+-910000
+310000
+-220000
+-1450000
+600000
+-780000
+420000
+-560000
+980000
+-1700000
+520000
+-350000
+-940000
+410000
+-650000
+700000
+-230000
+-520000
+190000
+-760000
+480000
+-1090000
+350000
+-280000
+-870000
+530000
+-690000
+760000
+-320000
+-1380000
+450000
+-470000
+-910000
+390000</textarea>
+        </div>
+
+        <div class="card">
+          <h3>Scenario Library</h3>
+          <label>CSV (`scenario` + factor shocks in factor units)</label>
+          <textarea id="scenarioCsv">scenario,UST10Y,IG_Spread,SPX,DXY,Brent
+Oil_Inflation_Shock,35,95,-5.5,1.5,18
+Growth_Scare,-40,145,-11,2.6,-12
+Liquidity_Crunch,55,220,-14,3.0,8
+Rates_Reversal,-65,-35,6.5,-1.8,-7</textarea>
+          <div class="row" style="margin-top:8px">
+            <div>
+              <label>Correlation stress shift (off-diagonal)</label>
+              <input id="corrShift" type="number" value="0.00" step="0.02" min="-0.40" max="0.40" />
+            </div>
+            <div>
+              <label>Reverse stress target loss (USD)</label>
+              <input id="targetLoss" type="number" value="-80000000" step="1000000" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Risk Metrics</h3>
+      <div class="metrics" id="metrics"></div>
+    </div>
+
+    <div class="mid">
+      <div class="stack">
+        <div class="card">
+          <h3>Factor Decomposition</h3>
+          <div class="table-wrap" id="factorTable"></div>
+        </div>
+        <div class="card">
+          <h3>Scenario PnL Ranking</h3>
+          <div class="table-wrap" id="scenarioTable"></div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <h3>Backtesting (Kupiec POF)</h3>
+          <div class="table-wrap" id="backtestTable"></div>
+        </div>
+        <div class="card">
+          <h3>Correlation Stress Sweep</h3>
+          <div class="table-wrap" id="sweepTable"></div>
+        </div>
+        <div class="card">
+          <h3>Method</h3>
+          <div class="method">
+            <div><span class="code">sigma_i = delta_i * vol_i * sqrt(h)</span></div>
+            <div><span class="code">sigma_p = sqrt(sigma^T * Corr * sigma)</span></div>
+            <div><span class="code">VaR = z(alpha) * sigma_p; ES = phi(z)/(1-alpha)*sigma_p</span></div>
+            <div><span class="code">MC PnL_i = delta_i*shock_i + 0.5*gamma_i*shock_i^2</span></div>
+            <div><span class="code">Kupiec LR = -2 ln[(1-p)^(n-x) p^x / (1-x/n)^(n-x) (x/n)^x]</span></div>
+            <div style="margin-top:8px">Backtest exceptions use threshold <span class="code">PnL < -VaR</span> for each model variant.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let state = {};
+
+    function num(v) {
+      const n = Number(String(v).trim());
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function parseCsv(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (lines.length < 2) throw new Error('CSV requires header + at least one row.');
+      const header = lines[0].split(',').map(s => s.trim());
+      const rows = lines.slice(1).map((line, idx) => {
+        const cols = line.split(',').map(s => s.trim());
+        if (cols.length < header.length) {
+          throw new Error(`Row ${idx + 2} has fewer columns than header.`);
+        }
+        const obj = {};
+        header.forEach((h, i) => obj[h] = cols[i] ?? '');
+        return obj;
+      });
+      return { header, rows };
+    }
+
+    function parseFactors(text) {
+      const { rows } = parseCsv(text);
+      const req = ['factor', 'desk', 'delta_usd_per_unit', 'gamma_usd_per_unit2', 'daily_vol_unit', 'stress_shock_unit', 'unit'];
+      const out = rows.map((r, idx) => {
+        for (const k of req) if (!(k in r)) throw new Error(`Missing factor column '${k}'.`);
+        const factor = String(r.factor || '').trim();
+        const desk = String(r.desk || '').trim();
+        const delta = num(r.delta_usd_per_unit);
+        const gamma = num(r.gamma_usd_per_unit2);
+        const vol = num(r.daily_vol_unit);
+        const stress = num(r.stress_shock_unit);
+        const unit = String(r.unit || '').trim().toLowerCase();
+        if (!factor || !desk) throw new Error(`Factor row ${idx + 2}: missing factor or desk.`);
+        if (![delta, gamma, vol, stress].every(Number.isFinite)) throw new Error(`Factor row ${idx + 2}: numeric parse error.`);
+        if (!(unit === 'bp' || unit === 'pct')) throw new Error(`Factor row ${idx + 2}: unit must be bp or pct.`);
+        return { factor, desk, delta, gamma, vol, stress, unit };
+      });
+      const seen = new Set();
+      out.forEach(r => {
+        if (seen.has(r.factor)) throw new Error(`Duplicate factor '${r.factor}'.`);
+        seen.add(r.factor);
+      });
+      return out;
+    }
+
+    function parseCorr(text, factorOrder) {
+      const { header, rows } = parseCsv(text);
+      if (header[0].toLowerCase() !== 'factor') throw new Error("Correlation header must start with 'factor'.");
+      const cols = header.slice(1);
+      const idx = Object.fromEntries(cols.map((c, i) => [c, i]));
+      factorOrder.forEach(f => {
+        if (!idx.hasOwnProperty(f)) throw new Error(`Correlation missing column '${f}'.`);
+      });
+
+      const rowMap = new Map();
+      rows.forEach((r, i) => {
+        const rf = String(r.factor || '').trim();
+        if (!rf) throw new Error(`Correlation row ${i + 2}: missing factor name.`);
+        const vals = cols.map(c => {
+          const v = num(r[c]);
+          if (!Number.isFinite(v)) throw new Error(`Correlation row ${i + 2}, col ${c}: not numeric.`);
+          return v;
+        });
+        rowMap.set(rf, vals);
+      });
+      factorOrder.forEach(f => {
+        if (!rowMap.has(f)) throw new Error(`Correlation missing row '${f}'.`);
+      });
+
+      const m = factorOrder.map(rf => {
+        const row = rowMap.get(rf);
+        return factorOrder.map(cf => row[idx[cf]]);
+      });
+      return m;
+    }
+
+    function parsePnlHistory(text) {
+      const vals = text.split(/[,\s\n\r]+/).map(s => s.trim()).filter(Boolean).map(num);
+      if (!vals.length) throw new Error('PnL history is empty.');
+      if (!vals.every(Number.isFinite)) throw new Error('PnL history contains non-numeric values.');
+      return vals;
+    }
+
+    function parseScenarios(text, factors) {
+      const { header, rows } = parseCsv(text);
+      if (header[0] !== 'scenario') throw new Error("Scenario CSV must start with 'scenario' column.");
+      factors.forEach(f => {
+        if (!header.includes(f)) throw new Error(`Scenario CSV missing factor column '${f}'.`);
+      });
+      return rows.map((r, idx) => {
+        const name = String(r.scenario || '').trim() || `Scenario_${idx + 1}`;
+        const shocks = {};
+        factors.forEach(f => {
+          const v = num(r[f]);
+          if (!Number.isFinite(v)) throw new Error(`Scenario '${name}' has non-numeric shock for factor '${f}'.`);
+          shocks[f] = v;
+        });
+        return { name, shocks };
+      });
+    }
+
+    function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+
+    function cloneMatrix(m) { return m.map(r => r.slice()); }
+
+    function applyCorrShift(corr, shift) {
+      const n = corr.length;
+      const out = cloneMatrix(corr);
+      for (let i = 0; i < n; i++) {
+        out[i][i] = 1;
+        for (let j = i + 1; j < n; j++) {
+          const v = clamp(out[i][j] + shift, -0.99, 0.99);
+          out[i][j] = v;
+          out[j][i] = v;
+        }
+      }
+      return out;
+    }
+
+    function matVec(m, v) {
+      return m.map(row => row.reduce((s, x, i) => s + x * v[i], 0));
+    }
+
+    function quad(v, m) {
+      const mv = matVec(m, v);
+      return v.reduce((s, x, i) => s + x * mv[i], 0);
+    }
+
+    function choleskyPSD(a, eps = 1e-12) {
+      const n = a.length;
+      const L = Array.from({ length: n }, () => Array(n).fill(0));
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j <= i; j++) {
+          let sum = a[i][j];
+          for (let k = 0; k < j; k++) sum -= L[i][k] * L[j][k];
+          if (i === j) {
+            if (sum < -eps) return { ok: false };
+            L[i][j] = Math.sqrt(Math.max(sum, 0));
+          } else {
+            if (L[j][j] <= eps) L[i][j] = 0;
+            else L[i][j] = sum / L[j][j];
+          }
+        }
+      }
+      return { ok: true, L };
+    }
+
+    function normalInv(p) {
+      if (!(p > 0 && p < 1)) throw new Error('Probability must be in (0,1).');
+      const a = [-39.69683028665376, 220.9460984245205, -275.9285104469687, 138.357751867269, -30.66479806614716, 2.506628277459239];
+      const b = [-54.47609879822406, 161.5858368580409, -155.6989798598866, 66.80131188771972, -13.28068155288572];
+      const c = [-0.007784894002430293, -0.3223964580411365, -2.400758277161838, -2.549732539343734, 4.374664141464968, 2.938163982698783];
+      const d = [0.007784695709041462, 0.3224671290700398, 2.445134137142996, 3.754408661907416];
+      const plow = 0.02425;
+      const phigh = 1 - plow;
+      let q, r;
+      if (p < plow) {
+        q = Math.sqrt(-2 * Math.log(p));
+        return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+          ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      if (p > phigh) {
+        q = Math.sqrt(-2 * Math.log(1 - p));
+        return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+          ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      q = p - 0.5;
+      r = q * q;
+      return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
+        (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+    }
+
+    function phi(z) { return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI); }
+
+    function erf(x) {
+      const sign = x >= 0 ? 1 : -1;
+      x = Math.abs(x);
+      const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+      const p = 0.3275911;
+      const t = 1 / (1 + p * x);
+      const y = 1 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+      return sign * y;
+    }
+
+    function erfc(x) { return 1 - erf(x); }
+
+    function quantile(sorted, q) {
+      if (!sorted.length) return NaN;
+      const p = clamp(q, 0, 1) * (sorted.length - 1);
+      const i = Math.floor(p);
+      const f = p - i;
+      if (i + 1 >= sorted.length) return sorted[i];
+      return sorted[i] * (1 - f) + sorted[i + 1] * f;
+    }
+
+    function fmtMoney(x, d = 0) {
+      return Number(x).toLocaleString(undefined, { maximumFractionDigits: d, minimumFractionDigits: d });
+    }
+
+    function showWarnings(lines) {
+      const box = document.getElementById('warnings');
+      if (!lines.length) {
+        box.classList.remove('show');
+        box.textContent = '';
+        return;
+      }
+      box.classList.add('show');
+      box.textContent = lines.join('\n');
+    }
+
+    function randomNormalPair() {
+      let u = 0, v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      const mag = Math.sqrt(-2 * Math.log(u));
+      return [mag * Math.cos(2 * Math.PI * v), mag * Math.sin(2 * Math.PI * v)];
+    }
+
+    function simulatePnL(factors, corr, horizon, sims) {
+      const n = factors.length;
+      const chol = choleskyPSD(corr);
+      if (!chol.ok) throw new Error('Correlation matrix is not PSD; Monte Carlo simulation is unstable.');
+      const L = chol.L;
+      const sqrtH = Math.sqrt(horizon);
+      const pnl = new Array(sims);
+
+      for (let s = 0; s < sims; s++) {
+        const z = new Array(n);
+        for (let i = 0; i < n; i += 2) {
+          const [z1, z2] = randomNormalPair();
+          z[i] = z1;
+          if (i + 1 < n) z[i + 1] = z2;
+        }
+
+        const c = new Array(n).fill(0);
+        for (let i = 0; i < n; i++) {
+          let sum = 0;
+          for (let k = 0; k <= i; k++) sum += L[i][k] * z[k];
+          c[i] = sum;
+        }
+
+        let total = 0;
+        for (let i = 0; i < n; i++) {
+          const f = factors[i];
+          const shock = c[i] * f.vol * sqrtH;
+          total += f.delta * shock + 0.5 * f.gamma * shock * shock;
+        }
+        pnl[s] = total;
+      }
+      pnl.sort((a, b) => a - b);
+      return pnl;
+    }
+
+    function parametricRisk(factors, corr, alpha, horizon) {
+      const sqrtH = Math.sqrt(horizon);
+      const sigma = factors.map(f => f.delta * f.vol * sqrtH);
+      const variance = quad(sigma, corr);
+      if (variance < -1e-8) throw new Error(`Negative variance (${variance.toFixed(4)}). Check matrix quality.`);
+      const sigmaP = Math.sqrt(Math.max(variance, 0));
+      const z = normalInv(alpha);
+      const varP = z * sigmaP;
+      const esP = (phi(z) / (1 - alpha)) * sigmaP;
+      const corrSigma = matVec(corr, sigma);
+      const comp = factors.map((f, i) => {
+        const compSigma = sigmaP > 0 ? (sigma[i] * corrSigma[i]) / sigmaP : 0;
+        return {
+          factor: f.factor,
+          desk: f.desk,
+          sigmaPnl: sigma[i],
+          compVar: z * compSigma,
+          compEs: (phi(z) / (1 - alpha)) * compSigma,
+        };
+      });
+      return { sigmaP, varP, esP, comp };
+    }
+
+    function historicalRisk(pnlSorted, alpha) {
+      const q = quantile(pnlSorted, 1 - alpha);
+      const varH = Math.max(0, -q);
+      const tail = pnlSorted.filter(x => x <= q);
+      const esH = tail.length ? -tail.reduce((s, x) => s + x, 0) / tail.length : varH;
+      return { varH, esH, q };
+    }
+
+    function backtestModel(pnlHist, varValue, alpha) {
+      const threshold = -Math.abs(varValue);
+      const n = pnlHist.length;
+      const x = pnlHist.filter(v => v < threshold).length;
+      const p = 1 - alpha;
+      const phat = x / n;
+      const eps = 1e-12;
+      const lr = -2 * (
+        (n - x) * Math.log(Math.max(1 - p, eps)) + x * Math.log(Math.max(p, eps)) -
+        (n - x) * Math.log(Math.max(1 - phat, eps)) - x * Math.log(Math.max(phat, eps))
+      );
+      const pValue = erfc(Math.sqrt(Math.max(lr, 0) / 2));
+      return { n, x, expected: n * p, exceptionRate: (x / n) * 100, lr, pValue };
+    }
+
+    function scenarioPnl(factors, scenarios) {
+      return scenarios.map(s => {
+        const details = factors.map(f => {
+          const shock = s.shocks[f.factor];
+          const pnl = f.delta * shock + 0.5 * f.gamma * shock * shock;
+          return { factor: f.factor, desk: f.desk, shock, pnl };
+        });
+        const total = details.reduce((sum, d) => sum + d.pnl, 0);
+        const absTotal = Math.abs(total) || 1;
+        details.forEach(d => d.share = Math.abs(d.pnl) / absTotal * 100);
+        return { scenario: s.name, total, details };
+      }).sort((a, b) => a.total - b.total);
+    }
+
+    function renderFactorTable(factors, comp, threshold, stressPnlMap) {
+      const compByFactor = Object.fromEntries(comp.map(c => [c.factor, c]));
+      const absSum = comp.reduce((s, c) => s + Math.abs(c.compVar), 0) || 1;
+      const rows = factors.map(f => {
+        const c = compByFactor[f.factor];
+        const share = Math.abs(c.compVar) / absSum * 100;
+        const stress = stressPnlMap[f.factor] ?? 0;
+        return { ...f, ...c, share, stress };
+      }).sort((a, b) => Math.abs(b.compVar) - Math.abs(a.compVar));
+      state.factorRows = rows;
+
+      document.getElementById('factorTable').innerHTML = `<table>
+        <thead>
+          <tr>
+            <th>Factor</th><th>Desk</th><th>Delta</th><th>Gamma</th><th>Vol</th><th>Sigma PnL</th><th>Comp VaR</th><th>Comp Share</th><th>Comp ES</th><th>Stress PnL</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${r.factor}</td>
+              <td>${r.desk}</td>
+              <td>${fmtMoney(r.delta, 2)}</td>
+              <td>${fmtMoney(r.gamma, 2)}</td>
+              <td>${r.vol.toFixed(4)}</td>
+              <td class="${r.sigmaPnl < 0 ? 'bad' : 'good'}">${fmtMoney(r.sigmaPnl, 2)}</td>
+              <td class="${r.compVar < 0 ? 'good' : 'bad'}">${fmtMoney(r.compVar, 2)}</td>
+              <td class="${r.share >= threshold ? 'warn' : ''}">${r.share.toFixed(2)}%</td>
+              <td class="${r.compEs < 0 ? 'good' : 'bad'}">${fmtMoney(r.compEs, 2)}</td>
+              <td class="${r.stress < 0 ? 'bad' : 'good'}">${fmtMoney(r.stress, 2)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+      return rows;
+    }
+
+    function renderScenarioTable(scenarioRows) {
+      const worst = scenarioRows[0];
+      const detail = worst ? worst.details.sort((a, b) => Math.abs(b.pnl) - Math.abs(a.pnl)) : [];
+      document.getElementById('scenarioTable').innerHTML = `<table>
+        <thead><tr><th>Scenario</th><th>Total PnL</th><th>Top Driver</th><th>Top Driver Share</th></tr></thead>
+        <tbody>
+          ${scenarioRows.map(s => {
+            const d = s.details.reduce((best, cur) => Math.abs(cur.pnl) > Math.abs(best.pnl) ? cur : best, s.details[0]);
+            return `<tr><td>${s.scenario}</td><td class="${s.total < 0 ? 'bad' : 'good'}">${fmtMoney(s.total, 2)}</td><td>${d.factor}</td><td>${d.share.toFixed(2)}%</td></tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+      ${worst ? `<div style="margin-top:8px;font-size:12px;color:#9db3c8;">Worst scenario detail: ${detail.map(d => `${d.factor} ${fmtMoney(d.pnl, 0)} (${d.share.toFixed(1)}%)`).join(' | ')}</div>` : ''}`;
+    }
+
+    function renderBacktestTable(rows) {
+      document.getElementById('backtestTable').innerHTML = `<table>
+        <thead><tr><th>Model</th><th>N</th><th>Expected Ex.</th><th>Observed Ex.</th><th>Ex. Rate</th><th>Kupiec LR</th><th>p-value</th></tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${r.model}</td>
+              <td>${r.n}</td>
+              <td>${r.expected.toFixed(2)}</td>
+              <td class="${r.x > r.expected * 1.75 ? 'bad' : 'good'}">${r.x}</td>
+              <td>${r.exceptionRate.toFixed(2)}%</td>
+              <td>${r.lr.toFixed(4)}</td>
+              <td class="${r.pValue < 0.05 ? 'bad' : 'good'}">${r.pValue.toFixed(4)}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+    }
+
+    function renderSweepTable(factors, baseCorr, alpha, horizon) {
+      const shifts = [-0.20, -0.10, -0.05, 0, 0.05, 0.10, 0.20];
+      const rows = shifts.map(shift => {
+        const corr = applyCorrShift(baseCorr, shift);
+        try {
+          const risk = parametricRisk(factors, corr, alpha, horizon);
+          return { shift, var: risk.varP, es: risk.esP, ok: true };
+        } catch (e) {
+          return { shift, var: NaN, es: NaN, ok: false };
+        }
+      });
+      document.getElementById('sweepTable').innerHTML = `<table>
+        <thead><tr><th>Corr Shift</th><th>VaR</th><th>ES</th><th>Status</th></tr></thead>
+        <tbody>
+          ${rows.map(r => `
+            <tr>
+              <td>${(r.shift >= 0 ? '+' : '') + r.shift.toFixed(2)}</td>
+              <td>${r.ok ? fmtMoney(r.var, 2) : 'N/A'}</td>
+              <td>${r.ok ? fmtMoney(r.es, 2) : 'N/A'}</td>
+              <td class="${r.ok ? 'good' : 'bad'}">${r.ok ? 'OK' : 'PSD FAIL'}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>`;
+    }
+
+    function symmetrizeCorr() {
+      try {
+        const factors = parseFactors(document.getElementById('factorCsv').value).map(f => f.factor);
+        const corr = parseCorr(document.getElementById('corrCsv').value, factors);
+        const n = corr.length;
+        for (let i = 0; i < n; i++) {
+          corr[i][i] = 1;
+          for (let j = i + 1; j < n; j++) {
+            const v = clamp((corr[i][j] + corr[j][i]) / 2, -0.99, 0.99);
+            corr[i][j] = v;
+            corr[j][i] = v;
+          }
+        }
+        const header = ['factor'].concat(factors).join(',');
+        const rows = corr.map((row, i) => `${factors[i]},${row.map(x => x.toFixed(6)).join(',')}`);
+        document.getElementById('corrCsv').value = [header].concat(rows).join('\n');
+        runAll();
+      } catch (err) {
+        showWarnings([`Cannot symmetrize matrix: ${err.message}`]);
+      }
+    }
+
+    function exportSnapshot() {
+      if (!state.snapshot) { runAll(); if (!state.snapshot) return; }
+      const blob = new Blob([JSON.stringify(state.snapshot, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'market_risk_terminal_snapshot.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function runAll() {
+      try {
+        const factors = parseFactors(document.getElementById('factorCsv').value);
+        const factorNames = factors.map(f => f.factor);
+        const corr = parseCorr(document.getElementById('corrCsv').value, factorNames);
+        const pnlHist = parsePnlHistory(document.getElementById('pnlHistory').value);
+        const scenarios = parseScenarios(document.getElementById('scenarioCsv').value, factorNames);
+
+        const alpha = num(document.getElementById('confidence').value) / 100;
+        const horizon = Math.max(1, Math.floor(num(document.getElementById('horizon').value)));
+        const sims = Math.max(2000, Math.floor(num(document.getElementById('sims').value)));
+        const threshold = num(document.getElementById('threshold').value);
+        const corrShift = num(document.getElementById('corrShift').value);
+        const targetLoss = num(document.getElementById('targetLoss').value);
+
+        if (!(alpha > 0.9 && alpha < 0.9999)) throw new Error('Confidence must be in [90, 99.99].');
+        if (![threshold, corrShift, targetLoss].every(Number.isFinite)) throw new Error('Invalid scalar control input.');
+
+        const warnings = [];
+        const corrShifted = applyCorrShift(corr, corrShift);
+
+        const paramBase = parametricRisk(factors, corrShifted, alpha, horizon);
+        const z = normalInv(alpha);
+
+        const mcPnl = simulatePnL(factors, corrShifted, horizon, sims);
+        const qMc = quantile(mcPnl, 1 - alpha);
+        const varMc = Math.max(0, -qMc);
+        const tailMc = mcPnl.filter(x => x <= qMc);
+        const esMc = tailMc.length ? -tailMc.reduce((s, x) => s + x, 0) / tailMc.length : varMc;
+
+        const pnlSorted = pnlHist.slice().sort((a, b) => a - b);
+        const hist = historicalRisk(pnlSorted, alpha);
+
+        const scenarioRows = scenarioPnl(factors, scenarios);
+        const worstScenario = scenarioRows.length ? scenarioRows[0] : null;
+        const stressMap = {};
+        if (worstScenario) worstScenario.details.forEach(d => stressMap[d.factor] = d.pnl);
+
+        const factorRows = renderFactorTable(factors, paramBase.comp, threshold, stressMap);
+        renderScenarioTable(scenarioRows);
+
+        const btParam = backtestModel(pnlHist, paramBase.varP, alpha);
+        const btMc = backtestModel(pnlHist, varMc, alpha);
+        const btHist = backtestModel(pnlHist, hist.varH, alpha);
+        renderBacktestTable([
+          { model: 'Parametric', ...btParam },
+          { model: 'MonteCarlo', ...btMc },
+          { model: 'Historical', ...btHist },
+        ]);
+
+        renderSweepTable(factors, corr, alpha, horizon);
+
+        const totalStress = worstScenario ? worstScenario.total : 0;
+        const diversification = factorRows.reduce((s, r) => s + Math.abs(r.sigmaPnl), 0) > 0
+          ? 1 - paramBase.sigmaP / factorRows.reduce((s, r) => s + Math.abs(r.sigmaPnl), 0)
+          : 0;
+        const hhi = factorRows.reduce((s, r) => {
+          const w = (Math.abs(r.compVar) / (factorRows.reduce((a, x) => a + Math.abs(x.compVar), 0) || 1));
+          return s + w * w;
+        }, 0);
+
+        const revA = 0.5 * factors.reduce((s, f) => s + f.gamma * f.stress * f.stress, 0);
+        const revB = factors.reduce((s, f) => s + f.delta * f.stress, 0);
+        let reverseScale = NaN;
+        if (Math.abs(revA) < 1e-12) {
+          if (Math.abs(revB) > 1e-12) reverseScale = targetLoss / revB;
+        } else {
+          const disc = revB * revB + 4 * revA * targetLoss;
+          if (disc >= 0) {
+            const r1 = (-revB + Math.sqrt(disc)) / (2 * revA);
+            const r2 = (-revB - Math.sqrt(disc)) / (2 * revA);
+            const cands = [r1, r2].filter(x => Number.isFinite(x) && x > 0).sort((a, b) => a - b);
+            if (cands.length) reverseScale = cands[0];
+          }
+        }
+
+        if (!Number.isFinite(reverseScale)) warnings.push('Reverse stress scale has no positive real solution for current target.');
+        if (hhi > 0.25) warnings.push(`Concentration HHI is high (${hhi.toFixed(3)}).`);
+        const top = factorRows.filter(r => (Math.abs(r.compVar) / (factorRows.reduce((a, x) => a + Math.abs(x.compVar), 0) || 1) * 100) >= threshold)
+          .map(r => `${r.factor}`);
+        if (top.length) warnings.push(`Concentration alert factors: ${top.join(', ')}`);
+        if (btParam.pValue < 0.05) warnings.push('Parametric backtest Kupiec p-value < 0.05 (model under scrutiny).');
+        if (Math.abs(totalStress) > paramBase.varP * 2) warnings.push('Worst scenario loss exceeds 2x parametric VaR.');
+
+        const metrics = [
+          ['Param VaR', fmtMoney(paramBase.varP), 'bad'],
+          ['Param ES', fmtMoney(paramBase.esP), 'bad'],
+          ['MC VaR', fmtMoney(varMc), 'bad'],
+          ['MC ES', fmtMoney(esMc), 'bad'],
+          ['Hist VaR', fmtMoney(hist.varH), 'bad'],
+          ['Hist ES', fmtMoney(hist.esH), 'bad'],
+          ['Worst Scenario PnL', fmtMoney(totalStress), totalStress < 0 ? 'bad' : 'good'],
+          ['Diversification Benefit', `${(diversification * 100).toFixed(1)}%`, diversification > 0.2 ? 'good' : 'warn'],
+          ['Concentration HHI', hhi.toFixed(3), hhi > 0.25 ? 'warn' : 'good'],
+          ['Reverse Stress Scale', Number.isFinite(reverseScale) ? `${reverseScale.toFixed(3)}x` : 'N/A', Number.isFinite(reverseScale) ? 'good' : 'warn'],
+        ];
+
+        document.getElementById('metrics').innerHTML = metrics.map(([k, v, cls]) => `
+          <div class="metric">
+            <div class="k">${k}</div>
+            <div class="v ${cls}">${v}</div>
+          </div>
+        `).join('');
+
+        state.snapshot = {
+          as_of: new Date().toISOString(),
+          confidence: alpha,
+          horizon_days: horizon,
+          sims,
+          corr_shift: corrShift,
+          parametric: { sigma: paramBase.sigmaP, var: paramBase.varP, es: paramBase.esP },
+          monte_carlo: { var: varMc, es: esMc },
+          historical: { var: hist.varH, es: hist.esH },
+          backtest: { parametric: btParam, monte_carlo: btMc, historical: btHist },
+          worst_scenario: worstScenario,
+          concentration_hhi: hhi,
+          reverse_stress_scale: Number.isFinite(reverseScale) ? reverseScale : null,
+        };
+
+        showWarnings(warnings);
+      } catch (err) {
+        document.getElementById('metrics').innerHTML = `<div class="metric"><div class="k">Error</div><div class="v bad">${err.message}</div></div>`;
+        document.getElementById('factorTable').innerHTML = '';
+        document.getElementById('scenarioTable').innerHTML = '';
+        document.getElementById('backtestTable').innerHTML = '';
+        document.getElementById('sweepTable').innerHTML = '';
+        showWarnings([`Validation failed: ${err.message}`]);
+      }
+    }
+
+    document.getElementById('factorCsv').addEventListener('input', () => {});
+    runAll();
+  </script>
+</body>
+</html>

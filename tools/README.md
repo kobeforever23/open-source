@@ -9,6 +9,7 @@ Standalone GUI/dashboard tools for CIB Risk execution.
 3. Open `http://127.0.0.1:8090/`
 
 ## Tool catalog
+- `market-risk-terminal/`: flagship quant market risk workstation (VaR/ES, MC, backtesting, scenarios, stress sweeps).
 - `eqfin-shock-calibrator/`: index and single-name stress shock calibration.
 - `cross-asset-risk-monitor/`: exposure and stress PnL dashboard.
 - `stress-scenario-studio/`: scenario definition and sensitivity translation.
