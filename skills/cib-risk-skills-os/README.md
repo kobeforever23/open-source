@@ -9,6 +9,9 @@ Institutional-grade, tool-ready, audit-defensible skills library for Corporate &
 - [Learning System](LEARNING_SYSTEM.md)
 - [Update Playbook](UPDATE_PLAYBOOK.md)
 - [Verification Policy](VERIFICATION_POLICY.md)
+- [Operating Model](OPERATING_MODEL.md)
+- [Prompt-to-Skill Mapping](PROMPT_SKILL_MAPPING.md)
+- [Templates](templates/)
 - [Changelog](CHANGELOG.md)
 - [Authoritative Sources](sources/authoritative_sources.md)
 - [RSS and Watchlist](sources/rss_and_watchlist.md)
@@ -51,3 +54,6 @@ graph TD
 
 ## Citation baseline
 Core source hierarchy is maintained in [sources/authoritative_sources.md](sources/authoritative_sources.md), prioritizing BIS/BCBS, Federal Reserve/OCC/SEC/CFTC, ESMA/EBA, IOSCO, ISDA, IMF, and major exchange rulebooks.
+
+## Prompt integration
+Use the production prompt library in [`../../prompts/`](../../prompts/README.md) and route each prompt through this skill system using [Prompt-to-Skill Mapping](PROMPT_SKILL_MAPPING.md).

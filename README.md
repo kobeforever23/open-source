@@ -1,8 +1,8 @@
 # Open Source Projects
 
-Public modules and utilities.
+CIB Risk operating repository (skills + prompts + supporting artifacts).
 
-## Structure
-- `skills/`: reusable skills and playbooks (including CIB Risk Skills OS).
-- `prompts/`: reusable prompt templates.
-- `misc/`: legacy/demo artifacts and non-library files.
+## Core
+- `skills/`: full CIB Risk Skills OS
+- `prompts/`: production prompt library mapped to skills
+- `misc/`: non-library artifacts and archived materials
