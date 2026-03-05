@@ -51,8 +51,15 @@ This folder is the canonical prompt operating system for CIB Risk workflows.
 1. Start with `00_system/cib_risk_os_master_operator.md`.
 2. Select a workflow prompt by category and fill required inputs.
 3. Run final output through `00_system/cib_risk_output_quality_gate.md`.
+4. Validate prompt quality using `PROMPT_EVALUATION_HARNESS.md` and `RED_TEAM_TEST_BANK.md`.
 
 ## Source and control alignment
 - Skills OS references: `../skills/cib-risk-skills-os/`
 - Verification policy: `../skills/cib-risk-skills-os/VERIFICATION_POLICY.md`
 - Update playbook: `../skills/cib-risk-skills-os/UPDATE_PLAYBOOK.md`
+
+## Prompt governance docs
+- [Prompt Standards](PROMPT_STANDARDS.md)
+- [Prompt Evaluation Harness](PROMPT_EVALUATION_HARNESS.md)
+- [Role-Based Prompt Routing](ROLE_BASED_PROMPT_ROUTING.md)
+- [Red-Team Test Bank](RED_TEAM_TEST_BANK.md)

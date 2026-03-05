@@ -102,3 +102,28 @@ Confluence template sections:
 - [COSO Internal Control Integrated Framework](https://www.coso.org/guidance-on-ic)
 - [Verification Policy](../../VERIFICATION_POLICY.md)
 - [Authoritative Sources Registry](../../sources/authoritative_sources.md)
+## Advanced implementation notes
+- **Depth objective:** move this module from descriptive understanding to decision-grade execution under stress.
+- **Primary instrumentation focus:** `data quality defect density`.
+- **Control anchor:** `DQ rule governance`.
+- **Adverse case to rehearse monthly:** `upstream schema drift`.
+- **Decision latency target:** deliver first recommendation within 30 minutes of trigger detection and final pack within policy SLA.
+
+## KPI / KRI instrumentation
+| Indicator | Definition | Threshold Logic | Owner | Cadence |
+|---|---|---|---|---|
+| Core KPI | `data quality defect density` measured against approved baseline | Green/Amber/Red with pre-agreed escalation thresholds | Desk + Risk | Daily |
+| Control KRI | `DQ rule governance` exception count and aging | Any overdue high-severity exception -> immediate escalation | Control owner | Daily |
+| Scenario KRI | Breach distance under `upstream schema drift` | <20% headroom to limit/appetite -> governance challenge | Risk manager | Weekly |
+| Delivery KPI | Decision package timeliness | Missed SLA requires RCA and process correction | COO/PMO | Weekly |
+
+## Control test library (module-specific)
+1. **Preventive test:** verify input assumptions and source systems before running analytics.
+2. **Detective test:** run independent reconciliation/challenge on key outputs and flag residuals above tolerance.
+3. **Corrective test:** simulate a live exception and validate escalation path, owner accountability, and evidence closure.
+4. **Audit test:** re-perform one historical decision end-to-end using stored evidence and confirm reproducibility.
+
+## 30-60-90 mastery plan
+- **Day 30:** reproduce the baseline workflow for `Data Quality Dimensions Framework` on historical data and pass peer review.
+- **Day 60:** independently own one production cycle and produce an executive-ready decision memo.
+- **Day 90:** lead a challenge session, improve one control, and mentor a junior analyst through the playbook.

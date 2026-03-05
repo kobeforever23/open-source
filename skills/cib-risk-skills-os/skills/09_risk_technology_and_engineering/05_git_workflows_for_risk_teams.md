@@ -102,3 +102,28 @@ Confluence template sections:
 - [Microsoft Power BI Documentation](https://learn.microsoft.com/power-bi/)
 - [Verification Policy](../../VERIFICATION_POLICY.md)
 - [Authoritative Sources Registry](../../sources/authoritative_sources.md)
+## Advanced implementation notes
+- **Depth objective:** move this module from descriptive understanding to decision-grade execution under stress.
+- **Primary instrumentation focus:** `branch health index`.
+- **Control anchor:** `branch protection`.
+- **Adverse case to rehearse monthly:** `merge conflict incident`.
+- **Decision latency target:** deliver first recommendation within 30 minutes of trigger detection and final pack within policy SLA.
+
+## KPI / KRI instrumentation
+| Indicator | Definition | Threshold Logic | Owner | Cadence |
+|---|---|---|---|---|
+| Core KPI | `branch health index` measured against approved baseline | Green/Amber/Red with pre-agreed escalation thresholds | Desk + Risk | Daily |
+| Control KRI | `branch protection` exception count and aging | Any overdue high-severity exception -> immediate escalation | Control owner | Daily |
+| Scenario KRI | Breach distance under `merge conflict incident` | <20% headroom to limit/appetite -> governance challenge | Risk manager | Weekly |
+| Delivery KPI | Decision package timeliness | Missed SLA requires RCA and process correction | COO/PMO | Weekly |
+
+## Control test library (module-specific)
+1. **Preventive test:** verify input assumptions and source systems before running analytics.
+2. **Detective test:** run independent reconciliation/challenge on key outputs and flag residuals above tolerance.
+3. **Corrective test:** simulate a live exception and validate escalation path, owner accountability, and evidence closure.
+4. **Audit test:** re-perform one historical decision end-to-end using stored evidence and confirm reproducibility.
+
+## 30-60-90 mastery plan
+- **Day 30:** reproduce the baseline workflow for `Git Workflows for Risk Teams` on historical data and pass peer review.
+- **Day 60:** independently own one production cycle and produce an executive-ready decision memo.
+- **Day 90:** lead a challenge session, improve one control, and mentor a junior analyst through the playbook.

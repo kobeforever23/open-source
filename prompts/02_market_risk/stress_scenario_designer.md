@@ -60,3 +60,53 @@ Output rules:
 - Are assumptions explicit and bounded?
 - Are owners and due dates specified for each action?
 - Is escalation logic concrete and testable?
+## Advanced prompt controls
+- **Decision lens:** risk signal quality
+- **Non-negotiable control:** every recommendation must include owner, due date, trigger, and fallback.
+- **Citation rule:** any regulatory or official-definition statement must include authoritative URL citation.
+- **Uncertainty protocol:** mark unresolved claims as **Unconfirmed** and provide a verification plan.
+
+## Structured output schema
+```yaml
+as_of:
+audience:
+decision_summary:
+  recommendation:
+  confidence:
+key_signals:
+  - signal:
+    evidence:
+    risk_direction:
+scenarios:
+  base:
+  adverse_1:
+  adverse_2:
+actions:
+  - owner:
+    action:
+    due_date:
+    trigger:
+    fallback:
+controls:
+  assumptions:
+  caveats:
+  escalation_path:
+sources:
+  - title:
+    url:
+```
+
+## Failure mode checks (red-team)
+1. What would make this recommendation wrong within 24 hours?
+2. Which hidden dependency or data latency risk is not yet captured?
+3. Where could governance fail even if analytics are correct?
+4. Which stakeholder might disagree, and what evidence would resolve that challenge?
+
+## Scoring rubric
+| Dimension | 1 (Weak) | 3 (Adequate) | 5 (Excellent) |
+|---|---|---|---|
+| Decision quality | Generic narrative | Actionable with gaps | Decisive with explicit trade-offs |
+| Quant rigor | Unclear basis | Basic metrics present | Transparent assumptions + stress-tested |
+| Control quality | Missing ownership | Partial controls | Full ownership, triggers, evidence |
+| Communication quality | Dense/ambiguous | Understandable | Executive-ready and unambiguous |
+| KPI alignment | No KPI linkage | One KPI linked | `explainability residual` and `limit/escalation hit quality` clearly monitored |
