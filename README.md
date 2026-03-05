@@ -7,6 +7,7 @@ Production-ready CIB Risk workspace with prompts, skills, tools, briefs, and arc
 - `skills/`: CIB Risk Skills OS and operating standards
 - `tools/`: standalone HTML/Python risk tooling suite
 - `briefs/`: executive brief outputs and briefing artifacts
+- `adhoc-analysis/`: one-off deep-dive analysis packages
 - `artifacts/`: archived dashboards, reports, and references
 
 ## Quick Navigation
@@ -16,6 +17,7 @@ Production-ready CIB Risk workspace with prompts, skills, tools, briefs, and arc
 | Skill framework and governance | `skills/cib-risk-skills-os/` | Verification and update playbooks included |
 | Interactive risk tools | `tools/` | Run local server via `python3 tools/start_tools_server.py` |
 | OpenClaw brief files | `briefs/openclaw/` | Includes color version and prior brief |
+| Iran crisis ad hoc package | `adhoc-analysis/iran-crisis-march-2026/` | Source docs + methodology + generation prompt |
 | Legacy one-off dashboards/exports | `artifacts/` | Organized by dashboard/report/reference |
 
 ## Repository Layout
@@ -26,6 +28,8 @@ open-source/
   tools/
   briefs/
     openclaw/
+  adhoc-analysis/
+    iran-crisis-march-2026/
   artifacts/
     dashboards/
     reports/
