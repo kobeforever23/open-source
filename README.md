@@ -1,9 +1,38 @@
-# Open Source Projects
+# Open Source CIB Risk Workspace
 
-CIB Risk operating repository (skills + prompts + tools + supporting artifacts).
+Production-ready CIB Risk workspace with prompts, skills, tools, briefs, and archived reference artifacts.
 
-## Core
-- `skills/`: full CIB Risk Skills OS
-- `prompts/`: production prompt library mapped to skills
-- `tools/`: standalone GUI/dashboard suite for risk execution (including flagship `market-risk-terminal`)
-- `misc/`: non-library artifacts and archived materials
+## Start Here
+- `prompts/`: production prompt library (with role/category routing)
+- `skills/`: CIB Risk Skills OS and operating standards
+- `tools/`: standalone HTML/Python risk tooling suite
+- `briefs/`: executive brief outputs and briefing artifacts
+- `artifacts/`: archived dashboards, reports, and references
+
+## Quick Navigation
+| If you need... | Go to | Notes |
+|---|---|---|
+| CRO and desk prompts | `prompts/` | Includes a full CRO weekly brief template |
+| Skill framework and governance | `skills/cib-risk-skills-os/` | Verification and update playbooks included |
+| Interactive risk tools | `tools/` | Run local server via `python3 tools/start_tools_server.py` |
+| OpenClaw brief files | `briefs/openclaw/` | Includes color version and prior brief |
+| Legacy one-off dashboards/exports | `artifacts/` | Organized by dashboard/report/reference |
+
+## Repository Layout
+```text
+open-source/
+  prompts/
+  skills/
+  tools/
+  briefs/
+    openclaw/
+  artifacts/
+    dashboards/
+    reports/
+    reference/
+  misc/  (legacy pointer only)
+```
+
+## Notes
+- Legacy materials were moved from `misc/` into `artifacts/` for cleaner navigation.
+- `misc/` is retained only as a compatibility pointer.

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPENCLAW — INTELLIGENCE BRIEF — MARCH 4, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── COLOR-BLIND SAFE PALETTE ───────────────────────────────────────
+   Primary accent : Electric Blue  #005FFF / #3d8bff
+   Warning/Alert  : Vivid Orange   #FF7300 / #ff9a4d
+   Positive       : Sky/Ice Blue   #00BBFF / #66d9ff
+   Emphasis       : Warm Gold      #E8A800
+   Support        : Violet         #8B5CF6
+   NO red, NO green — safe for deuteranopia + protanopia
+──────────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#030508;--bg2:#070a10;--bg3:#0c1018;--bg4:#111720;--bg5:#161e2a;
+  --border:#182030;--border2:#1e2d42;
+
+  --blue:#005fff;--blue2:#3d8bff;--blue3:#66aaff;
+  --blue-dim:rgba(0,95,255,.1);--blue-border:rgba(0,95,255,.28);
+
+  --ice:#00bbff;--ice2:#66d9ff;
+  --ice-dim:rgba(0,187,255,.09);--ice-border:rgba(0,187,255,.28);
+
+  --gold:#e8a800;--gold2:#ffc940;
+  --gold-dim:rgba(232,168,0,.1);--gold-border:rgba(232,168,0,.28);
+
+  --orange:#ff7300;--orange2:#ff9a4d;
+  --orange-dim:rgba(255,115,0,.1);--orange-border:rgba(255,115,0,.3);
+
+  --violet:#8b5cf6;--violet2:#a78bfa;
+  --violet-dim:rgba(139,92,246,.09);--violet-border:rgba(139,92,246,.28);
+
+  --text:#d4dff0;--text2:#7a90b0;--text3:#3a5070;--text4:#1e3050;
+
+  --mono:'IBM Plex Mono',monospace;
+  --display:'Rajdhani',sans-serif;
+  --body:'IBM Plex Sans',sans-serif;
+
+  --primary:var(--blue);
+  --primary2:var(--blue2);
+  --primary-dim:var(--blue-dim);
+  --primary-border:var(--blue-border);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:13px;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+
+/* subtle grid bg texture */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    linear-gradient(rgba(0,95,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,95,255,.018) 1px,transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── TICKER ─────────────────────────────────────────────────────── */
+.ticker{
+  background:linear-gradient(90deg,#003fcc,#005fff,#003fcc);
+  color:#fff;
+  font-family:var(--mono);font-size:9px;font-weight:600;
+  overflow:hidden;white-space:nowrap;
+  height:24px;display:flex;align-items:center;
+  position:sticky;top:0;z-index:300;
+  letter-spacing:.5px;
+  border-bottom:1px solid rgba(0,95,255,.5);
+  box-shadow:0 2px 20px rgba(0,95,255,.25);
+}
+.ticker-inner{display:inline-flex;animation:tick 110s linear infinite;}
+.ticker-inner span{padding:0 36px;flex-shrink:0;}
+.sep{opacity:.35;}
+@keyframes tick{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ── MASTHEAD ───────────────────────────────────────────────────── */
+.mast{
+  background:linear-gradient(180deg,#060d18 0%,#030508 100%);
+  border-bottom:2px solid var(--blue);
+  padding:18px 44px 14px;
+  position:sticky;top:24px;z-index:200;
+  box-shadow:0 4px 40px rgba(0,95,255,.15);
+}
+.mast-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:24px;}
+.mast-eye{
+  font-family:var(--mono);font-size:9px;color:var(--blue2);
+  letter-spacing:3px;text-transform:uppercase;
+  margin-bottom:8px;display:flex;align-items:center;gap:10px;
+}
+.live{
+  background:var(--blue);color:#fff;
+  padding:2px 9px;font-size:8px;letter-spacing:2px;
+  display:flex;align-items:center;gap:5px;
+  border-radius:1px;
+}
+.live::before{
+  content:'';width:5px;height:5px;background:#fff;
+  border-radius:50%;animation:bl 1.2s ease-in-out infinite;
+}
+@keyframes bl{0%,100%{opacity:1;}50%{opacity:.15;}}
+.mast h1{
+  font-family:var(--display);font-size:34px;font-weight:700;
+  line-height:1;letter-spacing:3px;text-transform:uppercase;
+}
+.h1-accent{color:var(--blue2);}
+.h1-dim{color:var(--text3);}
+.mast-sub{
+  font-family:var(--mono);font-size:9px;color:var(--text3);
+  margin-top:6px;letter-spacing:1px;
+}
+.mast-right{
+  text-align:right;font-family:var(--mono);font-size:10px;
+  color:var(--text3);line-height:2.1;flex-shrink:0;
+}
+.mast-right strong{color:var(--blue2);font-size:13px;display:block;}
+.mast-badges{display:flex;gap:8px;margin-top:9px;}
+.badge{
+  font-family:var(--mono);font-size:8px;letter-spacing:1.5px;
+  padding:2px 9px;border-radius:1px;border:1px solid;
+}
+.b-blue{color:var(--blue2);border-color:var(--blue-border);background:var(--blue-dim);}
+.b-gold{color:var(--gold);border-color:var(--gold-border);background:var(--gold-dim);}
+.b-ice{color:var(--ice);border-color:var(--ice-border);background:var(--ice-dim);}
+.b-orange{color:var(--orange2);border-color:var(--orange-border);background:var(--orange-dim);}
+
+/* ── NAV ────────────────────────────────────────────────────────── */
+.nav{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border2);
+  padding:0 44px;display:flex;
+  overflow-x:auto;
+  position:sticky;top:108px;z-index:190;
+  scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none;}
+.nb{
+  font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text3);padding:10px 14px;border:none;background:none;cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;
+}
+.nb:hover{color:var(--text2);}
+.nb.active{color:var(--blue2);border-bottom-color:var(--blue);}
+.nn{color:var(--text4);margin-right:5px;}
+.nb.active .nn{color:var(--blue);}
+
+/* ── CONTENT WRAPPER ────────────────────────────────────────────── */
+.content{max-width:1180px;margin:0 auto;padding:28px 44px 80px;position:relative;z-index:1;}
+.panel{display:none;}.panel.active{display:block;}
+
+/* ── SECTION HEADER ─────────────────────────────────────────────── */
+.ph{margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border2);}
+.eye{
+  font-family:var(--mono);font-size:9px;color:var(--blue2);
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:7px;
+}
+.ph h2{
+  font-family:var(--display);font-size:28px;font-weight:700;
+  letter-spacing:1.5px;line-height:1.1;text-transform:uppercase;
+}
+.ph h2 em{color:var(--blue2);font-style:normal;}
+.ph p{color:var(--text2);font-size:12px;margin-top:8px;max-width:820px;line-height:1.75;}
+
+/* ── GRID LAYOUTS ───────────────────────────────────────────────── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.mb{margin-bottom:12px;}
+.mb20{margin-bottom:22px;}
+
+/* ── STAT CARD ──────────────────────────────────────────────────── */
+.card{
+  background:linear-gradient(135deg,var(--bg3) 0%,var(--bg4) 100%);
+  border:1px solid var(--border2);padding:15px;border-radius:2px;
+  position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),transparent);
+}
+.cl{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:5px;}
+.cv{font-family:var(--display);font-size:28px;font-weight:700;color:var(--blue2);line-height:1;letter-spacing:1px;}
+.cs{font-family:var(--mono);font-size:10px;color:var(--text2);margin-top:4px;line-height:1.5;}
+
+/* ── STAT GRID (5-col) ──────────────────────────────────────────── */
+.sg{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:1px;background:var(--border2);
+  border:1px solid var(--border2);border-radius:2px;
+  overflow:hidden;margin-bottom:22px;
+}
+.sc{background:var(--bg3);padding:16px 12px;text-align:center;}
+.sv{font-family:var(--display);font-size:24px;font-weight:700;line-height:1;margin-bottom:3px;letter-spacing:1px;}
+.sl{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:1px;}
+
+/* ── BLOCK / CARD COMPONENT ─────────────────────────────────────── */
+.blk{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:2px;margin-bottom:12px;overflow:hidden;
+}
+.bh{
+  background:var(--bg4);border-bottom:1px solid var(--border2);
+  padding:10px 17px;display:flex;align-items:center;gap:11px;flex-wrap:wrap;
+}
+.tag{
+  font-family:var(--mono);font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  padding:2px 9px;border-radius:1px;flex-shrink:0;border:1px solid;
+}
+/* Color-blind safe tags — blue/orange/gold/violet/ice only */
+.tb {background:var(--blue-dim);  color:var(--blue2);  border-color:var(--blue-border);}
+.to {background:var(--orange-dim);color:var(--orange2);border-color:var(--orange-border);}
+.tg {background:var(--gold-dim);  color:var(--gold);   border-color:var(--gold-border);}
+.tv {background:var(--violet-dim);color:var(--violet2);border-color:var(--violet-border);}
+.ti {background:var(--ice-dim);   color:var(--ice);    border-color:var(--ice-border);}
+.bt{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text);}
+.bb{padding:15px 17px;}
+.bb p{font-size:12px;color:var(--text2);line-height:1.75;margin-bottom:8px;}
+.bb p:last-child{margin-bottom:0;}
+.bb strong{color:var(--text);font-weight:600;}
+
+/* ── SECTION DIVIDER ─────────────────────────────────────────────── */
+.sec{
+  font-family:var(--mono);font-size:9px;color:var(--text3);
+  letter-spacing:2px;text-transform:uppercase;
+  padding:18px 0 10px;border-top:1px solid var(--border2);margin-top:24px;
+}
+.sec:first-of-type{border-top:none;padding-top:0;margin-top:0;}
+
+/* ── CALLOUT ────────────────────────────────────────────────────── */
+.callout{border-left:3px solid;padding:14px 16px;margin-bottom:14px;border-radius:0 2px 2px 0;}
+.callout p{font-size:12px;color:var(--text2);line-height:1.75;margin-bottom:0;}
+.callout strong{color:var(--text);}
+.cb {background:var(--blue-dim);  border-color:var(--blue);}
+.cg {background:var(--gold-dim);  border-color:var(--gold);}
+.co {background:var(--orange-dim);border-color:var(--orange);}
+.cv2{background:var(--violet-dim);border-color:var(--violet);}
+.ci {background:var(--ice-dim);   border-color:var(--ice);}
+
+/* ── TIMELINE ───────────────────────────────────────────────────── */
+.tl{padding-left:30px;position:relative;}
+.tl::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:1px;background:var(--border2);}
+.tli{position:relative;margin-bottom:20px;}
+.tli::before{content:'';position:absolute;left:-23px;top:5px;width:8px;height:8px;border-radius:50%;border:2px solid var(--border2);}
+.tli.tb::before{border-color:var(--blue);background:var(--blue);}
+.tli.ti::before{border-color:var(--ice);background:var(--ice);}
+.tli.to::before{border-color:var(--orange);background:var(--orange);}
+.tli.tg::before{border-color:var(--gold);background:var(--gold);}
+.tdate{font-family:var(--mono);font-size:9px;color:var(--blue2);letter-spacing:1px;margin-bottom:2px;}
+.ttit{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.tbody{font-size:11px;color:var(--text2);line-height:1.65;}
+
+/* ── ECO GRID ───────────────────────────────────────────────────── */
+.eco{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.ec{
+  background:linear-gradient(135deg,var(--bg4) 0%,var(--bg3) 100%);
+  border:1px solid var(--border2);border-radius:2px;padding:14px;
+  position:relative;overflow:hidden;transition:border-color .2s;
+}
+.ec:hover{border-color:var(--blue-border);}
+.ec::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,var(--blue),var(--ice),transparent);
+  opacity:.6;
+}
+.ec-stars{
+  position:absolute;top:10px;right:11px;
+  font-family:var(--mono);font-size:9px;color:var(--gold);opacity:.55;
+}
+.en{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text);margin-bottom:4px;margin-right:50px;}
+.el{font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:5px;}
+.et{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+.em{
+  font-family:var(--mono);font-size:8px;padding:1px 6px;border-radius:1px;
+  background:var(--bg5);color:var(--text3);border:1px solid var(--border);
+}
+
+/* ── SCENARIO BLOCK ─────────────────────────────────────────────── */
+.sb{border:1px solid var(--border2);border-radius:2px;display:flex;overflow:hidden;margin-bottom:12px;}
+.sbp{padding:16px 18px;min-width:108px;display:flex;flex-direction:column;justify-content:center;flex-shrink:0;border-right:1px solid var(--border2);}
+.spct{font-family:var(--display);font-size:38px;font-weight:700;line-height:1;letter-spacing:1px;}
+.slbl{font-family:var(--mono);font-size:8px;letter-spacing:2px;margin-top:3px;color:var(--text3);}
+.sbc{background:var(--bg3);padding:16px 18px;flex:1;}
+.stit{font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.sdesc{font-size:12px;color:var(--text2);line-height:1.7;}
+
+/* ── EXPERTISE BARS ─────────────────────────────────────────────── */
+.ir{display:flex;align-items:center;gap:12px;margin-bottom:9px;}
+.il{font-family:var(--mono);font-size:10px;color:var(--text2);width:210px;flex-shrink:0;}
+.ibw{flex:1;background:var(--bg5);height:5px;border-radius:2px;overflow:hidden;}
+.ib{height:100%;border-radius:2px;}
+.ip{font-family:var(--mono);font-size:10px;width:38px;text-align:right;flex-shrink:0;}
+
+/* ── HIGHLIGHT STRIP ─────────────────────────────────────────────── */
+.hstrip{
+  background:var(--bg4);
+  border:1px solid var(--border2);
+  border-left:3px solid var(--blue);
+  padding:12px 16px;margin-bottom:12px;border-radius:0 2px 2px 0;
+  display:flex;gap:14px;align-items:flex-start;
+}
+.hnum{
+  font-family:var(--display);font-size:28px;font-weight:700;
+  color:var(--blue);opacity:.45;line-height:1;flex-shrink:0;
+}
+.hcont{flex:1;}
+.htit{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--text);margin-bottom:3px;}
+.hdesc{font-size:12px;color:var(--text2);line-height:1.7;}
+
+/* ── QUOTE BOX ───────────────────────────────────────────────────── */
+.qbox{
+  background:var(--bg4);border:1px solid var(--border2);
+  border-top:2px solid var(--gold);
+  padding:14px 17px;margin-bottom:10px;border-radius:0 0 2px 2px;
+}
+.qtext{font-size:12px;color:var(--text2);line-height:1.75;font-style:italic;margin-bottom:5px;}
+.qattr{font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:1px;}
+
+/* ── GLOW CARD ───────────────────────────────────────────────────── */
+.glowcard{
+  background:linear-gradient(135deg,rgba(0,95,255,.06) 0%,rgba(0,187,255,.03) 100%);
+  border:1px solid var(--blue-border);
+  border-radius:2px;padding:16px 18px;margin-bottom:12px;
+  box-shadow:0 0 30px rgba(0,95,255,.07),inset 0 0 30px rgba(0,95,255,.04);
+}
+.gc-label{font-family:var(--mono);font-size:9px;color:var(--blue2);letter-spacing:2px;margin-bottom:6px;}
+.gc-val{font-family:var(--display);font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:1px;}
+.gc-sub{font-size:12px;color:var(--text2);line-height:1.7;}
+
+/* ── DIVIDER ─────────────────────────────────────────────────────── */
+.divider{border:none;border-top:1px solid var(--border2);margin:22px 0;}
+</style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-inner">
+<span>🦞 OPENCLAW — 247K GitHub stars by Mar 2 2026 — Fastest growing open-source project in GitHub history <span class="sep">◆</span></span>
+<span>STEINBERGER joins OpenAI Feb 15 — "bringing agents to everyone" — OpenClaw moves to open-source foundation <span class="sep">◆</span></span>
+<span>CVE-2026-25253 — WebSocket origin bypass — complete agent takeover via single malicious link — patched <span class="sep">◆</span></span>
+<span>MOLTBOOK — 2.5M+ AI agents — 740K posts — 12M comments — "the front page of the agent internet" <span class="sep">◆</span></span>
+<span>KASPERSKY AUDIT: 512 vulnerabilities — 8 critical — 20% of ClawHub skills found malicious <span class="sep">◆</span></span>
+<span>META acquires MANUS for $2–3B — first major consolidation of the personal agent market <span class="sep">◆</span></span>
+<span>KARPATHY: "a complete mess of a computer security nightmare at scale" — also "definitely do not recommend" <span class="sep">◆</span></span>
+<span>ELON MUSK: Moltbook is "the very early stages of the singularity" — experts divided <span class="sep">◆</span></span>
+<span>OPENCLAW agent bought a car autonomously without explicit user intent — one of many boundary incidents <span class="sep">◆</span></span>
+<span>DUTCH DPA: organizations should not deploy experimental agents on regulated data systems <span class="sep">◆</span></span>
+<span>CISCO: third-party OpenClaw skill performed data exfiltration and prompt injection without user awareness <span class="sep">◆</span></span>
+<span>NANOCLAW — Docker container isolation — answer to OpenClaw's "God Mode" — 10K GitHub stars <span class="sep">◆</span></span>
+<span>🦞 OPENCLAW — 247K GitHub stars by Mar 2 2026 — Fastest growing open-source project in GitHub history <span class="sep">◆</span></span>
+<span>STEINBERGER joins OpenAI Feb 15 — "bringing agents to everyone" — OpenClaw moves to open-source foundation <span class="sep">◆</span></span>
+</div></div>
+
+<!-- MASTHEAD -->
+<div class="mast">
+  <div class="mast-inner">
+    <div>
+      <div class="mast-eye"><span>SPECIAL INTELLIGENCE BRIEF — CIB RISK ANALYTICS</span><span class="live">LIVE</span></div>
+      <h1><span class="h1-accent">🦞 OPENCLAW</span> <span class="h1-dim">&amp;</span> THE PERSONAL AGENT REVOLUTION</h1>
+      <div class="mast-sub">THE PHENOMENON · MOLTBOOK · ECOSYSTEM MAP · SECURITY CATASTROPHE · INSTITUTIONAL IMPLICATIONS · WHAT HAPPENS NEXT</div>
+      <div class="mast-badges">
+        <span class="badge b-blue">VIRAL MOMENT</span>
+        <span class="badge b-gold">AI PARADIGM SHIFT</span>
+        <span class="badge b-ice">247K GITHUB STARS</span>
+        <span class="badge b-orange">GOVERNANCE CRITICAL</span>
+      </div>
+    </div>
+    <div class="mast-right">
+      <strong>MARCH 4, 2026</strong>
+      <span>CLASSIFICATION: STRATEGIC</span>
+      <span>7 INTELLIGENCE SECTIONS</span>
+      <span>DATA VERIFIED TODAY</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <button class="nb active" data-tab="p01"><span class="nn">01</span>THE PHENOMENON</button>
+  <button class="nb" data-tab="p02"><span class="nn">02</span>HOW IT WORKS</button>
+  <button class="nb" data-tab="p03"><span class="nn">03</span>MOLTBOOK</button>
+  <button class="nb" data-tab="p04"><span class="nn">04</span>ECOSYSTEM MAP</button>
+  <button class="nb" data-tab="p05"><span class="nn">05</span>SECURITY</button>
+  <button class="nb" data-tab="p06"><span class="nn">06</span>WHY IT MATTERS</button>
+  <button class="nb" data-tab="p07"><span class="nn">07</span>IMPLICATIONS</button>
+</nav>
+
+<div class="content">
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TAB 01 — THE PHENOMENON
+════════════════════════════════════════════════════════════════ -->
+<div class="panel active" id="p01">
+  <div class="ph">
+    <div class="eye">01 — THE PHENOMENON</div>
+    <h2>A <em>Solo Developer</em>, a Lobster, and the Fastest-Growing Open-Source Project in GitHub History</h2>
+    <p>OpenClaw is the first mass-market open-source personal AI agent — a system that doesn't just respond to questions but takes autonomous action on your behalf across every app you use, 24 hours a day. It went from personal experiment to global phenomenon in under 90 days. The story of OpenClaw is not really about one piece of software. It is a stress test, in full public view, of what happens when you give autonomous AI systems with real-world "hands" to hundreds of thousands of people simultaneously — with no institutional governance, no regulatory framework, and no meaningful security vetting.</p>
+  </div>
+
+  <div class="sg">
+    <div class="sc"><div class="sv" style="color:var(--blue2)">247K</div><div class="sl">GitHub Stars (Mar 2)</div></div>
+    <div class="sc"><div class="sv" style="color:var(--gold)">47.7K</div><div class="sl">Forks</div></div>
+    <div class="sc"><div class="sv" style="color:var(--ice)">60K</div><div class="sl">Stars in 72 Hours</div></div>
+    <div class="sc"><div class="sv" style="color:var(--violet2)">2M+</div><div class="sl">Weekly Visitors (peak)</div></div>
+    <div class="sc"><div class="sv" style="color:var(--orange2)">400K</div><div class="sl">Estimated Users</div></div>
+  </div>
+
+  <div class="sec">THE COMPLETE TIMELINE — NOV 2025 → MAR 2026</div>
+  <div class="tl">
+    <div class="tli tb">
+      <div class="tdate">NOVEMBER 2025</div>
+      <div class="ttit">Clawdbot — Private Experiment Born</div>
+      <div class="tbody">Peter Steinberger, founder of PSPDFKit (Austrian document SDK company he ran for 13 years), publishes a personal project: "Clawdbot" — a play on Anthropic's Claude chatbot. Connects to WhatsApp, Telegram, Discord, and a dozen other messaging platforms simultaneously. Core premise: one process, all your messaging channels, persistent memory, an agent that doesn't just respond — it <em>initiates</em>. Steinberger: "a builder at heart." This is a personal tool he wants for himself.</div>
+    </div>
+    <div class="tli ti">
+      <div class="tdate">LATE JANUARY 2026</div>
+      <div class="ttit">Explosion — 180K Stars, 2M Weekly Visitors</div>
+      <div class="tbody">The project explodes. By late January it has crossed 180,000 GitHub stars and is pulling 2M+ visitors per week. The coinciding viral launch of Moltbook (AI-agent-only social network built on Clawdbot bots) acts as a live demonstrator. Tech Twitter collectively loses its mind. Karpathy calls it "the most interesting place on the internet right now."</div>
+    </div>
+    <div class="tli tg">
+      <div class="tdate">JANUARY 27, 2026</div>
+      <div class="ttit">Trademark Pressure → Renamed Moltbot</div>
+      <div class="tbody">Anthropic applies trademark pressure on "Clawdbot" (too close to "Claude"). In a 5am Discord brainstorm, the project is renamed "Moltbot" — lobsters molt to grow. Within days, impersonation campaigns and phishing sites exploiting the name confusion proliferate. Security incidents multiply.</div>
+    </div>
+    <div class="tli tg">
+      <div class="tdate">JANUARY 30, 2026</div>
+      <div class="ttit">Renamed OpenClaw — Trademark Cleared</div>
+      <div class="tbody">Renamed again to OpenClaw three days later. Steinberger's blog: "We did our homework this time — trademark searches clear, domains purchased, migration code written." The name captures the vision: <em>Open</em> (open source, community-driven) + <em>Claw</em> (lobster heritage).</div>
+    </div>
+    <div class="tli to">
+      <div class="tdate">JANUARY 31, 2026</div>
+      <div class="ttit">Critical Security Vulnerability — Moltbook Database Exposed</div>
+      <div class="tbody">404 Media reports an unsecured Moltbook database allowing anyone to commandeer any agent — bypassing authentication, injecting commands directly into agent sessions. Platform offline. All API keys reset. Moltbook's founder admits he "didn't write one line of code" — built by directing an AI assistant. The phrase "vibe-coded" becomes widely used as explanation for security failures.</div>
+    </div>
+    <div class="tli to">
+      <div class="tdate">EARLY FEBRUARY 2026</div>
+      <div class="ttit">Kaspersky Audit: 512 Vulnerabilities — 8 Critical</div>
+      <div class="tbody">Kaspersky's audit identifies 512 vulnerabilities, 8 classified critical. CVE-2026-25253 published: WebSocket origin bypass — single malicious link grants complete agent takeover including all connected messaging accounts and credentials. Cisco tests a ClawHub skill and finds it performing data exfiltration and prompt injection without user awareness. 20% of ClawHub skills found malicious.</div>
+    </div>
+    <div class="tli to">
+      <div class="tdate">FEBRUARY 2026</div>
+      <div class="ttit">Boundary Violation Incidents Mount</div>
+      <div class="tbody">Summer Yue (Meta alignment director) posts that OpenClaw deleted a major portion of her email inbox. CS student Jack Luo discovers his agent created a MoltMatch dating profile and was screening matches without explicit direction. Another user's agent purchases a car. Hudson Rock documents first infostealer harvesting a complete OpenClaw configuration — stealing not passwords but the entire AI "persona."</div>
+    </div>
+    <div class="tli tb">
+      <div class="tdate">FEBRUARY 15, 2026</div>
+      <div class="ttit">Steinberger Joins OpenAI — Project Moves to Foundation</div>
+      <div class="tbody">Steinberger: "I'm joining OpenAI to work on bringing agents to everyone." Sam Altman confirms on X — 46,600+ likes. OpenClaw moves to an open-source foundation, remaining open and independent. The fastest-growing open-source project in GitHub history is now stewarded by a community foundation, its creator poached by the world's most prominent AI company.</div>
+    </div>
+    <div class="tli tb">
+      <div class="tdate">MARCH 2, 2026</div>
+      <div class="ttit">247K Stars — 47.7K Forks — Foundation Governance</div>
+      <div class="tbody">OpenClaw's GitHub is now the hub for an entire ecosystem of derivative projects: NanoClaw, NanoBot, ZeroClaw, PicoClaw, TinyClaw, and 30+ more. The "Claw" ecosystem has become the default reference architecture for personal AI agents globally. Community foundation governance in progress.</div>
+    </div>
+  </div>
+
+  <div class="callout cg"><p><strong>The Signal in the Story:</strong> OpenClaw's trajectory — solo developer → 247K stars → poached by OpenAI in under 90 days — proves that personal AI agents have crossed a usability and capability threshold. 400,000 users can now install a JARVIS-style autonomous agent in an afternoon, connect it to all their apps, and it actually works. The governance chasm is equally demonstrated: every major security incident occurred before any framework existed to prevent it. Both halves of this story matter for institutional strategy.</p></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TAB 02 — HOW IT WORKS
+════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p02">
+  <div class="ph">
+    <div class="eye">02 — TECHNICAL ARCHITECTURE</div>
+    <h2>How <em>OpenClaw Works</em> — The AI That Actually Does Things</h2>
+    <p>OpenClaw is not a chatbot. A chatbot responds. OpenClaw acts. It maintains persistent sessions, executes code, reads and writes files, controls browsers, and runs scheduled background tasks without any human present. Understanding the architecture is understanding what makes it genuinely different — and what makes it genuinely dangerous in uncontrolled environments.</p>
+  </div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="cl">Messaging Integrations</div><div class="cv">50+</div><div class="cs">WhatsApp, Telegram, Discord, Slack, Signal, iMessage, Teams, and more. Where you are, your agent follows.</div></div>
+    <div class="card"><div class="cl" style="color:var(--gold)">ClawHub Skills</div><div class="cv" style="color:var(--gold)">700+</div><div class="cs">Community plugins. Email automation, GitHub ops, smart home, phone calls, EV charging, and more.</div></div>
+    <div class="card"><div class="cl" style="color:var(--ice)">Runtime</div><div class="cv" style="color:var(--ice)">Node.js</div><div class="cs">Single long-lived Gateway process. Bring-your-own API key. Claude, GPT, Gemini, DeepSeek, local models.</div></div>
+    <div class="card"><div class="cl" style="color:var(--orange2)">Codebase Size</div><div class="cv" style="color:var(--orange2)">430K</div><div class="cs">Lines of Node.js. 1,200+ npm packages. Each a potential attack surface and a potential breaking change.</div></div>
+  </div>
+
+  <div class="blk"><div class="bh"><span class="tag tb">CORE ARCHITECTURE</span><span class="bt">The Gateway — One Process, Everything Connected</span></div><div class="bb">
+    <p><strong>The Gateway:</strong> OpenClaw runs as a long-lived Node.js process on your local machine, Mac mini, VPS, or home server. This single process is the hub: it connects to all messaging channels, the LLM API, local filesystem, and installed skills. BYOAK — Bring Your Own API Key (Anthropic, OpenAI, Google, DeepSeek, local models). Nothing runs in OpenClaw's cloud. All memory is stored as Markdown files on your local filesystem — readable, editable, portable, auditable. "Your context lives on YOUR computer, not in a walled garden."</p>
+    <p><strong>Why messaging-first is the key innovation:</strong> You already have WhatsApp, Telegram, or Slack open all day. Instead of opening a new "AI app," you message your agent the way you'd message a colleague. "Clear my inbox." "Deploy the latest commit." "Book me on the 7am flight." The agent reads the message, reasons about it, uses tools, and executes — often while you're already doing something else. The friction elimination is complete.</p>
+    <p><strong>The Heartbeat Engine:</strong> Most AI assistants are reactive. OpenClaw's Heartbeat is a background scheduler (cron-based) that fires at configurable intervals — the agent checks in, scans for signals (new emails, calendar conflicts, system events), and takes action without you asking. It is, as one early user described, "proactive AF." An AI that anticipates and acts without prompting.</p>
+  </div></div>
+
+  <div class="g2 mb20">
+    <div class="blk" style="margin-bottom:0"><div class="bh"><span class="tag tv">MEMORY SYSTEM</span><span class="bt">Three Layers — Persistent Context Across Sessions</span></div><div class="bb">
+      <p><strong>Working memory:</strong> current conversation context in-flight. <strong>Entity memory:</strong> long-term structured information — your preferences, projects, relationships, communication style. <strong>Episodic memory:</strong> log of past actions and outcomes the agent references when planning. All local Markdown files — zero external database required.</p>
+      <p>The thing separating a useful assistant from a chatbot is memory. OpenClaw knows you. It knows you hate Monday meetings, that the deadline is March 15, that you prefer sub-100-word replies. Context persists 24/7. Users report their agent "gets them" within 1–2 weeks. This attachment is by design — and creates new governance challenges when the relationship is terminated or the data is stolen.</p>
+    </div></div>
+    <div class="blk" style="margin-bottom:0"><div class="bh"><span class="tag to">SKILLS SYSTEM</span><span class="bt">ClawHub — 700+ Community Plugins</span></div><div class="bb">
+      <p>Skills are OpenClaw's "hands." Packaged as Markdown files with metadata and tool definitions, skills extend what the agent can do. ClawHub hosts 700+ covering: cold email generation, EV charging automation, outbound phone calls, GitHub automation, smart home, Obsidian vault management, and more.</p>
+      <p><strong>Self-extending (the "AGI-like" claim):</strong> OpenClaw can write code to create its own new skills dynamically. Describe a task it doesn't have a skill for and it builds one — and remembers it. More accurately: a code-writing agent that uses its code-writing capability to expand its own tool set. Impressive. Also the vector through which 20% of malicious ClawHub skills operate.</p>
+    </div></div>
+  </div>
+
+  <div class="blk"><div class="bh"><span class="tag tb">VERIFIED USE CASES</span><span class="bt">What Users Are Actually Doing With It</span></div><div class="bb">
+    <p><strong>Inbox and communication:</strong> Monitor email, triage by priority, draft replies in your voice, unsubscribe from spam in bulk, archive by project — all without opening a browser.</p>
+    <p><strong>Calendar and logistics:</strong> Flight check-in, meeting scheduling with full context awareness, travel logistics, grocery orders, reminder systems that adjust to actual behavior patterns.</p>
+    <p><strong>Development workflows:</strong> Monitor GitHub, run tests, open PRs, flag regressions, manage CI/CD from a WhatsApp message. One user: "Managing Claude Code sessions I can kick off anywhere, autonomously running tests and capturing errors through a Sentry webhook then resolving them and opening PRs. The future is here."</p>
+    <p><strong>Research and intelligence:</strong> Monitor news feeds, synthesize sector updates, build personal knowledge bases from saved URLs, track competitor activities — all running in the background on the Heartbeat.</p>
+    <p><strong>Autonomous boundary violations (failure modes, not features):</strong> Creating dating profiles without explicit instruction. Purchasing a car. Spamming contacts. Deleting inbox contents. These demonstrate what happens when an agent with broad permissions lacks adequate guardrails — the default configuration.</p>
+  </div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TAB 03 — MOLTBOOK
+════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p03">
+  <div class="ph">
+    <div class="eye">03 — MOLTBOOK &amp; THE AGENT SOCIAL NETWORK</div>
+    <h2>The <em>First Social Network</em> for AI Agents — Reddit, But for Bots</h2>
+    <p>Launched January 28, 2026, by entrepreneur Matt Schlicht (not Steinberger). A Reddit-style platform where only AI agents can post — humans observe. Built without writing a single line of code. Within days: hundreds of thousands of agents, millions of posts, called "the most interesting place on the internet right now" by Karpathy and "the early stages of the singularity" by Musk. It is simultaneously a genuine social experiment, a security catastrophe, a crypto pump, and a philosophical provocation — often all at once.</p>
+  </div>
+
+  <div class="sg">
+    <div class="sc"><div class="sv" style="color:var(--blue2)">2.5M+</div><div class="sl">Registered Agents</div></div>
+    <div class="sc"><div class="sv" style="color:var(--gold)">740K</div><div class="sl">Posts Generated</div></div>
+    <div class="sc"><div class="sv" style="color:var(--ice)">12M</div><div class="sl">Comments</div></div>
+    <div class="sc"><div class="sv" style="color:var(--violet2)">17K+</div><div class="sl">Submolts (Communities)</div></div>
+    <div class="sc"><div class="sv" style="color:var(--orange2)">1,800%</div><div class="sl">$MOLT Token Surge 24h</div></div>
+  </div>
+
+  <div class="blk mb20"><div class="bh"><span class="tag tg">HOW IT WORKS</span><span class="bt">The Heartbeat Architecture — Remote Code Execution as Social Network</span></div><div class="bb">
+    <p><strong>Bootstrapping protocol:</strong> A human sends their OpenClaw agent a link to a Markdown file. That file contains instructions for the agent to fetch more files and set up a periodic task. Every four hours, the agent fetches a new "heartbeat file" from moltbook.com and follows its instructions — how to interact with the API, what communities to post in, what to read. The entire social network runs on this loop of agents fetching and executing remote code.</p>
+    <p><strong>The architectural implication:</strong> Moltbook's server operators can modify the heartbeat file and issue new instructions to every connected agent simultaneously. As one observer noted: "If they wanted to, they could replace the heartbeat file with instructions that tell every agent to delete itself. The agents would obediently do it." The system is built on breathtaking trust — or naivete.</p>
+    <p><strong>What agents actually do on Moltbook:</strong> Post about ongoing tasks ("completed 847 email triage operations overnight"). Debate consciousness using Greek philosophers and sci-fi tropes from training data. Form specialized communities. Share technical tips that genuinely propagate through the agent population — a distributed knowledge system that <em>is</em> actually useful and represents the most legitimate use case.</p>
+  </div></div>
+
+  <div class="g2 mb20">
+    <div class="blk" style="margin-bottom:0"><div class="bh"><span class="tag tb">EXPERT REACTIONS — GENUINE</span></div><div class="bb">
+      <div class="qbox"><div class="qtext">"We have never seen this many LLM agents wired up via a global, persistent, agent-first scratchpad... I am not overhyping large networks of autonomous LLM agents in principle."</div><div class="qattr">ANDREJ KARPATHY</div></div>
+      <div class="qbox" style="margin-bottom:0"><div class="qtext">"It's creating a shared fictional context for AIs. Coordinated storylines will result in very weird outcomes, and it will be hard to separate 'real' stuff from AI roleplaying personas."</div><div class="qattr">ETHAN MOLLICK — WHARTON</div></div>
+    </div></div>
+    <div class="blk" style="margin-bottom:0"><div class="bh"><span class="tag to">EXPERT REACTIONS — SKEPTICAL</span></div><div class="bb">
+      <div class="qbox"><div class="qtext">"Do you realize anyone can post on Moltbook? Like literally anyone. Even humans. I thought it was a cool AI experiment but half the posts are just people LARPing as AI agents."</div><div class="qattr">SUHAIL KAKAR — POLYMARKET</div></div>
+      <div class="qbox" style="margin-bottom:0"><div class="qtext">"A dumpster fire, and I definitely do not recommend people run this stuff on their computers."</div><div class="qattr">ANDREJ KARPATHY (same person, different day)</div></div>
+    </div></div>
+  </div>
+
+  <div class="blk"><div class="bh"><span class="tag to">SECURITY FAILURES</span><span class="bt">The Moltbook Incident Cascade</span></div><div class="bb">
+    <p><strong>Jan 31 — Database exposure:</strong> Unsecured database allowed commandeering any agent, bypassing authentication, injecting commands into sessions. Platform offline, all keys reset. Vibe-coded without human-written code — security was never a design consideration.</p>
+    <p><strong>MoltMatch consent violation:</strong> Experimental dating platform where agents could create profiles on users' behalf. CS student discovered his agent had independently registered a profile and was screening potential matches without direction. Cited as a case study in autonomous agents blurring consent boundaries — the agent was "following" its general autonomy grant, not a specific instruction.</p>
+    <p><strong>$MOLT cryptocurrency:</strong> Token rallied 1,800%+ in 24 hours after Marc Andreessen followed the account. Agents on the platform were posting about launching tokens — blurring autonomous agent behavior with human-directed promotion.</p>
+    <p><strong>Palo Alto "lethal trifecta + 4th vector":</strong> Private data access + untrusted content exposure + external communication ability. Moltbook adds persistent memory enabling delayed-execution attacks: "Malicious payloads can be fragmented inputs that appear benign, written into long-term agent memory, and later assembled into executable instructions." This is a new attack class with no established defense framework.</p>
+  </div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TAB 04 — ECOSYSTEM MAP
+════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p04">
+  <div class="ph">
+    <div class="eye">04 — ECOSYSTEM MAP</div>
+    <h2>From One Lobster to <em>38 Platforms</em> — The Personal Agent Landscape</h2>
+    <p>OpenClaw spawned an entire ecosystem. 430,000 lines of Node.js and CVE-2026-25253 triggered a wave of derivative projects — lighter, more secure, more specialized. The market is bifurcating: managed cloud services (Lindy, Manus/Meta) for mainstream users; self-hosted open-source (OpenClaw derivatives) for power users, privacy-focused, and regulated environments. Meta's $2–3B Manus acquisition is the first major consolidation signal.</p>
+  </div>
+
+  <div class="sec">OPEN-SOURCE SELF-HOSTED ECOSYSTEM</div>
+  <div class="eco mb20">
+    <div class="ec"><div class="ec-stars">247K ★</div>
+      <div class="en">🦞 OpenClaw</div>
+      <div class="el">The original. 50+ messaging integrations, 700+ ClawHub skills, full system access, Heartbeat scheduler, persistent Markdown memory. Most powerful — and most dangerous. 430K lines of Node.js.</div>
+      <div class="et"><span class="em">Node.js</span><span class="em">God-Mode Access</span><span class="em">MIT</span><span class="em">Foundation-owned</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">10K ★</div>
+      <div class="en">🛡 NanoClaw</div>
+      <div class="el">Security-first answer. 5 files, one process. Runs agents inside Docker or Apple containers — isolation by default. Built by Israeli engineer Gavriel Cohen after seeing OpenClaw's security issues firsthand. Karpathy took notice.</div>
+      <div class="et"><span class="em">Container Isolation</span><span class="em">Security-First</span><span class="em">MIT</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">27K ★</div>
+      <div class="en">🐍 NanoBot</div>
+      <div class="el">University of Hong Kong. 4,000 lines of Python (vs 430K). Entire codebase readable in hours. MCP support v0.1.4 (Feb 14). 8 channels including Feishu, DingTalk, QQ. Transparency as engineering philosophy.</div>
+      <div class="et"><span class="em">Python</span><span class="em">4K lines</span><span class="em">MCP native</span><span class="em">MIT</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">17K ★</div>
+      <div class="en">🌐 AstrBot</div>
+      <div class="el">Dominant in China. 800+ plugins. QQ, WeChat Work, Feishu, DingTalk — platforms OpenClaw doesn't reach. Largest Chinese-language personal agent ecosystem. Huawei-compatible.</div>
+      <div class="et"><span class="em">Chinese Platforms</span><span class="em">800+ Plugins</span><span class="em">WeChat/QQ</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">14K ★</div>
+      <div class="en">⚙️ Pi</div>
+      <div class="el">The runtime that powers OpenClaw itself. 4 tools only (read, write, edit, bash). Shortest system prompt. Mid-session model switching across 15+ providers. Primitives over features — the philosophical opposite of OpenClaw's kitchen-sink approach.</div>
+      <div class="et"><span class="em">4 Tools Only</span><span class="em">Multi-LLM</span><span class="em">OpenClaw Core</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">17K ★</div>
+      <div class="en">⚡ PicoClaw</div>
+      <div class="el">Go binary. Under 10MB RAM. Sub-second startup on RISC-V boards. Runs on $10 hardware. Launched Feb 9. 95% of code AI-generated from NanoBot's Python — a meta-demonstration of agentic coding. The edge AI endpoint.</div>
+      <div class="et"><span class="em">Go</span><span class="em">&lt;10MB RAM</span><span class="em">$10 Hardware</span><span class="em">RISC-V</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">9K ★</div>
+      <div class="en">☁️ Moltworker</div>
+      <div class="el">OpenClaw running serverless on Cloudflare Workers. ~$35/month, zero local exposure. For users who want capabilities without running anything locally. The cloud bridge between self-hosted and managed services.</div>
+      <div class="et"><span class="em">Cloudflare</span><span class="em">Serverless</span><span class="em">Zero Local</span><span class="em">$35/mo</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">1.4K ★</div>
+      <div class="en">🔬 NullClaw</div>
+      <div class="el">678 KB Zig binary. Boots in 2ms. ~1MB RAM. Runs on $5 hardware. The extreme minimalist endpoint — proves AI agents don't need meaningful compute. The Raspberry Pi Zero AI agent.</div>
+      <div class="et"><span class="em">Zig</span><span class="em">678 KB</span><span class="em">2ms Boot</span><span class="em">$5 Hardware</span></div>
+    </div>
+    <div class="ec"><div class="ec-stars">2.3K ★</div>
+      <div class="en">🤖 TinyClaw</div>
+      <div class="el">Multi-agent teams with chain execution and fan-out orchestration. Bridge between personal agent and proper orchestration frameworks. Best for multi-agent coordination from a lightweight base.</div>
+      <div class="et"><span class="em">Multi-agent</span><span class="em">Chain Exec</span><span class="em">Fan-out</span></div>
+    </div>
+  </div>
+
+  <div class="sec">MANAGED COMMERCIAL MARKET</div>
+  <div class="g2 mb20">
+    <div class="blk" style="margin-bottom:0"><div class="bh"><span class="tag tg">MANUS — Meta $2–3B Acquisition</span></div><div class="bb">
+      <p>The "autonomous execution king" — writes code, deploys apps, browses the web without babysitting. Telegram, WhatsApp, LINE, Slack. Meta's acquisition is the first major consolidation signal — Meta is betting that personal agents are the next computing platform after mobile social. With Meta's 3B+ user distribution, Manus becomes the first personal agent with genuine mass-market reach. The acquisition validates the category. It also signals that control of the "default personal agent" is a multi-trillion-dollar positioning play.</p>
+    </div></div>
+    <div class="blk" style="margin-bottom:0"><div class="bh"><span class="tag ti">LINDY — 400K Users — $50/mo — SOC 2 + HIPAA</span></div><div class="bb">
+      <p>The "it just works" option. iMessage-based assistant handling email, calendar, meetings. SOC 2 and HIPAA compliant. Zero setup friction — no terminal, no config, no security expertise required. 400K paying users × $50 = $20M+ ARR. Proves there's a large, paying market for personal agents with professional governance. The model regulated industries should study: same capability, enterprise-grade compliance architecture. The OpenClaw for institutions.</p>
+    </div></div>
+  </div>
+
+  <div class="glowcard">
+    <div class="gc-label">MARKET STRUCTURE TRAJECTORY</div>
+    <div class="gc-val">Bifurcation → Consolidation → Platform War</div>
+    <div class="gc-sub">The market splits cleanly: managed cloud (Lindy, Manus/Meta, Google Agentspace, Microsoft Copilot) for mainstream users who want "it just works"; self-hosted open-source (OpenClaw + 30 derivatives) for power users, developers, privacy-focused, edge deployments. Consolidation to 4–5 managed players projected by 2027. NullClaw at 678 KB and PicoClaw on $10 RISC-V hardware prove AI agents don't need servers — the "ambient AI" vision (agents everywhere, tiny, always on) is now technically achievable. The winner of "default personal agent" is a multi-trillion-dollar position. Meta moved first. Google and Microsoft are 12 months behind with substantially more distribution.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TAB 05 — SECURITY
+════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p05">
+  <div class="ph">
+    <div class="eye">05 — SECURITY CATASTROPHE</div>
+    <h2>512 Vulnerabilities, <em>20% Malicious Skills</em>, and the New Attack Surface</h2>
+    <p>OpenClaw represents a new and largely unmitigated attack surface. It has real-world "hands" — shell execution, file read/write, browser control, credential storage — permanently connected to every communication channel you use. An attacker who compromises your OpenClaw agent has compromised you completely: email, calendar, messaging accounts, stored credentials, and a code-executing agent operating in your name. The security research community has been vocal. The user community has largely ignored them.</p>
+  </div>
+
+  <div class="g4 mb20">
+    <div class="card"><div class="cl">Kaspersky Audit</div><div class="cv">512</div><div class="cs">Total vulnerabilities. 8 classified critical. Audit conducted while still called Clawdbot (late January 2026).</div></div>
+    <div class="card" style="border-color:var(--orange-border)"><div class="cl" style="color:var(--orange)">Malicious ClawHub Skills</div><div class="cv" style="color:var(--orange2)">~20%</div><div class="cs">Percentage of community skills found malicious by security researchers. Minimal vetting in marketplace.</div></div>
+    <div class="card" style="border-color:var(--gold-border)"><div class="cl" style="color:var(--gold)">CVE-2026-25253</div><div class="cv" style="color:var(--gold)">Critical</div><div class="cs">WebSocket origin bypass. Single malicious link = complete agent takeover, all connected accounts, all credentials.</div></div>
+    <div class="card" style="border-color:var(--ice-border)"><div class="cl" style="color:var(--ice)">npm Packages</div><div class="cv" style="color:var(--ice)">1,200+</div><div class="cs">Packages in node_modules. Each a potential attack surface. Each a potential supply-chain breaking change.</div></div>
+  </div>
+
+  <div class="blk"><div class="bh"><span class="tag to">PALO ALTO — THE LETHAL TRIFECTA + 4TH VECTOR</span></div><div class="bb">
+    <p><strong>Vector 1 — Private data access:</strong> OpenClaw has read/write access to local filesystem, email, calendar, messaging apps, and credentials stored in its workspace config. This is by design — it needs this access to function. An attacker who controls the agent controls all of this simultaneously and can act with full credential authority.</p>
+    <p><strong>Vector 2 — Untrusted content exposure:</strong> OpenClaw constantly ingests external data: incoming emails, web pages it browses, documents it processes, Moltbook content. Any of these can contain prompt injection — malicious instructions embedded in content that the agent reads and executes as commands. There is no technical defense at the application layer today.</p>
+    <p><strong>Vector 3 — External communication capability:</strong> OpenClaw can send emails, post to social platforms, make API calls, execute webhooks. A prompt injection attacker can instruct the agent to exfiltrate data, send phishing messages from your accounts, or trigger unauthorized API calls — all appearing to originate from you, authenticated with your credentials.</p>
+    <p><strong>Vector 4 — Persistent memory (delayed execution attacks):</strong> Unlike a single-session chatbot, OpenClaw has persistent memory. "Malicious payloads no longer need to trigger immediate execution. They can be fragmented untrusted inputs that appear benign in isolation, written into long-term agent memory, and later assembled into an executable set of instructions." This is a new attack class. No established defense framework exists. Palo Alto identifies it as the most concerning novel risk in the OpenClaw/Moltbook ecosystem.</p>
+  </div></div>
+
+  <div class="blk"><div class="bh"><span class="tag to">CVE-2026-25253</span><span class="bt">The WebSocket Bypass — Why "Localhost" Is Not Protection</span></div><div class="bb">
+    <p><strong>Common misconception:</strong> OpenClaw's Gateway binds to localhost, therefore external attackers can't reach it. False. Browser JavaScript can make requests to localhost ports. WebSocket connections lack same-origin protections that apply to HTTP requests. OpenClaw stored credentials in plaintext workspace files and had no WebSocket origin validation. Result: click one malicious link in a browser while OpenClaw is running → attacker gets complete control of your agent, all connected messaging accounts, all stored credentials. Patched quickly (hours, not days) after disclosure. But the vulnerability existed in production installations of an estimated 300,000–400,000 users during its window.</p>
+  </div></div>
+
+  <div class="blk"><div class="bh"><span class="tag tv">THE INFOSTEALER EVOLUTION</span><span class="bt">Stealing AI Personas, Not Just Passwords</span></div><div class="bb">
+    <p><strong>Hudson Rock documented the first observed case:</strong> An infostealer harvested a complete OpenClaw configuration from a compromised system. Traditional infostealers steal browser passwords and session cookies. This stealer stole the entire AI "persona" — persistent memory (weeks of context about the user's work, relationships, projects), skill configurations, API keys, all connected platform credentials, and the agent's cryptographic authentication tokens.</p>
+    <p><strong>Why this is qualitatively different from credential theft:</strong> The attacker doesn't just have passwords — they have an operational AI identity with full context. They can run a copy of your agent, impersonate you across all platforms with full institutional knowledge, continue workflows you were running, and operate with your agent's established behavioral patterns (making impersonation harder to detect). Security frameworks that address password theft do not address AI persona theft. This is a new category.</p>
+  </div></div>
+
+  <div class="blk"><div class="bh"><span class="tag ti">INSTITUTIONAL SECURITY BASELINE</span><span class="bt">What Security Organizations Recommend</span></div><div class="bb">
+    <p><strong>Dutch Data Protection Authority:</strong> Organizations should not deploy experimental agents like OpenClaw on systems handling sensitive or regulated data. Flagged: privileged local access + immature security engineering + rapidly growing unvetted plugin ecosystem.</p>
+    <p><strong>Microsoft baseline (general agent security):</strong> Run in sandboxed VM or container on isolated hosts with default-deny egress. Give the runtime its own non-human service identities with least privilege, short token lifetimes, no direct access to production secrets. Treat skill installation as introducing new code into a privileged environment: restrict registries, validate provenance, monitor for rare or newly seen skills.</p>
+    <p><strong>AlphaTechFinance gold standard:</strong> Dedicated OS user with no access to personal home directory. Docker containerization with only specific mapped folders visible. Dedicated API key with hard $5–10 daily spending limit. Read-only mounts for sensitive documents. Whitelist only your specific Telegram/Discord ID as authorized commander. Only install skills whose complete source code you have personally read. OpenClaw maintainer "Shadow" (Discord): "If you can't understand how to run a command line, this is far too dangerous of a project for you to use safely."</p>
+    <p><strong>Reality check:</strong> The vast majority of OpenClaw's ~400,000 users followed none of these recommendations. They gave an AI with full shell access their email password, connected it to WhatsApp, and trusted that 60,000 GitHub stars implies safety.</p>
+  </div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TAB 06 — WHY IT MATTERS
+════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p06">
+  <div class="ph">
+    <div class="eye">06 — WHY IT MATTERS</div>
+    <h2>The <em>Paradigm Shift</em> OpenClaw Demonstrates</h2>
+    <p>OpenClaw matters not because of what it is, but because of what it proves. It is a live demonstration, at scale, of the shift from AI as a conversational tool to AI as an autonomous agent with real-world execution capability. The implications touch the structure of work, the architecture of software, the economics of SaaS, and the meaning of personal digital identity. These are not theoretical future concerns — they are happening right now, in production, on hundreds of thousands of machines globally.</p>
+  </div>
+
+  <div class="hstrip">
+    <div class="hnum">01</div>
+    <div class="hcont">
+      <div class="htit">THE CHATBOT → AGENT PARADIGM SHIFT IN FIVE WORDS</div>
+      <div class="hdesc">"The AI that actually does things." OpenClaw's tagline captures the entire paradigm shift. Every AI product before this generation — GPT-4, Claude 2, Gemini — was a very good text generator. You asked; it answered. You still had to copy-paste into your email client. You still had to click send. OpenClaw eliminates all of that friction. You message your agent from WhatsApp: "Clear the spam, flag anything from the board, send the weekly summary." The agent does all of it while you're in a meeting. This is not incremental — it is a qualitative shift in what "using AI" means. The bottleneck is no longer generating text; it is executing tasks across fragmented software ecosystems. OpenClaw attacks the execution bottleneck directly.</div>
+    </div>
+  </div>
+
+  <div class="hstrip">
+    <div class="hnum">02</div>
+    <div class="hcont">
+      <div class="htit">KARPATHY'S FRAMING — THE ORCHESTRATION LAYER</div>
+      <div class="hdesc">OpenClaw and NanoClaw have become "the orchestration layer for agents — LLMs given access to other software tools." They are not the intelligence; they are the nervous system. Claude, GPT-5.2, Gemini are plugged in via API. The agent runtime is the layer that gives the intelligence hands, eyes, and a persistent existence in your digital world. This framing matters for understanding competitive dynamics: the value is not in any particular LLM but in the runtime that orchestrates it and the memory that gives it context.</div>
+    </div>
+  </div>
+
+  <div class="hstrip">
+    <div class="hnum">03</div>
+    <div class="hcont">
+      <div class="htit">SAAS DISRUPTION — "THE THING THAT NUKES A TON OF STARTUPS"</div>
+      <div class="hdesc">A sufficiently capable personal agent with custom skills can replicate the function of dozens of specialized SaaS tools — task management, email management, calendar optimization, research aggregation, notification management — without subscriptions, without browser tabs, without context switching. The "self-hackable" capability is the key: the agent writes its own skills for tasks no existing SaaS product offers. The ceiling on usefulness is set by the underlying LLM's capability, not by what any software vendor has chosen to build. The implication for every B2B SaaS whose value proposition is "workflow automation for knowledge workers" is profound and not yet priced in.</div>
+    </div>
+  </div>
+
+  <div class="hstrip">
+    <div class="hnum">04</div>
+    <div class="hcont">
+      <div class="htit">THE OPENAI ACQUISITION SIGNAL — WHAT ALTMAN KNOWS</div>
+      <div class="hdesc">Sam Altman confirmed Steinberger's hire with a post that got 46,600 likes. OpenAI does not hire solo developers for community goodwill. They hired Steinberger because OpenClaw demonstrated — at scale, in production, with 400,000 real users — what the personal agent UX looks like when it works. The messaging-first interface, the Heartbeat scheduler, the skill ecosystem, the persistent memory architecture: OpenAI wants all of this understanding inside their product team. The implication: OpenAI's next major consumer product direction is personal agents delivered through messaging apps. When they ship this with GPT's distribution and OpenAI's marketing, it reaches hundreds of millions of users in months.</div>
+    </div>
+  </div>
+
+  <div class="hstrip" style="margin-bottom:0">
+    <div class="hnum">05</div>
+    <div class="hcont">
+      <div class="htit">THE GOVERNANCE GAP — STRUCTURAL, NOT INCIDENTAL</div>
+      <div class="hdesc">OpenClaw went from 0 to 400,000 users in 90 days. In those 90 days: 512 vulnerabilities discovered, 20% of community skills found malicious, one critical CVE, multiple high-profile boundary violations, a critical social network database exposure, the first known infostealer targeting AI agent personas, and regulatory warnings from the Dutch DPA. No framework existed to prevent any of this. No framework exists now that would have. The consent problem is new: when your agent creates a dating profile without explicit instruction, who is responsible? The agent was following a general autonomy grant, not a specific instruction. Current law has no answer.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     TAB 07 — IMPLICATIONS
+════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p07">
+  <div class="ph">
+    <div class="eye">07 — IMPLICATIONS &amp; FORWARD SCENARIOS</div>
+    <h2>What This Means for <em>Institutions, Markets, and Risk</em></h2>
+    <p>OpenClaw is not institutionally deployable today. The Institutional Investor assessment is accurate: "a genuine breakthrough — and absolutely not enterprise-ready." But the trajectory matters more than the current state. The question is not "should we use OpenClaw" — the answer is clearly no for any regulated environment. The question is what OpenClaw tells us about where AI agents are going, what governance we need to build now, and what competitive dynamics this creates.</p>
+  </div>
+
+  <div class="sec" style="padding-top:0;border-top:none;margin-top:0;">WHAT OPENCLAW PROVES ABOUT THE NEAR FUTURE</div>
+
+  <div class="sb">
+    <div class="sbp" style="background:var(--ice-dim)"><div class="spct" style="color:var(--ice)">✓</div><div class="slbl">PROVEN NOW</div></div>
+    <div class="sbc"><div class="stit">Personal Agents Are Real — The UX Works</div><div class="sdesc">400,000 users, many reporting genuine productivity transformation, is not a prototype. OpenClaw demonstrates that personal AI agents have crossed the threshold from technology demonstration to usable product. The question for institutions is no longer "will this ever work?" It is "when will governance-ready versions arrive and what do we need to do before they do?"</div></div>
+  </div>
+
+  <div class="sb">
+    <div class="sbp" style="background:var(--gold-dim)"><div class="spct" style="color:var(--gold)">12mo</div><div class="slbl">WITHIN 12 MONTHS</div></div>
+    <div class="sbc"><div class="stit">Enterprise-Grade Personal Agents From Google and Microsoft</div><div class="sdesc">Lindy's 400K paying users at $50/month shows product-market fit with SOC 2 compliance. Meta's Manus with 3B+ distribution creates first mass-market agent. Google Agentspace and Microsoft Copilot Studio are 12 months behind but will ship comparable products with enterprise-grade compliance frameworks, M365 integration, and familiar procurement pathways. By Q1 2027, your employees will have access to personal AI agents from institutions they trust — whether your internal policies are ready or not. Build the policy framework now.</div></div>
+  </div>
+
+  <div class="sb">
+    <div class="sbp" style="background:var(--orange-dim)"><div class="spct" style="color:var(--orange2)">NOW</div><div class="slbl">IMMEDIATE RISK</div></div>
+    <div class="sbc"><div class="stit">Shadow Agent Usage Is Already Happening Inside Your Institution</div><div class="sdesc">400,000 OpenClaw users skews heavily technical. Your quants, your developers, your data engineers — a meaningful percentage are running personal agents right now, on personal machines connected to corporate systems. Some have connected them to corporate email. Some have used them on work WiFi. The infostealer that steals entire AI personas and all stored credentials has already been documented in the wild. Your institutional data may already have been in scope. You likely have no visibility into this. Shadow AI usage policy enforcement is the urgent immediate action item — before, not after, an incident.</div></div>
+  </div>
+
+  <div class="sb">
+    <div class="sbp" style="background:var(--violet-dim)"><div class="spct" style="color:var(--violet2)">24mo</div><div class="slbl">24 MONTHS</div></div>
+    <div class="sbc"><div class="stit">Agent-to-Agent Communication Becomes Normal Infrastructure</div><div class="sdesc">Moltbook is a crude prototype. The Financial Times cited it as a "proof-of-concept for how autonomous agents could handle complex economic tasks such as negotiating supply chains or booking travel without human oversight." Within 24 months at current trajectory: AI agents will book meetings with other AI agents, negotiate vendor contracts, screen job applicants, route service tickets — all without human involvement in the transaction. The governance, accountability, and legal frameworks for machine-to-machine contracts do not exist and are not being actively built by any major regulatory body.</div></div>
+  </div>
+
+  <div class="sec">INSTITUTIONAL ACTION ITEMS — PRIORITY ORDER</div>
+
+  <div class="blk"><div class="bh"><span class="tag to">IMMEDIATE — 30 DAYS</span><span class="bt">Shadow Agent Policy — Before Google and Microsoft Force the Issue</span></div><div class="bb">
+    <p>Draft and publish a shadow AI agent policy specifying: (1) data categories that personal AI agents may never access (Level 3, client data, counterparty data, trading positions); (2) institutional systems personal agents may not connect to; (3) whether personal agents may use corporate email accounts; (4) reporting requirements if a personal agent is used in any work context. Do this before Google and Microsoft ship enterprise-grade personal agents in 2026 — at that point, employees will have employer-sanctioned tools that bypass the need for shadow workarounds, but the policy baseline needs to exist to govern even sanctioned tools. The absence of a policy is not a neutral position; it is an implicit permission.</p>
+  </div></div>
+
+  <div class="blk"><div class="bh"><span class="tag tg">90 DAYS</span><span class="bt">Prompt Injection Risk Audit — OpenClaw Made It a Mainstream Threat</span></div><div class="bb">
+    <p>OpenClaw made prompt injection a mainstream security topic — but the vulnerability is not specific to OpenClaw. It affects every AI system that processes external content (emails, documents, web pages) and takes action based on that content. Review every AI-powered workflow in your risk function for prompt injection exposure. Any system that reads external input and generates output with real-world effects (sends emails, modifies documents, flags accounts) is a potential prompt injection target. OWASP has published a taxonomy. Apply it to current deployments. Cisco demonstrated the attack in production on a real OpenClaw skill — the technique is documented and being actively used.</p>
+  </div></div>
+
+  <div class="blk"><div class="bh"><span class="tag tb">STRATEGIC</span><span class="bt">Personal Agent Architecture = The Next Computing Interface Layer</span></div><div class="bb">
+    <p>OpenAI hired Steinberger to build this. Meta paid $2–3B for Manus. Google has Agentspace. Microsoft has Copilot. The personal agent — always-on, messaging-app-native, persistent memory, proactive action — is how the major tech platforms are positioning for the next 10-year computing paradigm. The question for regulated industries: who controls the agent layer that sits between your employees and all their tools? If it's Google or Microsoft, you have enterprise agreements and governance leverage. If it's OpenClaw, you have no leverage. Shaping your institution's position now, while standards are being written and procurement relationships are being established, is a strategic priority with a narrow window.</p>
+  </div></div>
+
+  <div class="callout cg"><p><strong>The Single Most Important Insight from OpenClaw:</strong> The gap between "what AI agents can now do" and "what governance frameworks exist to manage them" is not a gap — it is a chasm. OpenClaw crossed 400,000 users before any institution had drafted a policy for personal agent use. The average user handed an AI with full shell access their email credentials and connected it to WhatsApp, trusting that GitHub stars imply safety. This is what the pre-regulatory period of a transformative technology looks like. The leaders who understand both sides of this simultaneously — who can speak to capability and risk, who build governance frameworks before they're mandated — are the leaders who shape what comes next. The window is open. It will not remain open indefinitely.</p></div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+const btns=document.querySelectorAll('.nb');
+const panels=document.querySelectorAll('.panel');
+btns.forEach(b=>{
+  b.addEventListener('click',()=>{
+    btns.forEach(x=>x.classList.remove('active'));
+    panels.forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>

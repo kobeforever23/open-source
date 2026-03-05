@@ -1,11 +1,14 @@
-# Misc Artifacts
+# Legacy Misc (Compatibility Pointer)
 
-This folder contains non-library artifacts that were previously in the `open-source/` root, including:
-- HTML dashboards and prototypes
-- PDF and DOCX exports
-- One-off markdown cheat sheets
+This folder is deprecated.
 
-The root of `open-source/` is reserved for core library folders (`skills/`, `prompts/`) and top-level repo metadata.
+Content previously kept in `misc/` has been reorganized into:
+- `../artifacts/dashboards/`
+- `../artifacts/reports/`
+- `../artifacts/reference/`
+- `../briefs/openclaw/` (for OpenClaw briefing files)
 
-
-Note: `eqfin-calibrator` has been promoted into the production tool suite at `../tools/eqfin-shock-calibrator/`.
+Core production areas remain:
+- `../prompts/`
+- `../skills/`
+- `../tools/`
