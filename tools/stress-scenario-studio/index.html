@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stress Scenario Studio</title>
+  <style>
+    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
+    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
+    h1 { margin:0; font-size:30px; }
+    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
+    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
+    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
+    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
+    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
+    th:first-child, td:first-child { text-align:left; }
+    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
+    .good { color:var(--ok); font-weight:700; }
+    .bad { color:var(--bad); font-weight:700; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    .row > * { flex:1 1 150px; }
+    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Stress Scenario Studio</h1>
+    <div class="sub">Translate macro-factor shocks into desk-level stress PnL with instant scenario presets. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
+    
+<div class="grid">
+  <div class="card">
+    <h3 style="margin-top:0">Scenario shocks</h3>
+    <label>Rates move (bp)</label><input id="rates" type="number" value="50" />
+    <label>Credit spread move (bp)</label><input id="credit" type="number" value="120" />
+    <label>Equity index move (%)</label><input id="eq" type="number" value="-8" />
+    <label>FX move (%)</label><input id="fx" type="number" value="-2" />
+    <label>Commodity move (%)</label><input id="cmd" type="number" value="12" />
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Desk sensitivities</h3>
+    <label>Rates DV01 (USD per bp)</label><input id="dv01" type="number" value="-180000" />
+    <label>Credit CS01 (USD per bp)</label><input id="cs01" type="number" value="-90000" />
+    <label>Equity beta-adjusted delta (USD per 1%)</label><input id="eqd" type="number" value="250000" />
+    <label>FX delta (USD per 1%)</label><input id="fxd" type="number" value="130000" />
+    <label>Commodity delta (USD per 1%)</label><input id="cmdd" type="number" value="70000" />
+    <div style="margin-top:10px" class="row"><button onclick="calc()">Run Scenario</button><button class="alt" onclick="preset('oil')">Oil Shock Preset</button><button class="alt" onclick="preset('riskoff')">Risk-off Preset</button></div>
+  </div>
+</div>
+<div class="card" style="margin-top:12px">
+  <h3 style="margin-top:0">Scenario translation</h3>
+  <div id="out" class="mono"></div>
+</div>
+<script>
+function g(id){ return +document.getElementById(id).value; }
+function calc(){
+  const ratePnL = g('dv01') * g('rates');
+  const creditPnL = g('cs01') * g('credit');
+  const eqPnL = g('eqd') * g('eq');
+  const fxPnL = g('fxd') * g('fx');
+  const cmdPnL = g('cmdd') * g('cmd');
+  const total = ratePnL+creditPnL+eqPnL+fxPnL+cmdPnL;
+  const rows=[['Rates',ratePnL],['Credit',creditPnL],['Equity',eqPnL],['FX',fxPnL],['Commodity',cmdPnL],['TOTAL',total]];
+  document.getElementById('out').innerHTML='<table><thead><tr><th>Risk bucket</th><th>PnL (USD)</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${r[0]}</td><td class="${r[1]<0?'bad':'good'}">${Math.round(r[1]).toLocaleString()}</td></tr>`).join('')+'</tbody></table>';
+}
+function preset(k){
+  if(k==='oil'){ document.getElementById('cmd').value=18; document.getElementById('eq').value=-5; document.getElementById('rates').value=35; document.getElementById('fx').value=-1.2; document.getElementById('credit').value=90; }
+  if(k==='riskoff'){ document.getElementById('cmd').value=-10; document.getElementById('eq').value=-12; document.getElementById('rates').value=-45; document.getElementById('fx').value=2.5; document.getElementById('credit').value=180; }
+  calc();
+}
+calc();
+</script>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Model Validation Lab</title>
+  <style>
+    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
+    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
+    h1 { margin:0; font-size:30px; }
+    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
+    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
+    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
+    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
+    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
+    th:first-child, td:first-child { text-align:left; }
+    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
+    .good { color:var(--ok); font-weight:700; }
+    .bad { color:var(--bad); font-weight:700; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    .row > * { flex:1 1 150px; }
+    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Model Validation Lab</h1>
+    <div class="sub">Outcomes analysis workbench for quick independent challenge diagnostics. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
+    
+<div class="card">
+  <label>Paste actual vs predicted CSV (actual,predicted)</label>
+  <textarea id="csv">actual,predicted
+1.21,1.18
+1.08,1.10
+0.95,1.01
+1.32,1.25
+1.12,1.09
+0.88,0.94
+1.40,1.27</textarea>
+  <div class="row" style="margin-top:8px"><button onclick="run()">Evaluate Model</button></div>
+</div>
+<div class="grid" style="margin-top:12px" id="cards"></div>
+<div class="card" style="margin-top:12px" id="tbl"></div>
+<script>
+function run(){
+  const lines=document.getElementById('csv').value.trim().split(/
++/).slice(1);
+  const rows=lines.map(l=>{const [a,p]=l.split(',').map(Number);return {a,p,e:p-a};});
+  const n=rows.length||1;
+  const mae=rows.reduce((s,r)=>s+Math.abs(r.e),0)/n;
+  const bias=rows.reduce((s,r)=>s+r.e,0)/n;
+  const rmse=Math.sqrt(rows.reduce((s,r)=>s+r.e*r.e,0)/n);
+  const hit=rows.filter(r=>Math.sign(r.a)===Math.sign(r.p)).length/n*100;
+  const grade = (mae<0.08 && Math.abs(bias)<0.03 && hit>90) ? 'GREEN' : (mae<0.15 && Math.abs(bias)<0.08 ? 'AMBER' : 'RED');
+  document.getElementById('cards').innerHTML =
+    `<div class='card'><div class='pill'>MAE</div><div class='${mae<0.1?'good':'bad'}'>${mae.toFixed(4)}</div></div>`+
+    `<div class='card'><div class='pill'>Bias</div><div class='${Math.abs(bias)<0.05?'good':'bad'}'>${bias.toFixed(4)}</div></div>`+
+    `<div class='card'><div class='pill'>RMSE</div><div>${rmse.toFixed(4)}</div></div>`+
+    `<div class='card'><div class='pill'>Sign Hit Rate</div><div class='${hit>85?'good':'bad'}'>${hit.toFixed(1)}%</div></div>`+
+    `<div class='card'><div class='pill'>Validation Grade</div><div class='${grade==='GREEN'?'good':'bad'}'>${grade}</div></div>`;
+  document.getElementById('tbl').innerHTML='<h3 style="margin-top:0">Residual diagnostics</h3><table><thead><tr><th>#</th><th>Actual</th><th>Predicted</th><th>Error</th></tr></thead><tbody>'+
+    rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.a.toFixed(4)}</td><td>${r.p.toFixed(4)}</td><td class='${Math.abs(r.e)>0.12?'bad':''}'>${r.e.toFixed(4)}</td></tr>`).join('')+
+    '</tbody></table>';
+}
+run();
+</script>
+
+  </div>
+</body>
+</html>

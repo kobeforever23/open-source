@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Liquidity Funding War Room</title>
+  <style>
+    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
+    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
+    h1 { margin:0; font-size:30px; }
+    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
+    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
+    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
+    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
+    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
+    th:first-child, td:first-child { text-align:left; }
+    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
+    .good { color:var(--ok); font-weight:700; }
+    .bad { color:var(--bad); font-weight:700; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    .row > * { flex:1 1 150px; }
+    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Liquidity Funding War Room</h1>
+    <div class="sub">Early-warning liquidity dashboard for funding and margin stress governance. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
+    
+<div class="grid">
+  <div class="card">
+    <h3 style="margin-top:0">Liquidity buffer</h3>
+    <label>HQLA (USD mn)</label><input id="hqla" type="number" value="2850" />
+    <label>30D expected inflows (USD mn)</label><input id="inflows" type="number" value="960" />
+    <label>30D stressed outflows (USD mn)</label><input id="outflows" type="number" value="3100" />
+    <label>Margin call stress add-on (USD mn)</label><input id="margin" type="number" value="420" />
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Funding resilience</h3>
+    <label>Committed backup lines (USD mn)</label><input id="lines" type="number" value="700" />
+    <label>Unsecured roll-off next 5D (USD mn)</label><input id="rolloff" type="number" value="540" />
+    <label>Secured capacity (USD mn)</label><input id="secured" type="number" value="880" />
+    <label>Operational frictions haircut (%)</label><input id="haircut" type="number" value="15" />
+    <div style="margin-top:10px" class="row"><button onclick="calc()">Compute</button><button class="alt" onclick="stress()">Severe Stress</button></div>
+  </div>
+</div>
+<div class="grid" style="margin-top:12px" id="cards"></div>
+<div class="card" style="margin-top:12px"><div id="notes" class="mono"></div></div>
+<script>
+function v(id){return +document.getElementById(id).value;}
+function calc(){
+  const inflowCap = Math.min(v('inflows'), 0.75*v('outflows'));
+  const adjOut = v('outflows') + v('margin') - inflowCap;
+  const lcr = (v('hqla')/Math.max(adjOut,1))*100;
+  const available = (v('lines')+v('secured'))*(1-v('haircut')/100);
+  const gap5d = available - v('rolloff') - (v('margin')*0.35);
+  const runway = Math.max((v('hqla')+available)/(Math.max((adjOut/30),1)),0);
+  const statuses = {
+    lcr: lcr>=110 ? 'good':'bad',
+    gap: gap5d>=0 ? 'good':'bad',
+    run: runway>=35 ? 'good':'bad',
+  };
+  document.getElementById('cards').innerHTML = `
+    <div class='card'><div class='pill'>LCR Proxy</div><div class='${statuses.lcr}'>${lcr.toFixed(1)}%</div></div>
+    <div class='card'><div class='pill'>5D Funding Gap</div><div class='${statuses.gap}'>${gap5d.toFixed(1)} mn</div></div>
+    <div class='card'><div class='pill'>Liquidity Runway</div><div class='${statuses.run}'>${runway.toFixed(1)} days</div></div>
+  `;
+  const actions=[];
+  if(lcr<110) actions.push('Raise high-quality liquid assets or reduce short-dated outflows.');
+  if(gap5d<0) actions.push('Pre-fund roll-off window and activate contingent funding channels.');
+  if(runway<35) actions.push('Escalate to liquidity governance and trigger intraday funding watch.');
+  document.getElementById('notes').textContent = 'Recommended actions: ' + (actions.length?actions.join(' | '):'No immediate escalation.');
+}
+function stress(){
+  document.getElementById('margin').value = (v('margin')*1.7).toFixed(0);
+  document.getElementById('outflows').value = (v('outflows')*1.25).toFixed(0);
+  document.getElementById('haircut').value = Math.min(v('haircut')+10,45);
+  calc();
+}
+calc();
+</script>
+
+  </div>
+</body>
+</html>

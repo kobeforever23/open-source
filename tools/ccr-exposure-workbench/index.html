@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CCR Exposure Workbench</title>
+  <style>
+    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
+    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
+    h1 { margin:0; font-size:30px; }
+    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
+    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
+    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
+    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
+    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
+    th:first-child, td:first-child { text-align:left; }
+    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
+    .good { color:var(--ok); font-weight:700; }
+    .bad { color:var(--bad); font-weight:700; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    .row > * { flex:1 1 150px; }
+    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>CCR Exposure Workbench</h1>
+    <div class="sub">Counterparty stress exposure, WWR amplification, and limit utilization controls. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
+    
+<div class="card">
+  <label>Counterparty input CSV (name,current_exposure,collateral,wwr_multiplier,limit)</label>
+  <textarea id="csv">name,current_exposure,collateral,wwr_multiplier,limit
+HF_ALPHA,420,160,1.4,500
+ENERGY_TRADER_B,380,95,1.7,450
+BANK_C,290,130,1.2,420
+MACRO_FUND_D,510,180,1.5,520</textarea>
+  <div class="row" style="margin-top:8px">
+    <button onclick="run()">Run CCR Check</button>
+    <button class="alt" onclick="fillStress()">Apply Stress Multipliers</button>
+  </div>
+</div>
+<div class="card" style="margin-top:12px" id="out"></div>
+<script>
+function parseCSV(t){ const l=t.trim().split(/
++/); const h=l.shift().split(','); return l.map(r=>{const c=r.split(','); const o={}; h.forEach((k,i)=>o[k.trim()]=(c[i]||'').trim()); return o;}); }
+function run(){
+  const rows=parseCSV(document.getElementById('csv').value).map(r=>({
+    name:r.name, exp:+r.current_exposure, col:+r.collateral, m:+r.wwr_multiplier, lim:+r.limit
+  }));
+  rows.forEach(r=>{ r.net=Math.max(r.exp-r.col,0); r.stress=r.net*r.m; r.util=r.stress/Math.max(r.lim,1)*100; });
+  rows.sort((a,b)=>b.util-a.util);
+  const breaches=rows.filter(r=>r.util>=100).map(r=>r.name);
+  document.getElementById('out').innerHTML =
+    `<h3 style='margin-top:0'>CCR Utilization</h3>`+
+    `<table><thead><tr><th>Counterparty</th><th>Net Exposure</th><th>Stressed Exposure</th><th>Limit</th><th>Utilization %</th></tr></thead><tbody>`+
+    rows.map(r=>`<tr><td>${r.name}</td><td>${r.net.toFixed(1)}</td><td class='${r.util>=100?'bad':'good'}'>${r.stress.toFixed(1)}</td><td>${r.lim.toFixed(1)}</td><td class='${r.util>=100?'bad':''}'>${r.util.toFixed(1)}</td></tr>`).join('')+
+    `</tbody></table><div style='margin-top:8px'>Hard breach counterparties: ${breaches.length?'<span class="bad">'+breaches.join(', ')+'</span>':'<span class="good">None</span>'}</div>`;
+}
+function fillStress(){
+  const rows=parseCSV(document.getElementById('csv').value);
+  rows.forEach(r=>r.wwr_multiplier=(+r.wwr_multiplier*1.2).toFixed(2));
+  const hdr='name,current_exposure,collateral,wwr_multiplier,limit';
+  document.getElementById('csv').value=hdr+'
+'+rows.map(r=>`${r.name},${r.current_exposure},${r.collateral},${r.wwr_multiplier},${r.limit}`).join('
+');
+  run();
+}
+run();
+</script>
+
+  </div>
+</body>
+</html>

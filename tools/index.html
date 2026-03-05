@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CIB Risk Tools Suite</title>
+  <style>
+    :root {
+      --bg1: #f5f8ff;
+      --bg2: #ecf6f2;
+      --card: #ffffff;
+      --ink: #142031;
+      --muted: #5b6a7c;
+      --line: #d8e1ec;
+      --accent: #0f6ab4;
+      --accent2: #127f52;
+      --warn: #a54812;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, #dcefff 0%, rgba(220,239,255,0) 60%),
+        radial-gradient(900px 500px at 90% -20%, #dff7ec 0%, rgba(223,247,236,0) 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 28px 22px 56px; }
+    h1 { margin: 0; font-size: 34px; letter-spacing: -0.4px; }
+    .sub { color: var(--muted); margin-top: 8px; font-size: 15px; line-height: 1.5; max-width: 960px; }
+    .meta { margin-top: 10px; color: #3a4a5e; font-size: 12px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(19, 36, 61, 0.06);
+      display: flex;
+      flex-direction: column;
+      min-height: 200px;
+    }
+    .card h2 { margin: 0; font-size: 18px; }
+    .desc { color: var(--muted); margin: 8px 0 12px; font-size: 13px; line-height: 1.45; }
+    .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+    .tag { font-size: 11px; background: #f2f7fd; border: 1px solid #d8e4f4; border-radius: 999px; padding: 3px 8px; }
+    .actions { margin-top: auto; display: flex; gap: 8px; }
+    a.btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-weight: 650;
+      font-size: 13px;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: #fff;
+      flex: 1;
+    }
+    a.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .callout {
+      margin-top: 20px;
+      background: #ffffffcc;
+      border: 1px dashed #b8c9de;
+      border-radius: 12px;
+      padding: 14px;
+      color: #294059;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>CIB Risk Tools Suite</h1>
+    <div class="sub">
+      Standalone dashboards and workbenches for market risk, CCR, liquidity, capital, model validation, and prompt quality control.
+      Designed for fast deployment with audit-defensible outputs and clear escalation signals.
+    </div>
+    <div class="meta"><strong>AS-OF:</strong> 2026-03-05 14:03:09 EST</div>
+
+    <div class="grid">
+      <article class="card">
+        <h2>EQFIN Shock Calibrator</h2>
+        <div class="desc">Index and single-name shock consistency solver for stress calibration.</div>
+        <div class="tags"><span class="tag">Market Risk</span><span class="tag">Stress</span><span class="tag">Quant</span></div>
+        <div class="actions">
+          <a class="btn primary" href="eqfin-shock-calibrator/index.html">Open Tool</a>
+          <a class="btn" href="eqfin-shock-calibrator/README.md">Readme</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Cross-Asset Risk Monitor</h2>
+        <div class="desc">Aggregate exposure, stress PnL, and concentration slices with CSV upload support.</div>
+        <div class="tags"><span class="tag">Market Risk</span><span class="tag">Dashboard</span><span class="tag">CSV</span></div>
+        <div class="actions">
+          <a class="btn primary" href="cross-asset-risk-monitor/index.html">Open Tool</a>
+          <a class="btn" href="cross-asset-risk-monitor/README.md">Readme</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Stress Scenario Studio</h2>
+        <div class="desc">Define macro-to-market shocks and convert desk sensitivities into scenario PnL.</div>
+        <div class="tags"><span class="tag">Stress</span><span class="tag">Scenarios</span><span class="tag">Playbook</span></div>
+        <div class="actions">
+          <a class="btn primary" href="stress-scenario-studio/index.html">Open Tool</a>
+          <a class="btn" href="stress-scenario-studio/README.md">Readme</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Liquidity Funding War Room</h2>
+        <div class="desc">Compute LCR proxy, margin liquidity stress, and funding runway with early warnings.</div>
+        <div class="tags"><span class="tag">Liquidity</span><span class="tag">Funding</span><span class="tag">Early Warning</span></div>
+        <div class="actions">
+          <a class="btn primary" href="liquidity-funding-war-room/index.html">Open Tool</a>
+          <a class="btn" href="liquidity-funding-war-room/README.md">Readme</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>CCR Exposure Workbench</h2>
+        <div class="desc">Counterparty-level exposure, collateral offsets, WWR multipliers, and limit utilization.</div>
+        <div class="tags"><span class="tag">CCR</span><span class="tag">Limits</span><span class="tag">Escalation</span></div>
+        <div class="actions">
+          <a class="btn primary" href="ccr-exposure-workbench/index.html">Open Tool</a>
+          <a class="btn" href="ccr-exposure-workbench/README.md">Readme</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Capital Bridge Analyzer</h2>
+        <div class="desc">Driver-based capital ratio bridge for management commentary and action planning.</div>
+        <div class="tags"><span class="tag">Capital</span><span class="tag">RWA</span><span class="tag">Finance-Risk</span></div>
+        <div class="actions">
+          <a class="btn primary" href="capital-bridge-analyzer/index.html">Open Tool</a>
+          <a class="btn" href="capital-bridge-analyzer/README.md">Readme</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Model Validation Lab</h2>
+        <div class="desc">Run quick outcomes analysis from actual-vs-predicted series and score model health.</div>
+        <div class="tags"><span class="tag">Model Risk</span><span class="tag">Validation</span><span class="tag">Monitoring</span></div>
+        <div class="actions">
+          <a class="btn primary" href="model-validation-lab/index.html">Open Tool</a>
+          <a class="btn" href="model-validation-lab/README.md">Readme</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Prompt Evaluation Console</h2>
+        <div class="desc">Score AI risk outputs for control completeness, citation quality, and decision readiness.</div>
+        <div class="tags"><span class="tag">AI Risk</span><span class="tag">Governance</span><span class="tag">Quality Gate</span></div>
+        <div class="actions">
+          <a class="btn primary" href="prompt-evaluation-console/index.html">Open Tool</a>
+          <a class="btn" href="prompt-evaluation-console/README.md">Readme</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="callout">
+      Recommended run mode: from `open-source/tools`, start a local server with
+      <code>python3 start_tools_server.py --port 8090</code> and open
+      <code>http://localhost:8090/</code>.
+    </div>
+  </div>
+</body>
+</html>

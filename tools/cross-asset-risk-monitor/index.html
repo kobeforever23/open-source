@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cross-Asset Risk Monitor</title>
+  <style>
+    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
+    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
+    h1 { margin:0; font-size:30px; }
+    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
+    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
+    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
+    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
+    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
+    th:first-child, td:first-child { text-align:left; }
+    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
+    .good { color:var(--ok); font-weight:700; }
+    .bad { color:var(--bad); font-weight:700; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    .row > * { flex:1 1 150px; }
+    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Cross-Asset Risk Monitor</h1>
+    <div class="sub">Aggregate stress impact and concentration diagnostics from simple desk-level input. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
+    
+<div class="card">
+  <div class="row">
+    <div><label>CSV Input (asset,desk,exposure_usd,shock_pct)</label><textarea id="csv">asset,desk,exposure_usd,shock_pct
+Rates DV01,Rates,12000000,-0.45
+Credit CS01,Credit,8500000,-1.20
+Equity Delta,Equities,15000000,-4.00
+FX Net USD,FX,11000000,-1.80
+Commod Delta,Commod,6000000,-7.00</textarea></div>
+    <div>
+      <label>Concentration alert threshold (% of total stress loss)</label>
+      <input id="thr" type="number" value="35" step="1" />
+      <div style="margin-top:10px" class="row">
+        <button onclick="run()">Run Dashboard</button>
+        <button class="alt" onclick="download()">Export CSV</button>
+      </div>
+      <div id="headline" style="margin-top:10px;font-size:13px"></div>
+    </div>
+  </div>
+</div>
+<div class="card" style="margin-top:12px">
+  <h3 style="margin:0 0 8px">Stress PnL by asset</h3>
+  <div id="table"></div>
+</div>
+<script>
+let lastRows = [];
+function parseCSV(t){
+  const lines=t.trim().split(/
++/); const h=lines.shift().split(',').map(s=>s.trim());
+  return lines.map(l=>{ const c=l.split(','); const o={}; h.forEach((k,i)=>o[k]=(c[i]||'').trim()); return o; });
+}
+function run(){
+  const rows=parseCSV(document.getElementById('csv').value).map(r=>({
+    asset:r.asset,desk:r.desk,exposure:+r.exposure_usd,shock:+r.shock_pct
+  }));
+  const out=rows.map(r=>({ ...r, stress: r.exposure*(r.shock/100) }));
+  const total=out.reduce((a,b)=>a+b.stress,0);
+  const absTotal=Math.abs(total)||1;
+  out.forEach(r=>r.share=Math.abs(r.stress)/absTotal*100);
+  out.sort((a,b)=>Math.abs(b.stress)-Math.abs(a.stress));
+  lastRows=out;
+  const thr=+document.getElementById('thr').value;
+  const alert=out.filter(r=>r.share>=thr).map(r=>`${r.asset} (${r.share.toFixed(1)}%)`);
+  document.getElementById('headline').innerHTML=`Net stress PnL: <span class="${total<0?'bad':'good'}">${total.toLocaleString(undefined,{maximumFractionDigits:0})}</span><br/>`+
+    (alert.length?`Concentration alert: <span class="bad">${alert.join(', ')}</span>`:`Concentration alert: <span class="good">none</span>`);
+  document.getElementById('table').innerHTML = '<table><thead><tr><th>Asset</th><th>Desk</th><th>Exposure</th><th>Shock %</th><th>Stress PnL</th><th>Share %</th></tr></thead><tbody>'+
+    out.map(r=>`<tr><td>${r.asset}</td><td>${r.desk}</td><td>${r.exposure.toLocaleString()}</td><td>${r.shock.toFixed(2)}</td><td class="${r.stress<0?'bad':'good'}">${r.stress.toLocaleString(undefined,{maximumFractionDigits:0})}</td><td>${r.share.toFixed(1)}</td></tr>`).join('')+
+    '</tbody></table>';
+}
+function download(){
+  if(!lastRows.length) run();
+  const hdr='asset,desk,exposure_usd,shock_pct,stress_pnl,share_pct
+';
+  const body=lastRows.map(r=>`${r.asset},${r.desk},${r.exposure},${r.shock},${r.stress},${r.share.toFixed(2)}`).join('
+');
+  const blob=new Blob([hdr+body],{type:'text/csv'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='cross_asset_stress_output.csv'; a.click(); URL.revokeObjectURL(a.href);
+}
+run();
+</script>
+
+  </div>
+</body>
+</html>

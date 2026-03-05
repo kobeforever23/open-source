@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Capital Bridge Analyzer</title>
+  <style>
+    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
+    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
+    h1 { margin:0; font-size:30px; }
+    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
+    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
+    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
+    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
+    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
+    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
+    th:first-child, td:first-child { text-align:left; }
+    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
+    .good { color:var(--ok); font-weight:700; }
+    .bad { color:var(--bad); font-weight:700; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    .row > * { flex:1 1 150px; }
+    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Capital Bridge Analyzer</h1>
+    <div class="sub">CET1 bridge decomposition with driver-level management commentary support. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
+    
+<div class="grid">
+  <div class="card">
+    <h3 style="margin-top:0">Starting position</h3>
+    <label>Starting CET1 ratio (%)</label><input id="start" type="number" value="12.6" step="0.01" />
+    <label>RWA growth impact (bp)</label><input id="rwa" type="number" value="-38" />
+    <label>Earnings retention impact (bp)</label><input id="earn" type="number" value="22" />
+    <label>OCI / AOCI impact (bp)</label><input id="oci" type="number" value="-11" />
+    <label>Distribution impact (bp)</label><input id="dist" type="number" value="-18" />
+    <label>Methodology/model impact (bp)</label><input id="meth" type="number" value="-7" />
+    <div style="margin-top:10px" class="row"><button onclick="calc()">Build Bridge</button></div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Bridge summary</h3>
+    <div id="sum" class="mono"></div>
+    <div id="bars"></div>
+  </div>
+</div>
+<script>
+function val(id){return +document.getElementById(id).value;}
+function calc(){
+  const start=val('start');
+  const drivers=[['RWA growth',val('rwa')],['Earnings retention',val('earn')],['OCI/AOCI',val('oci')],['Distributions',val('dist')],['Methodology',val('meth')]];
+  const end=start+drivers.reduce((a,b)=>a+b[1]/100,0);
+  document.getElementById('sum').innerHTML=`Start CET1: ${start.toFixed(2)}%<br/>End CET1: <span class='${end<11?'bad':'good'}'>${end.toFixed(2)}%</span><br/>Net change: ${(end-start).toFixed(2)}%`;
+  document.getElementById('bars').innerHTML='<table><thead><tr><th>Driver</th><th>Impact (bp)</th><th>Direction</th></tr></thead><tbody>'+
+    drivers.map(d=>`<tr><td>${d[0]}</td><td class='${d[1]<0?'bad':'good'}'>${d[1]}</td><td>${d[1]<0?'Headwind':'Tailwind'}</td></tr>`).join('')+
+    '</tbody></table>';
+}
+calc();
+</script>
+
+  </div>
+</body>
+</html>
