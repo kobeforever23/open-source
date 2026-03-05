@@ -8,6 +8,8 @@ This folder contains the sourced Iran stress scenario and risk report package, p
 - `source-materials/CIB_Market_Risk_Briefing_Iran_Crisis_March_2026.docx`
 - `source-materials/Iran_Escalation_Risk_Intel_Dashboard.html`
 - `methodology_overview.md`
+- `quantitative_math_and_number_construction.md`
+- `internal_number_alignment_alternative_methods.md`
 - `generation_prompt_iran_stress_and_risk_report.md`
 
 ## Source location used
