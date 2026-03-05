@@ -3,97 +3,629 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Cross-Asset Risk Monitor</title>
+  <title>Cross-Asset Risk Monitor (Quant-Grade)</title>
   <style>
-    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
-    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
-    h1 { margin:0; font-size:30px; }
-    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
-    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
-    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
-    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
-    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
-    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
-    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
-    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
-    table { width:100%; border-collapse:collapse; font-size:12px; }
-    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
-    th:first-child, td:first-child { text-align:left; }
-    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
-    .good { color:var(--ok); font-weight:700; }
-    .bad { color:var(--bad); font-weight:700; }
-    .row { display:flex; gap:8px; flex-wrap:wrap; }
-    .row > * { flex:1 1 150px; }
-    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+    :root {
+      --bg: #070b12;
+      --panel: #0d1420;
+      --panel-2: #111b2a;
+      --ink: #d8e2f0;
+      --muted: #7e91a9;
+      --line: #223247;
+      --accent: #25c2ff;
+      --accent-2: #71ffb8;
+      --warn: #ff9d2e;
+      --bad: #ff5c80;
+      --good: #53f1aa;
+      --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 700px at 90% -20%, #123b5f55 0%, transparent 65%),
+        radial-gradient(900px 600px at -10% 10%, #0b2f3d66 0%, transparent 60%),
+        linear-gradient(180deg, #050910, #070b12 40%, #090f1a);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1320px; margin: 0 auto; padding: 24px 22px 40px; }
+    h1 { margin: 0; font-size: 32px; letter-spacing: 0.2px; }
+    .sub { margin: 8px 0 18px; color: var(--muted); font-size: 14px; line-height: 1.45; }
+    .sub a { color: var(--accent); text-decoration: none; }
+    .pill {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #23415f;
+      background: #0d2134;
+      font-size: 11px;
+      color: #9ec4ea;
+      margin-right: 6px;
+    }
+    .layout { display: grid; gap: 12px; grid-template-columns: 1.15fr 0.85fr; }
+    .stack { display: grid; gap: 12px; }
+    .card {
+      background: linear-gradient(180deg, #0d1420, #0b1320);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 14px; letter-spacing: 0.3px; color: #b9cce0; }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 650;
+      color: var(--muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.2px;
+    }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid #29405a;
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #dbe8f8;
+      background: #08121e;
+      font: inherit;
+    }
+    textarea { min-height: 220px; font-family: var(--mono); font-size: 12px; line-height: 1.35; }
+    input:focus, textarea:focus, select:focus {
+      outline: 2px solid #2a9fd655;
+      border-color: #2ea8df;
+    }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .row > * { flex: 1 1 130px; }
+    button {
+      border: 1px solid #279ad0;
+      background: linear-gradient(180deg, #1795cf, #0f6f9d);
+      color: #e7f7ff;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.alt {
+      border-color: #2f4358;
+      background: #121f30;
+      color: #c7d6e8;
+      font-weight: 600;
+    }
+    .grid-metrics { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+    .metric {
+      border: 1px solid #233447;
+      border-radius: 10px;
+      background: #0a1522;
+      padding: 10px;
+    }
+    .metric .k { font-size: 10px; color: #8aa0b8; text-transform: uppercase; letter-spacing: 0.4px; }
+    .metric .v { margin-top: 4px; font-family: var(--mono); font-size: 20px; font-weight: 750; }
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+    .table-wrap {
+      max-height: 420px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #08121d;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td {
+      padding: 7px 8px;
+      border-bottom: 1px solid #1b2a3a;
+      text-align: right;
+      white-space: nowrap;
+      font-family: var(--mono);
+    }
+    th:first-child, td:first-child,
+    th:nth-child(2), td:nth-child(2) { text-align: left; }
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #122033;
+      color: #a7bfd8;
+      font-size: 11px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .method {
+      font-size: 12px;
+      color: #9bb0c6;
+      line-height: 1.45;
+    }
+    .code { font-family: var(--mono); color: #c7e6ff; }
+    .warning-box {
+      margin-top: 8px;
+      border: 1px solid #594320;
+      background: #2a1f0f;
+      border-radius: 8px;
+      padding: 8px;
+      color: #ffd9a8;
+      font-size: 12px;
+      display: none;
+      white-space: pre-wrap;
+    }
+    .warning-box.show { display: block; }
+    @media (max-width: 1120px) {
+      .layout { grid-template-columns: 1fr; }
+      textarea { min-height: 180px; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Cross-Asset Risk Monitor</h1>
-    <div class="sub">Aggregate stress impact and concentration diagnostics from simple desk-level input. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
-    
-<div class="card">
-  <div class="row">
-    <div><label>CSV Input (asset,desk,exposure_usd,shock_pct)</label><textarea id="csv">asset,desk,exposure_usd,shock_pct
-Rates DV01,Rates,12000000,-0.45
-Credit CS01,Credit,8500000,-1.20
-Equity Delta,Equities,15000000,-4.00
-FX Net USD,FX,11000000,-1.80
-Commod Delta,Commod,6000000,-7.00</textarea></div>
-    <div>
-      <label>Concentration alert threshold (% of total stress loss)</label>
-      <input id="thr" type="number" value="35" step="1" />
-      <div style="margin-top:10px" class="row">
-        <button onclick="run()">Run Dashboard</button>
-        <button class="alt" onclick="download()">Export CSV</button>
+    <div class="sub">
+      Quant-grade portfolio risk monitor with full covariance VaR/ES decomposition, stress translation, and matrix quality diagnostics.
+      <span class="pill">Bloomberg-style UI</span>
+      <span class="pill">Parametric VaR + ES</span>
+      <span class="pill">Component Risk</span>
+      <a href="../index.html">Back to tools suite</a>
+    </div>
+
+    <div class="layout">
+      <div class="stack">
+        <div class="card">
+          <h3>Exposure Inputs</h3>
+          <label>Risk factors CSV (factor, desk, delta_usd_per_unit, daily_vol_unit, stress_shock_unit, unit[bp|pct])</label>
+          <textarea id="exposureCsv">factor,desk,delta_usd_per_unit,daily_vol_unit,stress_shock_unit,unit
+UST10Y,Rates,-185000,6.5,45,bp
+IG_Spread,Credit,-92000,8.0,120,bp
+SPX,Equities,260000,1.35,-6.5,pct
+DXY,FX,130000,0.55,2.2,pct
+Brent,Commodities,75000,2.40,12.0,pct</textarea>
+          <div class="row" style="margin-top:8px">
+            <div>
+              <label>Confidence (%)</label>
+              <input id="confidence" type="number" value="99" step="0.1" min="90" max="99.9" />
+            </div>
+            <div>
+              <label>Concentration alert threshold (% abs Component VaR)</label>
+              <input id="threshold" type="number" value="35" step="1" min="5" max="100" />
+            </div>
+            <div>
+              <label>Horizon (days)</label>
+              <input id="horizon" type="number" value="1" step="1" min="1" max="20" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Correlation Matrix (factor header must match factor list)</h3>
+          <textarea id="corrCsv">factor,UST10Y,IG_Spread,SPX,DXY,Brent
+UST10Y,1.00,-0.25,-0.35,-0.20,-0.15
+IG_Spread,-0.25,1.00,0.55,0.20,0.35
+SPX,-0.35,0.55,1.00,0.15,0.25
+DXY,-0.20,0.20,0.15,1.00,0.30
+Brent,-0.15,0.35,0.25,0.30,1.00</textarea>
+          <div class="row" style="margin-top:8px">
+            <button onclick="runAnalysis()">Run Quant Analysis</button>
+            <button class="alt" onclick="symmetrizeCorr()">Symmetrize Matrix</button>
+            <button class="alt" onclick="exportResults()">Export Results CSV</button>
+          </div>
+          <div id="warnings" class="warning-box"></div>
+        </div>
       </div>
-      <div id="headline" style="margin-top:10px;font-size:13px"></div>
+
+      <div class="stack">
+        <div class="card">
+          <h3>Portfolio Risk Summary</h3>
+          <div class="grid-metrics" id="metrics"></div>
+        </div>
+
+        <div class="card">
+          <h3>Methodology</h3>
+          <div class="method">
+            <div><span class="code">sigma_i = delta_i * vol_i * sqrt(horizon)</span></div>
+            <div><span class="code">sigma_p = sqrt(sigma^T * Corr * sigma)</span></div>
+            <div><span class="code">VaR(alpha) = z(alpha) * sigma_p</span></div>
+            <div><span class="code">ES(alpha) = phi(z) / (1-alpha) * sigma_p</span></div>
+            <div><span class="code">CompVaR_i = z(alpha) * sigma_i * (Corr*sigma)_i / sigma_p</span></div>
+            <div style="margin-top:8px; color:#86a3bf;">Interpretation: Component VaR may be negative when a factor hedges portfolio risk.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Factor-Level Decomposition</h3>
+      <div class="table-wrap" id="factorTable"></div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Correlation Matrix (validated order)</h3>
+      <div class="table-wrap" id="corrTable"></div>
     </div>
   </div>
-</div>
-<div class="card" style="margin-top:12px">
-  <h3 style="margin:0 0 8px">Stress PnL by asset</h3>
-  <div id="table"></div>
-</div>
-<script>
-let lastRows = [];
-function parseCSV(t){
-  const lines=t.trim().split(/
-+/); const h=lines.shift().split(',').map(s=>s.trim());
-  return lines.map(l=>{ const c=l.split(','); const o={}; h.forEach((k,i)=>o[k]=(c[i]||'').trim()); return o; });
-}
-function run(){
-  const rows=parseCSV(document.getElementById('csv').value).map(r=>({
-    asset:r.asset,desk:r.desk,exposure:+r.exposure_usd,shock:+r.shock_pct
-  }));
-  const out=rows.map(r=>({ ...r, stress: r.exposure*(r.shock/100) }));
-  const total=out.reduce((a,b)=>a+b.stress,0);
-  const absTotal=Math.abs(total)||1;
-  out.forEach(r=>r.share=Math.abs(r.stress)/absTotal*100);
-  out.sort((a,b)=>Math.abs(b.stress)-Math.abs(a.stress));
-  lastRows=out;
-  const thr=+document.getElementById('thr').value;
-  const alert=out.filter(r=>r.share>=thr).map(r=>`${r.asset} (${r.share.toFixed(1)}%)`);
-  document.getElementById('headline').innerHTML=`Net stress PnL: <span class="${total<0?'bad':'good'}">${total.toLocaleString(undefined,{maximumFractionDigits:0})}</span><br/>`+
-    (alert.length?`Concentration alert: <span class="bad">${alert.join(', ')}</span>`:`Concentration alert: <span class="good">none</span>`);
-  document.getElementById('table').innerHTML = '<table><thead><tr><th>Asset</th><th>Desk</th><th>Exposure</th><th>Shock %</th><th>Stress PnL</th><th>Share %</th></tr></thead><tbody>'+
-    out.map(r=>`<tr><td>${r.asset}</td><td>${r.desk}</td><td>${r.exposure.toLocaleString()}</td><td>${r.shock.toFixed(2)}</td><td class="${r.stress<0?'bad':'good'}">${r.stress.toLocaleString(undefined,{maximumFractionDigits:0})}</td><td>${r.share.toFixed(1)}</td></tr>`).join('')+
-    '</tbody></table>';
-}
-function download(){
-  if(!lastRows.length) run();
-  const hdr='asset,desk,exposure_usd,shock_pct,stress_pnl,share_pct
-';
-  const body=lastRows.map(r=>`${r.asset},${r.desk},${r.exposure},${r.shock},${r.stress},${r.share.toFixed(2)}`).join('
-');
-  const blob=new Blob([hdr+body],{type:'text/csv'}); const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download='cross_asset_stress_output.csv'; a.click(); URL.revokeObjectURL(a.href);
-}
-run();
-</script>
 
-  </div>
+  <script>
+    let latestRows = [];
+
+    function num(v) {
+      const n = Number(String(v).trim());
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function parseCsv(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (lines.length < 2) throw new Error('CSV requires header and at least one data row.');
+      const header = lines[0].split(',').map(s => s.trim());
+      const rows = lines.slice(1).map(line => {
+        const cols = line.split(',').map(s => s.trim());
+        const obj = {};
+        header.forEach((h, i) => obj[h] = cols[i] ?? '');
+        return obj;
+      });
+      return { header, rows };
+    }
+
+    function parseExposureCsv(text) {
+      const { rows } = parseCsv(text);
+      const required = ['factor', 'desk', 'delta_usd_per_unit', 'daily_vol_unit', 'stress_shock_unit', 'unit'];
+      const out = rows.map((r, idx) => {
+        for (const k of required) {
+          if (!(k in r)) throw new Error(`Missing required column '${k}'.`);
+        }
+        const factor = String(r.factor || '').trim();
+        const desk = String(r.desk || '').trim();
+        const delta = num(r.delta_usd_per_unit);
+        const vol = num(r.daily_vol_unit);
+        const stress = num(r.stress_shock_unit);
+        const unit = String(r.unit || '').trim().toLowerCase();
+        if (!factor) throw new Error(`Row ${idx + 2}: factor is empty.`);
+        if (!desk) throw new Error(`Row ${idx + 2}: desk is empty.`);
+        if (!Number.isFinite(delta) || !Number.isFinite(vol) || !Number.isFinite(stress)) {
+          throw new Error(`Row ${idx + 2}: numeric field parse error.`);
+        }
+        if (!(unit === 'bp' || unit === 'pct')) {
+          throw new Error(`Row ${idx + 2}: unit must be 'bp' or 'pct'.`);
+        }
+        return { factor, desk, delta, vol, stress, unit };
+      });
+
+      const seen = new Set();
+      for (const r of out) {
+        if (seen.has(r.factor)) throw new Error(`Duplicate factor '${r.factor}' detected.`);
+        seen.add(r.factor);
+      }
+      return out;
+    }
+
+    function parseCorrelationCsv(text, factorOrder) {
+      const { header, rows } = parseCsv(text);
+      if (header.length < 2 || header[0].toLowerCase() !== 'factor') {
+        throw new Error("Correlation CSV header must start with 'factor'.");
+      }
+      const factors = header.slice(1);
+      const map = new Map();
+      rows.forEach((r, idx) => {
+        const rowFactor = String(r.factor || '').trim();
+        if (!rowFactor) throw new Error(`Correlation row ${idx + 2}: missing factor name.`);
+        const row = factors.map(f => {
+          const n = num(r[f]);
+          if (!Number.isFinite(n)) throw new Error(`Correlation row ${idx + 2}, factor '${f}' is not numeric.`);
+          return n;
+        });
+        map.set(rowFactor, row);
+      });
+
+      for (const f of factorOrder) {
+        if (!map.has(f)) throw new Error(`Correlation matrix missing row for factor '${f}'.`);
+      }
+      for (const f of factorOrder) {
+        if (!factors.includes(f)) throw new Error(`Correlation matrix missing column for factor '${f}'.`);
+      }
+
+      const idxByFactor = Object.fromEntries(factors.map((f, i) => [f, i]));
+      const matrix = factorOrder.map(rf => {
+        const raw = map.get(rf);
+        return factorOrder.map(cf => raw[idxByFactor[cf]]);
+      });
+      return { factors: factorOrder, matrix };
+    }
+
+    function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+
+    function symmetrizeMatrix(m) {
+      const n = m.length;
+      for (let i = 0; i < n; i++) {
+        m[i][i] = 1;
+      }
+      for (let i = 0; i < n; i++) {
+        for (let j = i + 1; j < n; j++) {
+          const v = clamp((m[i][j] + m[j][i]) / 2, -1, 1);
+          m[i][j] = v;
+          m[j][i] = v;
+        }
+      }
+    }
+
+    function choleskyPSD(a, eps = 1e-12) {
+      const n = a.length;
+      const L = Array.from({ length: n }, () => Array(n).fill(0));
+      for (let i = 0; i < n; i++) {
+        for (let j = 0; j <= i; j++) {
+          let sum = a[i][j];
+          for (let k = 0; k < j; k++) sum -= L[i][k] * L[j][k];
+          if (i === j) {
+            if (sum < -eps) return { ok: false };
+            L[i][j] = Math.sqrt(Math.max(sum, 0));
+          } else {
+            if (L[j][j] <= eps) {
+              L[i][j] = 0;
+            } else {
+              L[i][j] = sum / L[j][j];
+            }
+          }
+        }
+      }
+      return { ok: true, L };
+    }
+
+    function matVec(m, v) {
+      const n = m.length;
+      const out = Array(n).fill(0);
+      for (let i = 0; i < n; i++) {
+        let s = 0;
+        for (let j = 0; j < n; j++) s += m[i][j] * v[j];
+        out[i] = s;
+      }
+      return out;
+    }
+
+    function quad(v, m) {
+      const mv = matVec(m, v);
+      let s = 0;
+      for (let i = 0; i < v.length; i++) s += v[i] * mv[i];
+      return s;
+    }
+
+    function normalInv(p) {
+      if (!(p > 0 && p < 1)) throw new Error('Probability must be in (0,1).');
+      const a = [-3.969683028665376e+01, 2.209460984245205e+02, -2.759285104469687e+02,
+        1.383577518672690e+02, -3.066479806614716e+01, 2.506628277459239e+00];
+      const b = [-5.447609879822406e+01, 1.615858368580409e+02, -1.556989798598866e+02,
+        6.680131188771972e+01, -1.328068155288572e+01];
+      const c = [-7.784894002430293e-03, -3.223964580411365e-01, -2.400758277161838e+00,
+        -2.549732539343734e+00, 4.374664141464968e+00, 2.938163982698783e+00];
+      const d = [7.784695709041462e-03, 3.224671290700398e-01, 2.445134137142996e+00,
+        3.754408661907416e+00];
+      const plow = 0.02425;
+      const phigh = 1 - plow;
+      let q, r;
+      if (p < plow) {
+        q = Math.sqrt(-2 * Math.log(p));
+        return (((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+          ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      if (p > phigh) {
+        q = Math.sqrt(-2 * Math.log(1 - p));
+        return -(((((c[0] * q + c[1]) * q + c[2]) * q + c[3]) * q + c[4]) * q + c[5]) /
+          ((((d[0] * q + d[1]) * q + d[2]) * q + d[3]) * q + 1);
+      }
+      q = p - 0.5;
+      r = q * q;
+      return (((((a[0] * r + a[1]) * r + a[2]) * r + a[3]) * r + a[4]) * r + a[5]) * q /
+        (((((b[0] * r + b[1]) * r + b[2]) * r + b[3]) * r + b[4]) * r + 1);
+    }
+
+    function phi(z) {
+      return Math.exp(-0.5 * z * z) / Math.sqrt(2 * Math.PI);
+    }
+
+    function fmtMoney(x, digits = 0) {
+      return Number(x).toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits });
+    }
+
+    function fmtPct(x, digits = 2) {
+      return `${Number(x).toFixed(digits)}%`;
+    }
+
+    function showWarnings(lines) {
+      const box = document.getElementById('warnings');
+      if (!lines.length) {
+        box.classList.remove('show');
+        box.textContent = '';
+        return;
+      }
+      box.textContent = lines.join('\n');
+      box.classList.add('show');
+    }
+
+    function corrDiagnostics(corr) {
+      const warnings = [];
+      const n = corr.length;
+      let maxAsym = 0;
+      for (let i = 0; i < n; i++) {
+        if (Math.abs(corr[i][i] - 1) > 1e-6) warnings.push(`Diagonal at ${i + 1} is ${corr[i][i].toFixed(4)} (expected 1).`);
+        for (let j = i + 1; j < n; j++) {
+          const diff = Math.abs(corr[i][j] - corr[j][i]);
+          if (diff > maxAsym) maxAsym = diff;
+          if (corr[i][j] < -1 || corr[i][j] > 1) warnings.push(`Correlation out of bounds at (${i + 1}, ${j + 1}).`);
+        }
+      }
+      if (maxAsym > 1e-4) warnings.push(`Matrix asymmetry detected. Max |rho_ij-rho_ji| = ${maxAsym.toExponential(2)}.`);
+      const psd = choleskyPSD(corr);
+      if (!psd.ok) warnings.push('Matrix is not positive semidefinite (Cholesky failed).');
+      return { warnings, psd: psd.ok };
+    }
+
+    function renderCorrTable(factors, corr) {
+      const head = ['<th>Factor</th>'].concat(factors.map(f => `<th>${f}</th>`)).join('');
+      const body = corr.map((row, i) => {
+        const cells = row.map(v => `<td>${v.toFixed(4)}</td>`).join('');
+        return `<tr><td>${factors[i]}</td>${cells}</tr>`;
+      }).join('');
+      document.getElementById('corrTable').innerHTML = `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+    }
+
+    function runAnalysis() {
+      try {
+        const exp = parseExposureCsv(document.getElementById('exposureCsv').value);
+        const factors = exp.map(r => r.factor);
+        const corrData = parseCorrelationCsv(document.getElementById('corrCsv').value, factors);
+        const corr = corrData.matrix;
+
+        const alpha = num(document.getElementById('confidence').value) / 100;
+        const horizon = Math.max(1, Math.floor(num(document.getElementById('horizon').value)));
+        const threshold = num(document.getElementById('threshold').value);
+        if (!(alpha > 0.9 && alpha < 0.9999)) throw new Error('Confidence must be between 90 and 99.99.');
+        if (!Number.isFinite(threshold) || threshold <= 0) throw new Error('Invalid concentration threshold.');
+
+        const sqrtH = Math.sqrt(horizon);
+        const sigmaVec = exp.map(r => r.delta * r.vol * sqrtH);
+        const variance = quad(sigmaVec, corr);
+        if (variance < -1e-8) throw new Error(`Negative portfolio variance (${variance.toFixed(2)}) from correlation matrix.`);
+        const sigmaP = Math.sqrt(Math.max(variance, 0));
+
+        const z = normalInv(alpha);
+        const varP = z * sigmaP;
+        const esMult = phi(z) / (1 - alpha);
+        const esP = esMult * sigmaP;
+
+        const corrSigma = matVec(corr, sigmaVec);
+        const rows = exp.map((r, i) => {
+          const compSigma = sigmaP > 0 ? (sigmaVec[i] * corrSigma[i]) / sigmaP : 0;
+          const compVaR = z * compSigma;
+          const compES = esMult * compSigma;
+          const stressPnL = r.delta * r.stress;
+          return {
+            ...r,
+            sigmaPnl: sigmaVec[i],
+            compSigma,
+            compVaR,
+            compES,
+            stressPnL,
+          };
+        });
+
+        const totalStress = rows.reduce((s, r) => s + r.stressPnL, 0);
+        const absCompVaRSum = rows.reduce((s, r) => s + Math.abs(r.compVaR), 0) || 1;
+        rows.forEach(r => {
+          r.absShare = (Math.abs(r.compVaR) / absCompVaRSum) * 100;
+          r.stressShare = (Math.abs(r.stressPnL) / (Math.abs(totalStress) || 1)) * 100;
+        });
+
+        const diversification = sigmaVec.reduce((s, v) => s + Math.abs(v), 0) > 0
+          ? 1 - sigmaP / sigmaVec.reduce((s, v) => s + Math.abs(v), 0)
+          : 0;
+        const hhi = rows.reduce((s, r) => {
+          const w = r.absShare / 100;
+          return s + w * w;
+        }, 0);
+        const maxAbsShare = Math.max(...rows.map(r => r.absShare));
+        const topContrib = rows.filter(r => r.absShare >= threshold).map(r => `${r.factor} (${r.absShare.toFixed(1)}%)`);
+
+        const diag = corrDiagnostics(corr);
+        const warnings = [];
+        if (!diag.psd) warnings.push('Correlation matrix is not PSD. Results may not be stable for quant sign-off.');
+        warnings.push(...diag.warnings);
+        if (maxAbsShare >= threshold) warnings.push(`Concentration alert: ${topContrib.join(', ')}`);
+        if (Math.abs(totalStress) > varP * 2) warnings.push('Stress loss materially exceeds parametric VaR. Validate nonlinear and liquidity effects.');
+
+        const metrics = [
+          ['Portfolio Sigma (USD)', fmtMoney(sigmaP), ''],
+          [`${(alpha * 100).toFixed(1)}% 1D VaR (USD)`, fmtMoney(varP), 'bad'],
+          [`${(alpha * 100).toFixed(1)}% 1D ES (USD)`, fmtMoney(esP), 'bad'],
+          ['Stress Scenario PnL (USD)', fmtMoney(totalStress), totalStress < 0 ? 'bad' : 'good'],
+          ['Diversification Benefit', fmtPct(diversification * 100, 1), diversification > 0.2 ? 'good' : 'warn'],
+          ['Concentration HHI', hhi.toFixed(3), hhi > 0.25 ? 'warn' : 'good'],
+        ];
+
+        document.getElementById('metrics').innerHTML = metrics.map(([k, v, cls]) => `
+          <div class="metric">
+            <div class="k">${k}</div>
+            <div class="v ${cls}">${v}</div>
+          </div>
+        `).join('');
+
+        rows.sort((a, b) => Math.abs(b.compVaR) - Math.abs(a.compVaR));
+        latestRows = rows;
+
+        const table = `<table>
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>Desk</th>
+              <th>Delta</th>
+              <th>Vol</th>
+              <th>Unit</th>
+              <th>Sigma PnL</th>
+              <th>Component VaR</th>
+              <th>Abs Share</th>
+              <th>Component ES</th>
+              <th>Stress PnL</th>
+              <th>Stress Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows.map(r => `
+              <tr>
+                <td>${r.factor}</td>
+                <td>${r.desk}</td>
+                <td>${fmtMoney(r.delta, 2)}</td>
+                <td>${r.vol.toFixed(4)}</td>
+                <td>${r.unit}</td>
+                <td class="${r.sigmaPnl < 0 ? 'bad' : 'good'}">${fmtMoney(r.sigmaPnl, 2)}</td>
+                <td class="${r.compVaR < 0 ? 'good' : 'bad'}">${fmtMoney(r.compVaR, 2)}</td>
+                <td class="${r.absShare >= threshold ? 'warn' : ''}">${r.absShare.toFixed(2)}%</td>
+                <td class="${r.compES < 0 ? 'good' : 'bad'}">${fmtMoney(r.compES, 2)}</td>
+                <td class="${r.stressPnL < 0 ? 'bad' : 'good'}">${fmtMoney(r.stressPnL, 2)}</td>
+                <td>${r.stressShare.toFixed(2)}%</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+        document.getElementById('factorTable').innerHTML = table;
+
+        renderCorrTable(factors, corr);
+        showWarnings(warnings);
+      } catch (err) {
+        document.getElementById('metrics').innerHTML = `<div class="metric"><div class="k">Error</div><div class="v bad">${err.message}</div></div>`;
+        document.getElementById('factorTable').innerHTML = '';
+        document.getElementById('corrTable').innerHTML = '';
+        showWarnings([`Validation failed: ${err.message}`]);
+      }
+    }
+
+    function symmetrizeCorr() {
+      try {
+        const exp = parseExposureCsv(document.getElementById('exposureCsv').value);
+        const factors = exp.map(r => r.factor);
+        const c = parseCorrelationCsv(document.getElementById('corrCsv').value, factors);
+        symmetrizeMatrix(c.matrix);
+        const header = ['factor'].concat(factors).join(',');
+        const rows = c.matrix.map((row, i) => `${factors[i]},${row.map(x => x.toFixed(6)).join(',')}`);
+        document.getElementById('corrCsv').value = [header].concat(rows).join('\n');
+        runAnalysis();
+      } catch (err) {
+        showWarnings([`Cannot symmetrize: ${err.message}`]);
+      }
+    }
+
+    function exportResults() {
+      if (!latestRows.length) {
+        runAnalysis();
+        if (!latestRows.length) return;
+      }
+      const header = 'factor,desk,delta_usd_per_unit,daily_vol_unit,unit,sigma_pnl,component_var,component_es,abs_var_share_pct,stress_pnl,stress_share_pct\n';
+      const body = latestRows.map(r => [
+        r.factor, r.desk, r.delta, r.vol, r.unit,
+        r.sigmaPnl, r.compVaR, r.compES, r.absShare.toFixed(4), r.stressPnL, r.stressShare.toFixed(4)
+      ].join(',')).join('\n');
+      const blob = new Blob([header + body], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'cross_asset_quant_risk_output.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    runAnalysis();
+  </script>
 </body>
 </html>

@@ -3,80 +3,460 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stress Scenario Studio</title>
+  <title>Stress Scenario Studio (Quant-Grade)</title>
   <style>
-    :root { --ink:#162235; --muted:#62748a; --bg:#f6f9ff; --card:#fff; --line:#d8e2ef; --accent:#0f6ab4; --ok:#127f52; --bad:#af3b1a; }
-    * { box-sizing:border-box; }
-    body { margin:0; font-family:"IBM Plex Sans","Avenir Next","Segoe UI",sans-serif; color:var(--ink); background:linear-gradient(180deg,#eef5ff,#f8fcff); }
-    .wrap { max-width:1100px; margin:0 auto; padding:22px; }
-    h1 { margin:0; font-size:30px; }
-    .sub { margin:8px 0 18px; color:var(--muted); font-size:14px; }
-    .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); }
-    .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; box-shadow:0 8px 18px rgba(12,32,58,.05); }
-    label { display:block; font-size:12px; color:var(--muted); margin-bottom:4px; font-weight:600; }
-    input, textarea, select { width:100%; border:1px solid var(--line); border-radius:8px; padding:8px 10px; font:inherit; }
-    textarea { min-height:120px; font-family:Menlo,Consolas,monospace; font-size:12px; }
-    button { border:1px solid var(--accent); background:var(--accent); color:#fff; padding:10px 12px; border-radius:9px; font-weight:650; cursor:pointer; }
-    button.alt { background:#fff; color:var(--ink); border-color:var(--line); }
-    table { width:100%; border-collapse:collapse; font-size:12px; }
-    th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:right; }
-    th:first-child, td:first-child { text-align:left; }
-    .pill { display:inline-block; font-size:11px; padding:2px 7px; border-radius:999px; border:1px solid #d0dcec; background:#f4f8ff; margin-right:6px; }
-    .good { color:var(--ok); font-weight:700; }
-    .bad { color:var(--bad); font-weight:700; }
-    .row { display:flex; gap:8px; flex-wrap:wrap; }
-    .row > * { flex:1 1 150px; }
-    .mono { font-family:Menlo,Consolas,monospace; font-size:12px; }
+    :root {
+      --bg: #070b12;
+      --panel: #0d1420;
+      --panel-2: #111b2a;
+      --ink: #d8e2f0;
+      --muted: #7e91a9;
+      --line: #223247;
+      --accent: #25c2ff;
+      --accent-2: #71ffb8;
+      --warn: #ff9d2e;
+      --bad: #ff5c80;
+      --good: #53f1aa;
+      --mono: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1100px 700px at 88% -10%, #0f345855 0%, transparent 65%),
+        radial-gradient(900px 600px at -8% 8%, #0b2f3d66 0%, transparent 60%),
+        linear-gradient(180deg, #050910, #070b12 45%, #090f1a);
+      min-height: 100vh;
+    }
+    .wrap { max-width: 1380px; margin: 0 auto; padding: 24px 22px 40px; }
+    h1 { margin: 0; font-size: 32px; letter-spacing: 0.2px; }
+    .sub { margin: 8px 0 18px; color: var(--muted); font-size: 14px; line-height: 1.45; }
+    .sub a { color: var(--accent); text-decoration: none; }
+    .pill {
+      display: inline-flex;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #23415f;
+      background: #0d2134;
+      font-size: 11px;
+      color: #9ec4ea;
+      margin-right: 6px;
+    }
+    .layout { display: grid; gap: 12px; grid-template-columns: 1.1fr 0.9fr; }
+    .stack { display: grid; gap: 12px; }
+    .card {
+      background: linear-gradient(180deg, #0d1420, #0b1320);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 14px; letter-spacing: 0.3px; color: #b9cce0; }
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 650;
+      color: var(--muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.2px;
+    }
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid #29405a;
+      border-radius: 8px;
+      padding: 8px 10px;
+      color: #dbe8f8;
+      background: #08121e;
+      font: inherit;
+    }
+    textarea { min-height: 210px; font-family: var(--mono); font-size: 12px; line-height: 1.34; }
+    input:focus, textarea:focus, select:focus {
+      outline: 2px solid #2a9fd655;
+      border-color: #2ea8df;
+    }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .row > * { flex: 1 1 120px; }
+    button {
+      border: 1px solid #279ad0;
+      background: linear-gradient(180deg, #1795cf, #0f6f9d);
+      color: #e7f7ff;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.alt {
+      border-color: #2f4358;
+      background: #121f30;
+      color: #c7d6e8;
+      font-weight: 600;
+    }
+    .grid-metrics { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+    .metric {
+      border: 1px solid #233447;
+      border-radius: 10px;
+      background: #0a1522;
+      padding: 10px;
+    }
+    .metric .k { font-size: 10px; color: #8aa0b8; text-transform: uppercase; letter-spacing: 0.4px; }
+    .metric .v { margin-top: 4px; font-family: var(--mono); font-size: 20px; font-weight: 750; }
+    .good { color: var(--good); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+    .table-wrap {
+      max-height: 430px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #08121d;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th, td {
+      padding: 7px 8px;
+      border-bottom: 1px solid #1b2a3a;
+      text-align: right;
+      white-space: nowrap;
+      font-family: var(--mono);
+    }
+    th:first-child, td:first-child,
+    th:nth-child(2), td:nth-child(2) { text-align: left; }
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #122033;
+      color: #a7bfd8;
+      font-size: 11px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .method {
+      font-size: 12px;
+      color: #9bb0c6;
+      line-height: 1.45;
+    }
+    .code { font-family: var(--mono); color: #c7e6ff; }
+    .warning-box {
+      margin-top: 8px;
+      border: 1px solid #594320;
+      background: #2a1f0f;
+      border-radius: 8px;
+      padding: 8px;
+      color: #ffd9a8;
+      font-size: 12px;
+      display: none;
+      white-space: pre-wrap;
+    }
+    .warning-box.show { display: block; }
+    @media (max-width: 1160px) {
+      .layout { grid-template-columns: 1fr; }
+      textarea { min-height: 180px; }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Stress Scenario Studio</h1>
-    <div class="sub">Translate macro-factor shocks into desk-level stress PnL with instant scenario presets. <span class="pill">AS-OF: 2026-03-05 14:03:09 EST</span> <a href="../index.html">Back to suite</a></div>
-    
-<div class="grid">
-  <div class="card">
-    <h3 style="margin-top:0">Scenario shocks</h3>
-    <label>Rates move (bp)</label><input id="rates" type="number" value="50" />
-    <label>Credit spread move (bp)</label><input id="credit" type="number" value="120" />
-    <label>Equity index move (%)</label><input id="eq" type="number" value="-8" />
-    <label>FX move (%)</label><input id="fx" type="number" value="-2" />
-    <label>Commodity move (%)</label><input id="cmd" type="number" value="12" />
-  </div>
-  <div class="card">
-    <h3 style="margin-top:0">Desk sensitivities</h3>
-    <label>Rates DV01 (USD per bp)</label><input id="dv01" type="number" value="-180000" />
-    <label>Credit CS01 (USD per bp)</label><input id="cs01" type="number" value="-90000" />
-    <label>Equity beta-adjusted delta (USD per 1%)</label><input id="eqd" type="number" value="250000" />
-    <label>FX delta (USD per 1%)</label><input id="fxd" type="number" value="130000" />
-    <label>Commodity delta (USD per 1%)</label><input id="cmdd" type="number" value="70000" />
-    <div style="margin-top:10px" class="row"><button onclick="calc()">Run Scenario</button><button class="alt" onclick="preset('oil')">Oil Shock Preset</button><button class="alt" onclick="preset('riskoff')">Risk-off Preset</button></div>
-  </div>
-</div>
-<div class="card" style="margin-top:12px">
-  <h3 style="margin-top:0">Scenario translation</h3>
-  <div id="out" class="mono"></div>
-</div>
-<script>
-function g(id){ return +document.getElementById(id).value; }
-function calc(){
-  const ratePnL = g('dv01') * g('rates');
-  const creditPnL = g('cs01') * g('credit');
-  const eqPnL = g('eqd') * g('eq');
-  const fxPnL = g('fxd') * g('fx');
-  const cmdPnL = g('cmdd') * g('cmd');
-  const total = ratePnL+creditPnL+eqPnL+fxPnL+cmdPnL;
-  const rows=[['Rates',ratePnL],['Credit',creditPnL],['Equity',eqPnL],['FX',fxPnL],['Commodity',cmdPnL],['TOTAL',total]];
-  document.getElementById('out').innerHTML='<table><thead><tr><th>Risk bucket</th><th>PnL (USD)</th></tr></thead><tbody>'+rows.map(r=>`<tr><td>${r[0]}</td><td class="${r[1]<0?'bad':'good'}">${Math.round(r[1]).toLocaleString()}</td></tr>`).join('')+'</tbody></table>';
-}
-function preset(k){
-  if(k==='oil'){ document.getElementById('cmd').value=18; document.getElementById('eq').value=-5; document.getElementById('rates').value=35; document.getElementById('fx').value=-1.2; document.getElementById('credit').value=90; }
-  if(k==='riskoff'){ document.getElementById('cmd').value=-10; document.getElementById('eq').value=-12; document.getElementById('rates').value=-45; document.getElementById('fx').value=2.5; document.getElementById('credit').value=180; }
-  calc();
-}
-calc();
-</script>
+    <div class="sub">
+      Nonlinear scenario engine with delta + gamma + vega decomposition, preset scenario library, and reverse stress scale solving.
+      <span class="pill">Delta-Gamma-Vega</span>
+      <span class="pill">Scenario Library</span>
+      <span class="pill">Reverse Stress</span>
+      <a href="../index.html">Back to tools suite</a>
+    </div>
 
+    <div class="layout">
+      <div class="stack">
+        <div class="card">
+          <h3>Factor Sensitivity Inputs</h3>
+          <label>CSV (factor,unit,delta_usd_per_unit,gamma_usd_per_unit2,vega_usd_per_vol_unit,base_shock,base_vol_shock)</label>
+          <textarea id="factorCsv">factor,unit,delta_usd_per_unit,gamma_usd_per_unit2,vega_usd_per_vol_unit,base_shock,base_vol_shock
+UST10Y,bp,-185000,-900,0,45,0
+IG_Spread,bp,-92000,-250,0,120,0
+SPX,pct,260000,-12000,38000,-6.5,8
+DXY,pct,130000,5000,14000,2.2,3
+Brent,pct,75000,-4000,19000,12,10</textarea>
+          <div class="row" style="margin-top:8px">
+            <div>
+              <label>Scenario scale multiplier</label>
+              <input id="scale" type="number" value="1" step="0.05" min="0" />
+            </div>
+            <div>
+              <label>Target loss for reverse stress (USD)</label>
+              <input id="targetLoss" type="number" value="-75000000" step="1000000" />
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Scenario Library</h3>
+          <label>CSV (scenario, factor shocks..., optional factor_VOL overrides)</label>
+          <textarea id="scenarioCsv">scenario,UST10Y,IG_Spread,SPX,DXY,Brent,SPX_VOL,DXY_VOL,Brent_VOL
+Oil_Inflation_Shock,35,95,-5.5,1.5,18,7,2,9
+Growth_Scare,-40,145,-11,2.6,-12,12,4,6
+Liquidity_Crunch,55,220,-14,3.0,8,16,5,14
+Rates_Reversal,-65,-35,6.5,-1.8,-7,6,2,5</textarea>
+          <div class="row" style="margin-top:8px">
+            <div>
+              <label>Scenario</label>
+              <select id="scenarioSelect"></select>
+            </div>
+            <div style="align-self:flex-end; display:flex; gap:8px;">
+              <button onclick="runScenario()">Run Scenario</button>
+              <button class="alt" onclick="scalePreset('severe')">Severe</button>
+              <button class="alt" onclick="scalePreset('base')">Base</button>
+            </div>
+          </div>
+          <div id="warnings" class="warning-box"></div>
+        </div>
+      </div>
+
+      <div class="stack">
+        <div class="card">
+          <h3>Scenario Summary</h3>
+          <div class="grid-metrics" id="metrics"></div>
+        </div>
+
+        <div class="card">
+          <h3>Methodology</h3>
+          <div class="method">
+            <div><span class="code">PnL_i = delta_i*shock_i + 0.5*gamma_i*shock_i^2 + vega_i*volShock_i</span></div>
+            <div><span class="code">Total PnL = Σ PnL_i</span></div>
+            <div><span class="code">Reverse stress scale m solves: A*m^2 + B*m = targetLoss</span></div>
+            <div style="margin-top:8px; color:#86a3bf;">where <span class="code">A = 0.5*Σ(gamma_i*shock_i^2)</span> and <span class="code">B = Σ(delta_i*shock_i + vega_i*volShock_i)</span>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <h3>Factor PnL Decomposition</h3>
+      <div class="table-wrap" id="factorTable"></div>
+    </div>
   </div>
+
+  <script>
+    let latest = [];
+
+    function num(v) {
+      const n = Number(String(v).trim());
+      return Number.isFinite(n) ? n : NaN;
+    }
+
+    function parseCsv(text) {
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if (lines.length < 2) throw new Error('CSV needs header + at least one row.');
+      const header = lines[0].split(',').map(s => s.trim());
+      const rows = lines.slice(1).map(line => {
+        const cols = line.split(',').map(s => s.trim());
+        const obj = {};
+        header.forEach((h, i) => obj[h] = cols[i] ?? '');
+        return obj;
+      });
+      return { header, rows };
+    }
+
+    function parseFactors(text) {
+      const { rows } = parseCsv(text);
+      const req = ['factor', 'unit', 'delta_usd_per_unit', 'gamma_usd_per_unit2', 'vega_usd_per_vol_unit', 'base_shock', 'base_vol_shock'];
+      const out = rows.map((r, idx) => {
+        for (const k of req) if (!(k in r)) throw new Error(`Missing factor column '${k}'.`);
+        const factor = String(r.factor || '').trim();
+        const unit = String(r.unit || '').trim().toLowerCase();
+        const delta = num(r.delta_usd_per_unit);
+        const gamma = num(r.gamma_usd_per_unit2);
+        const vega = num(r.vega_usd_per_vol_unit);
+        const baseShock = num(r.base_shock);
+        const baseVolShock = num(r.base_vol_shock);
+        if (!factor) throw new Error(`Factor row ${idx + 2}: empty factor.`);
+        if (!(unit === 'bp' || unit === 'pct')) throw new Error(`Factor row ${idx + 2}: unit must be bp or pct.`);
+        if (![delta, gamma, vega, baseShock, baseVolShock].every(Number.isFinite)) {
+          throw new Error(`Factor row ${idx + 2}: numeric parse error.`);
+        }
+        return { factor, unit, delta, gamma, vega, baseShock, baseVolShock };
+      });
+
+      const seen = new Set();
+      for (const f of out) {
+        if (seen.has(f.factor)) throw new Error(`Duplicate factor '${f.factor}'.`);
+        seen.add(f.factor);
+      }
+      return out;
+    }
+
+    function parseScenarioLib(text) {
+      const { header, rows } = parseCsv(text);
+      if (header[0] !== 'scenario') throw new Error("Scenario CSV first column must be 'scenario'.");
+      return { header, rows };
+    }
+
+    function showWarnings(lines) {
+      const box = document.getElementById('warnings');
+      if (!lines.length) {
+        box.classList.remove('show');
+        box.textContent = '';
+        return;
+      }
+      box.classList.add('show');
+      box.textContent = lines.join('\n');
+    }
+
+    function fmtMoney(x, digits = 0) {
+      return Number(x).toLocaleString(undefined, { maximumFractionDigits: digits, minimumFractionDigits: digits });
+    }
+
+    function populateScenarios() {
+      try {
+        const lib = parseScenarioLib(document.getElementById('scenarioCsv').value);
+        const sel = document.getElementById('scenarioSelect');
+        sel.innerHTML = lib.rows.map((r, i) => `<option value="${i}">${r.scenario}</option>`).join('');
+      } catch (err) {
+        document.getElementById('scenarioSelect').innerHTML = '';
+      }
+    }
+
+    function solveReverseScale(A, B, target) {
+      // Solve A m^2 + B m - target = 0 for positive m
+      const eps = 1e-12;
+      if (Math.abs(A) < eps) {
+        if (Math.abs(B) < eps) return { ok: false, m: NaN, reason: 'Both A and B are ~0; scenario has no sensitivity.' };
+        const m = target / B;
+        if (m <= 0) return { ok: false, m, reason: 'Required scale is non-positive.' };
+        return { ok: true, m };
+      }
+      const disc = B * B + 4 * A * target;
+      if (disc < 0) return { ok: false, m: NaN, reason: 'No real scale solution for target loss.' };
+      const sqrtD = Math.sqrt(disc);
+      const m1 = (-B + sqrtD) / (2 * A);
+      const m2 = (-B - sqrtD) / (2 * A);
+      const candidates = [m1, m2].filter(x => Number.isFinite(x) && x > 0).sort((a, b) => a - b);
+      if (!candidates.length) return { ok: false, m: NaN, reason: 'No positive scale solution.' };
+      return { ok: true, m: candidates[0] };
+    }
+
+    function scalePreset(mode) {
+      const scale = document.getElementById('scale');
+      scale.value = mode === 'severe' ? '1.8' : '1';
+      runScenario();
+    }
+
+    function runScenario() {
+      try {
+        const factors = parseFactors(document.getElementById('factorCsv').value);
+        const lib = parseScenarioLib(document.getElementById('scenarioCsv').value);
+        const idx = Number(document.getElementById('scenarioSelect').value || 0);
+        if (!lib.rows.length) throw new Error('Scenario library is empty.');
+        if (!(idx >= 0 && idx < lib.rows.length)) throw new Error('Invalid scenario selection.');
+
+        const row = lib.rows[idx];
+        const scale = Math.max(0, num(document.getElementById('scale').value));
+        const targetLoss = num(document.getElementById('targetLoss').value);
+        if (!Number.isFinite(scale)) throw new Error('Invalid scenario scale.');
+        if (!Number.isFinite(targetLoss)) throw new Error('Invalid target loss.');
+
+        const warnings = [];
+        const out = factors.map(f => {
+          const shockRaw = row[f.factor] !== undefined && row[f.factor] !== '' ? num(row[f.factor]) : f.baseShock;
+          const volRaw = row[`${f.factor}_VOL`] !== undefined && row[`${f.factor}_VOL`] !== '' ? num(row[`${f.factor}_VOL`]) : f.baseVolShock;
+          if (!Number.isFinite(shockRaw) || !Number.isFinite(volRaw)) {
+            throw new Error(`Scenario '${row.scenario}' has non-numeric shock for factor '${f.factor}'.`);
+          }
+          const shock = shockRaw * scale;
+          const volShock = volRaw * scale;
+          const linear = f.delta * shock;
+          const gamma = 0.5 * f.gamma * shock * shock;
+          const vega = f.vega * volShock;
+          const total = linear + gamma + vega;
+          return { ...f, shock, volShock, linear, gamma, vega, total };
+        });
+
+        const totalLinear = out.reduce((s, r) => s + r.linear, 0);
+        const totalGamma = out.reduce((s, r) => s + r.gamma, 0);
+        const totalVega = out.reduce((s, r) => s + r.vega, 0);
+        const totalPnL = totalLinear + totalGamma + totalVega;
+
+        const absTotal = Math.abs(totalPnL) || 1;
+        out.forEach(r => r.share = Math.abs(r.total) / absTotal * 100);
+
+        const A = 0.5 * out.reduce((s, r) => s + r.gamma / (scale * scale || 1), 0);
+        const B = out.reduce((s, r) => s + ((r.linear + r.vega) / (scale || 1)), 0);
+        const rev = solveReverseScale(A, B, targetLoss);
+
+        const nonlinearShare = Math.abs(totalPnL) > 0 ? (Math.abs(totalGamma + totalVega) / Math.abs(totalPnL)) * 100 : 0;
+        if (nonlinearShare > 45) warnings.push('Nonlinear share exceeds 45%; validate convexity and vol-of-vol assumptions.');
+        if (Math.abs(scale) > 1.5) warnings.push('Scenario scale > 1.5x baseline; verify liquidity and model extrapolation controls.');
+        const top = out.filter(r => r.share > 35).map(r => `${r.factor} (${r.share.toFixed(1)}%)`);
+        if (top.length) warnings.push(`Concentration watch: ${top.join(', ')}`);
+
+        const metrics = [
+          ['Scenario', row.scenario, ''],
+          ['Total PnL (USD)', fmtMoney(totalPnL), totalPnL < 0 ? 'bad' : 'good'],
+          ['Linear Component (USD)', fmtMoney(totalLinear), totalLinear < 0 ? 'bad' : 'good'],
+          ['Gamma Component (USD)', fmtMoney(totalGamma), totalGamma < 0 ? 'bad' : 'good'],
+          ['Vega Component (USD)', fmtMoney(totalVega), totalVega < 0 ? 'bad' : 'good'],
+          ['Nonlinear Share', `${nonlinearShare.toFixed(1)}%`, nonlinearShare > 45 ? 'warn' : 'good'],
+          ['Reverse Stress Scale', rev.ok ? `${rev.m.toFixed(3)}x` : 'N/A', rev.ok ? 'good' : 'warn'],
+        ];
+
+        document.getElementById('metrics').innerHTML = metrics.map(([k, v, cls]) => `
+          <div class="metric">
+            <div class="k">${k}</div>
+            <div class="v ${cls}">${v}</div>
+          </div>
+        `).join('');
+
+        out.sort((a, b) => Math.abs(b.total) - Math.abs(a.total));
+        latest = out;
+
+        document.getElementById('factorTable').innerHTML = `<table>
+          <thead>
+            <tr>
+              <th>Factor</th>
+              <th>Unit</th>
+              <th>Shock</th>
+              <th>Vol Shock</th>
+              <th>Linear PnL</th>
+              <th>Gamma PnL</th>
+              <th>Vega PnL</th>
+              <th>Total PnL</th>
+              <th>Abs Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${out.map(r => `
+              <tr>
+                <td>${r.factor}</td>
+                <td>${r.unit}</td>
+                <td>${r.shock.toFixed(4)}</td>
+                <td>${r.volShock.toFixed(4)}</td>
+                <td class="${r.linear < 0 ? 'bad' : 'good'}">${fmtMoney(r.linear, 2)}</td>
+                <td class="${r.gamma < 0 ? 'bad' : 'good'}">${fmtMoney(r.gamma, 2)}</td>
+                <td class="${r.vega < 0 ? 'bad' : 'good'}">${fmtMoney(r.vega, 2)}</td>
+                <td class="${r.total < 0 ? 'bad' : 'good'}">${fmtMoney(r.total, 2)}</td>
+                <td class="${r.share > 35 ? 'warn' : ''}">${r.share.toFixed(2)}%</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>`;
+
+        if (!rev.ok) warnings.push(`Reverse stress solve: ${rev.reason}`);
+        showWarnings(warnings);
+      } catch (err) {
+        document.getElementById('metrics').innerHTML = `<div class="metric"><div class="k">Error</div><div class="v bad">${err.message}</div></div>`;
+        document.getElementById('factorTable').innerHTML = '';
+        showWarnings([`Validation failed: ${err.message}`]);
+      }
+    }
+
+    document.getElementById('scenarioCsv').addEventListener('input', () => {
+      populateScenarios();
+      runScenario();
+    });
+
+    populateScenarios();
+    runScenario();
+  </script>
 </body>
 </html>

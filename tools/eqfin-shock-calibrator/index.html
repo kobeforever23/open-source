@@ -179,6 +179,124 @@
     .metrics { grid-template-columns: 1fr 1fr; }
     .tabs { flex-wrap: wrap; }
   }
+
+  /* Bloomberg-like futuristic override */
+  :root {
+    --bg: #060b12;
+    --card: #0d1522;
+    --ink: #d7e1ef;
+    --muted: #89a0b8;
+    --line: #24364c;
+    --accent: #21b8f3;
+    --danger: #ff5f82;
+    --good: #50f0ae;
+    --step-bg: #0a1320;
+    --step-border: #223448;
+  }
+  body {
+    background:
+      radial-gradient(1100px 600px at 95% -20%, rgba(21, 79, 124, 0.35) 0%, rgba(21, 79, 124, 0) 65%),
+      radial-gradient(900px 500px at -10% 15%, rgba(16, 76, 89, 0.25) 0%, rgba(16, 76, 89, 0) 60%),
+      linear-gradient(180deg, #050910 0%, #070c13 45%, #081120 100%);
+    color: var(--ink);
+  }
+  .wrap { max-width: 1040px; }
+  .tagline { color: var(--muted); }
+  .pill {
+    background: #0f2133;
+    border-color: #274463;
+    color: #a8c6e4;
+  }
+  .tab {
+    background: #0c1624;
+    color: #8ca4be;
+    border-color: var(--line);
+  }
+  .tab.active {
+    background: var(--card);
+    color: var(--ink);
+    border-bottom-color: var(--card);
+  }
+  .tab-body {
+    background: var(--card);
+    border-color: var(--line);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.32);
+  }
+  label { color: var(--muted); }
+  input, textarea, select {
+    background: #08121d;
+    border-color: #2b4158;
+    color: #dbe7f5;
+  }
+  input:focus, textarea:focus {
+    outline: 2px solid rgba(33, 184, 243, 0.32);
+    border-color: #38b9eb;
+  }
+  .btn {
+    background: linear-gradient(180deg, #1aa8dd, #0e6d97);
+    border-color: #269fd0;
+    color: #e8f7ff;
+  }
+  .btn-sm, .btn-reset {
+    background: #101d2d;
+    border-color: #30465b;
+    color: #c7d8ea;
+  }
+  .results-placeholder {
+    border-color: #2a3f57;
+    color: #88a1bb;
+    background: #0a1320;
+  }
+  .metric {
+    border-color: #2a3f57;
+    background: #091320;
+  }
+  .metric .k { color: #8ea6be; }
+  .metric .v { color: #e3edf9; }
+  .metric.highlight {
+    border-color: #2b8964;
+    background: #0d1f1a;
+  }
+  .metric.highlight .k { color: #7ad7b2; }
+  .metric.highlight .v { color: var(--good); }
+  .step {
+    background: var(--step-bg);
+    border-color: var(--step-border);
+  }
+  .step-header:hover { background: #101d2e; }
+  .formula {
+    background: #08121d;
+    border-color: #2a3f57;
+    color: #c8d9ec;
+  }
+  .table-wrap {
+    background: #07101a;
+    border-color: #2a3f57;
+  }
+  .table-wrap thead th {
+    background: #102035;
+    color: #a8c1da;
+  }
+  tbody tr:nth-child(even) td { background: #0b1623; }
+  .calibrated-cell {
+    background: #10221a;
+    color: #8fe6c0;
+  }
+  .warn-box {
+    background: #2a140f;
+    border-color: #6a2d22;
+    color: #ffc3b5;
+  }
+  .help-icon {
+    background: #1e3247;
+    color: #a8bfd8;
+  }
+  .help-icon:hover { background: #2a4865; }
+  [data-tip]:hover::after {
+    background: #0f2236;
+    border: 1px solid #2f4f6f;
+    color: #d8e9fa;
+  }
 </style>
 </head>
 <body>
@@ -189,6 +307,7 @@
     <span class="pill">As-of: 2026-02-27</span>
     <span class="pill">SPX proxy: IVV (503 names)</span>
     <span class="pill">NDX proxy: CNDX (101 names)</span>
+    <span class="pill"><a href="../index.html" style="color:#9fd0ff;text-decoration:none;">Back to tools suite</a></span>
   </div>
 
   <!-- TABS -->

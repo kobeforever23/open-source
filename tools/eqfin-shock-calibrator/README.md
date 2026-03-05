@@ -11,3 +11,6 @@ Standalone market-shock calibration tool.
 
 ## Run
 Open `index.html` directly, or run the suite server from `../` and open `/eqfin-shock-calibrator/index.html`.
+
+## UI mode
+- Bloomberg-inspired dark terminal styling tuned for dense quant diagnostics.

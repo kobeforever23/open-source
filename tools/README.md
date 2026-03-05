@@ -18,6 +18,9 @@ Standalone GUI/dashboard tools for CIB Risk execution.
 - `model-validation-lab/`: quick model outcomes validation diagnostics.
 - `prompt-evaluation-console/`: AI prompt output quality and control checks.
 
+## Quant governance
+- [Market Risk Tooling Standards](MARKET_RISK_TOOLING_STANDARDS.md)
+
 ## Design principles
 - Standalone first (HTML + JS).
 - Fast to use under market-event pressure.
