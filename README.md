@@ -23,7 +23,8 @@ PyCharm:
 3. Click Run.
 
 Portable ZIP bundle:
-- `dist/eqfin-shock-calibrator-portable-2026-03-06.zip`
+- `eqfin-shock-calibrator-portable-2026-03-06.zip` (repo root, fastest to find)
+- `dist/eqfin-shock-calibrator-portable-2026-03-06.zip` (distribution folder copy)
 - Includes all required source/data + Windows/macOS/Linux launch scripts.
 
 ## Start Here
