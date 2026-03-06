@@ -11,12 +11,32 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import os, sys
 import argparse
+import importlib.util
 
 # ---------------------------------------------------------------------------
 #  Import constituent data
 # ---------------------------------------------------------------------------
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from spx_ndx_data import SPX_DATA, NDX_DATA
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, SCRIPT_DIR)
+
+try:
+    from spx_ndx_data import SPX_DATA, NDX_DATA
+except ModuleNotFoundError as exc:
+    if exc.name != "spx_ndx_data":
+        raise
+    data_path = os.path.join(SCRIPT_DIR, "spx_ndx_data.py")
+    if not os.path.exists(data_path):
+        raise ModuleNotFoundError(
+            "spx_ndx_data.py not found. Keep calibrator_gui.py and spx_ndx_data.py "
+            "in the same folder."
+        )
+    spec = importlib.util.spec_from_file_location("spx_ndx_data", data_path)
+    if spec is None or spec.loader is None:
+        raise ModuleNotFoundError("Unable to load spx_ndx_data.py from local folder.")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    SPX_DATA = module.SPX_DATA
+    NDX_DATA = module.NDX_DATA
 
 # ---------------------------------------------------------------------------
 #  The 75 fixed single-name tickers
