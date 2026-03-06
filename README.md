@@ -22,6 +22,10 @@ PyCharm:
 2. Open `tools/eqfin-shock-calibrator/launch_eqfin_gui.py`.
 3. Click Run.
 
+Portable ZIP bundle:
+- `dist/eqfin-shock-calibrator-portable-2026-03-06.zip`
+- Includes all required source/data + Windows/macOS/Linux launch scripts.
+
 ## Start Here
 - `prompts/`: production prompt library (with role/category routing)
 - `skills/`: CIB Risk Skills OS and operating standards
