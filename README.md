@@ -2,6 +2,26 @@
 
 Production-ready CIB Risk workspace with prompts, skills, tools, briefs, and archived reference artifacts.
 
+## EQ Index Calibration GUI (Python)
+Direct folder:
+- `tools/eqfin-shock-calibrator/`
+
+Primary launcher files:
+- `tools/eqfin-shock-calibrator/launch_eqfin_gui.py`
+- `tools/eqfin-shock-calibrator/run_eqfin_gui.bat` (Windows)
+- `tools/eqfin-shock-calibrator/run_eqfin_gui.command` (macOS)
+- `tools/eqfin-shock-calibrator/run_eqfin_gui.sh` (Linux/macOS shell)
+
+Quick run:
+- Windows: `tools\\eqfin-shock-calibrator\\run_eqfin_gui.bat`
+- macOS: `chmod +x tools/eqfin-shock-calibrator/run_eqfin_gui.command tools/eqfin-shock-calibrator/run_eqfin_gui.sh && tools/eqfin-shock-calibrator/run_eqfin_gui.command`
+- Linux: `chmod +x tools/eqfin-shock-calibrator/run_eqfin_gui.sh && tools/eqfin-shock-calibrator/run_eqfin_gui.sh`
+
+PyCharm:
+1. Open the repo.
+2. Open `tools/eqfin-shock-calibrator/launch_eqfin_gui.py`.
+3. Click Run.
+
 ## Start Here
 - `prompts/`: production prompt library (with role/category routing)
 - `skills/`: CIB Risk Skills OS and operating standards

@@ -10,6 +10,7 @@ Run:  python3 calibrator_gui.py
 import tkinter as tk
 from tkinter import ttk, messagebox
 import os, sys
+import argparse
 
 # ---------------------------------------------------------------------------
 #  Import constituent data
@@ -145,6 +146,25 @@ def generate_75_exposures():
         exp = round((1_200_000 - i * 9000) * (1 + w / 100))
         lines.append(f"{t},{exp}")
     return "\n".join(lines)
+
+
+def run_self_test():
+    """Run a lightweight deterministic validation without launching the GUI."""
+    assert SPX_DATA and NDX_DATA, "Constituent datasets must be non-empty."
+    assert abs(sum(r["weight"] for r in SPX_DATA) - 100.0) < 2.0, "SPX weights look invalid."
+    assert abs(sum(r["weight"] for r in NDX_DATA) - 100.0) < 2.0, "NDX weights look invalid."
+
+    sample_overrides = {"NVDA": 50.0, "MSFT": 50.0, "AAPL": 50.0}
+    spx = solve_residual("SPX", SPX_DATA, 26.0, sample_overrides)
+    ndx = solve_residual("NDX", NDX_DATA, 35.0, sample_overrides)
+
+    assert spx["residual_shock"] is not None, "SPX residual shock should be solvable."
+    assert ndx["residual_shock"] is not None, "NDX residual shock should be solvable."
+    assert abs((spx["rebuilt"] or 0) - 26.0) < 1e-6, "SPX reconstruction failed."
+    assert abs((ndx["rebuilt"] or 0) - 35.0) < 1e-6, "NDX reconstruction failed."
+    assert len(generate_75_exposures().splitlines()) == 75, "75-name exposure template must have 75 rows."
+
+    print("EQFIN self-test: PASS")
 
 
 # ---------------------------------------------------------------------------
@@ -633,10 +653,38 @@ class CalibratorApp:
         widget.see("1.0")
 
 
+def main(argv=None):
+    parser = argparse.ArgumentParser(
+        description="EQFIN Stress Shock Calibrator (standalone Python GUI)"
+    )
+    parser.add_argument(
+        "--self-test",
+        action="store_true",
+        help="Run deterministic checks without opening the GUI.",
+    )
+    args = parser.parse_args(argv)
+
+    if args.self_test:
+        run_self_test()
+        return 0
+
+    try:
+        root = tk.Tk()
+    except tk.TclError as exc:
+        print(
+            "Failed to start Tkinter GUI. Ensure your machine has a desktop "
+            "environment and Tk support installed.\n"
+            f"Details: {exc}"
+        )
+        return 1
+
+    CalibratorApp(root)
+    root.mainloop()
+    return 0
+
+
 # ---------------------------------------------------------------------------
 #  Main
 # ---------------------------------------------------------------------------
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = CalibratorApp(root)
-    root.mainloop()
+    raise SystemExit(main())

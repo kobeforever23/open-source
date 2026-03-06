@@ -8,6 +8,13 @@ Standalone GUI/dashboard tools for CIB Risk execution.
 2. `python3 start_tools_server.py --port 8090`
 3. Open `http://127.0.0.1:8090/`
 
+## EQFIN Python GUI quick launch
+- Folder: `eqfin-shock-calibrator/`
+- Windows: `eqfin-shock-calibrator\\run_eqfin_gui.bat`
+- macOS: `chmod +x eqfin-shock-calibrator/run_eqfin_gui.command eqfin-shock-calibrator/run_eqfin_gui.sh && eqfin-shock-calibrator/run_eqfin_gui.command`
+- Linux: `chmod +x eqfin-shock-calibrator/run_eqfin_gui.sh && eqfin-shock-calibrator/run_eqfin_gui.sh`
+- Self-test (headless): `python3 eqfin-shock-calibrator/calibrator_gui.py --self-test`
+
 ## Tool catalog
 - `market-risk-terminal/`: flagship quant market risk workstation (VaR/ES, MC, backtesting, scenarios, stress sweeps).
 - `eqfin-shock-calibrator/`: index and single-name stress shock calibration.
