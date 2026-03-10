@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 TOH BAU Stress Scenario Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --wf-red: #D71E28;
+    --wf-red-dark: #A3161E;
+    --wf-red-glow: rgba(215,30,40,0.15);
+    --wf-red-dim: rgba(215,30,40,0.08);
+    --wf-gold: #FFCD41;
+    --wf-gold-dark: #D4A520;
+    --wf-gold-glow: rgba(255,205,65,0.12);
+    --wf-gold-dim: rgba(255,205,65,0.06);
+    --dark: #0A0A0C;
+    --dark-card: #111114;
+    --dark-surface: #18181C;
+    --dark-elevated: #1E1E24;
+    --dark-hover: #252530;
+    --white: #FFFFFF;
+    --text: #E4E4E8;
+    --text-dim: #8A8A96;
+    --text-muted: #5A5A68;
+    --border: rgba(255,255,255,0.06);
+    --border-subtle: rgba(255,255,255,0.03);
+    --accent-cyan: #38BDF8;
+    --accent-blue: #6366F1;
+    --accent-purple: #A855F7;
+    --accent-amber: #F59E0B;
+    --accent-green: #22C55E;
+    --accent-rose: #FB7185;
+    --neg: #EF4444;
+    --pos: #22C55E;
+    --warn: #F59E0B;
+    --shadow: 0 8px 32px rgba(0,0,0,0.5);
+    --shadow-glow-red: 0 0 40px rgba(215,30,40,0.08);
+    --shadow-glow-gold: 0 0 40px rgba(255,205,65,0.06);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-xs: 6px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Animated background gradient */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 600px;
+    background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(215,30,40,0.07), transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 0%, rgba(255,205,65,0.04), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+
+  /* ── Top Bar ── */
+  .topbar {
+    background: rgba(10,10,12,0.85);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 16px; }
+  .topbar-logo {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--wf-red), var(--wf-red-dark));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 17px; color: #fff;
+    box-shadow: 0 4px 16px rgba(215,30,40,0.25);
+    position: relative;
+  }
+  .topbar-logo::after {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 13px;
+    background: linear-gradient(135deg, rgba(255,205,65,0.3), transparent 60%);
+    z-index: -1;
+  }
+  .topbar-title {
+    font-size: 17px; font-weight: 700; color: var(--white);
+    letter-spacing: -0.3px;
+  }
+  .topbar-subtitle {
+    font-size: 11.5px; color: var(--text-dim); margin-top: 1px;
+    letter-spacing: 0.3px;
+  }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-badge {
+    padding: 5px 14px;
+    border-radius: 24px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .badge-conf {
+    background: var(--wf-red-dim);
+    color: var(--wf-red);
+    border: 1px solid rgba(215,30,40,0.15);
+  }
+  .badge-date {
+    background: var(--wf-gold-dim);
+    color: var(--wf-gold-dark);
+    border: 1px solid rgba(255,205,65,0.12);
+  }
+
+  /* ── Tab Nav ── */
+  .tab-nav {
+    display: flex;
+    gap: 2px;
+    padding: 0 36px;
+    background: rgba(10,10,12,0.6);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    position: sticky;
+    top: 68px;
+    z-index: 99;
+  }
+  .tab-nav::-webkit-scrollbar { height: 0; }
+  .tab-btn {
+    padding: 14px 24px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    position: relative;
+    transition: color 0.25s;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--wf-gold); }
+  .tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 8px; right: 8px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--wf-red), var(--wf-gold));
+    border-radius: 2px 2px 0 0;
+  }
+
+  /* ── Content ── */
+  .tab-content {
+    display: none;
+    padding: 32px 36px 56px;
+    max-width: 1480px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .tab-content.active { display: block; animation: fadeSlide 0.4s cubic-bezier(0.22,1,0.36,1); }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Section Headers ── */
+  .section-title {
+    font-size: 24px; font-weight: 800; color: var(--white);
+    margin-bottom: 6px; letter-spacing: -0.5px;
+  }
+  .section-desc {
+    font-size: 14px; color: var(--text-dim); margin-bottom: 28px;
+    line-height: 1.7; max-width: 900px;
+  }
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 36px 0;
+  }
+
+  /* ── Grid ── */
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+  .grid-5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+
+  /* ── KPI Card ── */
+  .kpi-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+  }
+  .kpi-card:hover {
+    border-color: rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,205,65,0.15), transparent);
+  }
+  .kpi-label {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-size: 30px; font-weight: 900; color: var(--white);
+    letter-spacing: -1px; line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+  .kpi-sub {
+    font-size: 11.5px; color: var(--text-dim); margin-top: 8px;
+    font-weight: 500;
+  }
+  .kpi-value.down { color: var(--neg); }
+  .kpi-value.up { color: var(--pos); }
+  .kpi-value.amber { color: var(--warn); }
+  .kpi-value.blue { color: var(--accent-cyan); }
+  .kpi-value.purple { color: var(--accent-purple); }
+  .kpi-value.gold { color: var(--wf-gold); }
+  .kpi-value.red { color: var(--wf-red); }
+
+  /* ── Scenario Badge ── */
+  .scenario-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    border-radius: 24px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 16px;
+  }
+  .badge-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
+  }
+
+  /* ── Tables ── */
+  .data-table-wrapper {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+  }
+  .data-table-wrapper::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(215,30,40,0.12), transparent);
+  }
+  .data-table-title {
+    padding: 16px 22px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    border-bottom: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.data-table th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  table.data-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  table.data-table tr:last-child td { border-bottom: none; }
+  table.data-table tr:hover td { background: rgba(255,255,255,0.015); }
+  td.val-neg { color: var(--neg); font-weight: 600; }
+  td.val-pos { color: var(--pos); font-weight: 600; }
+  td.val-amber { color: var(--warn); font-weight: 600; }
+  td.val-blue { color: var(--accent-cyan); font-weight: 600; }
+  td.val-bold { font-weight: 700; color: var(--white); }
+
+  /* ── Chart Card ── */
+  .chart-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .chart-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,205,65,0.1), transparent);
+  }
+  .chart-title {
+    font-size: 13px; font-weight: 700; color: var(--white);
+    margin-bottom: 18px; text-transform: uppercase; letter-spacing: 0.4px;
+  }
+
+  /* ── Bar Charts (CSS) ── */
+  .bar-group { margin-bottom: 16px; }
+  .bar-label {
+    font-size: 12px; color: var(--text-dim); margin-bottom: 5px;
+    display: flex; justify-content: space-between; font-weight: 500;
+  }
+  .bar-track {
+    height: 28px;
+    background: rgba(255,255,255,0.025);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    background-image: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 100%);
+  }
+  .bar-fill::after {
+    content: '';
+    position: absolute; right: 0; top: 0; bottom: 0; width: 3px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 0 6px 6px 0;
+  }
+
+  /* ── Narrative Box ── */
+  .narrative-box {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px;
+    position: relative;
+    overflow: hidden;
+  }
+  .narrative-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(215,30,40,0.1), transparent);
+  }
+  .narrative-box h3 {
+    font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 14px;
+  }
+  .narrative-box p {
+    font-size: 14px; color: var(--text); line-height: 1.75; margin-bottom: 12px;
+  }
+  .narrative-box .highlight { color: var(--wf-gold); font-weight: 600; }
+  .narrative-box .tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-bottom: 6px;
+    letter-spacing: 0.2px;
+  }
+
+  /* ── Severity Meter ── */
+  .severity-meter { display: flex; align-items: center; gap: 12px; margin: 14px 0; }
+  .severity-track {
+    flex: 1; height: 6px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 3px;
+    position: relative;
+    overflow: visible;
+  }
+  .severity-fill {
+    height: 100%; border-radius: 3px; position: relative;
+    box-shadow: 0 0 12px rgba(215,30,40,0.2);
+  }
+  .severity-marker {
+    position: absolute; right: -7px; top: -7px;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 3px solid var(--dark);
+    box-shadow: 0 0 12px rgba(0,0,0,0.5), 0 0 8px currentColor;
+  }
+  .severity-label {
+    font-size: 11px; color: var(--text-muted); font-weight: 600;
+    white-space: nowrap; letter-spacing: 0.3px;
+  }
+  .severity-pct {
+    font-size: 18px; font-weight: 900; white-space: nowrap;
+    min-width: 50px; text-align: right; letter-spacing: -0.5px;
+  }
+
+  /* ── Alert Boxes ── */
+  .alert-box {
+    padding: 16px 20px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    line-height: 1.65;
+    margin-bottom: 14px;
+    border-left: 3px solid;
+    background: var(--dark-surface);
+  }
+  .alert-info { border-color: var(--accent-cyan); }
+  .alert-warn { border-color: var(--wf-gold); }
+  .alert-danger { border-color: var(--wf-red); }
+  .alert-box strong { color: var(--white); }
+
+  /* ── Coherence Check ── */
+  .coherence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .coherence-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.2);
+    border-radius: var(--radius-xs);
+    border: 1px solid var(--border);
+  }
+  .coherence-icon { font-size: 16px; width: 24px; text-align: center; }
+  .coherence-label { font-size: 12px; color: var(--text-dim); }
+  .coherence-val { font-size: 13px; font-weight: 700; margin-left: auto; white-space: nowrap; }
+
+  /* ── Gradient Line ── */
+  .gradient-line {
+    height: 2px;
+    background: linear-gradient(90deg, var(--wf-red), var(--wf-gold), var(--wf-red));
+    border-radius: 1px;
+    margin: 4px 0 24px;
+    opacity: 0.4;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .grid-5 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+    .topbar { padding: 12px 16px; }
+    .tab-content { padding: 20px 16px; }
+    .tab-nav { padding: 0 16px; }
+    .coherence-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Scenario Narrative Cards ── */
+  .scenario-narrative {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+  .scenario-narrative::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  }
+  .scenario-narrative-header {
+    padding: 22px 28px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+  .scenario-narrative-header h3 {
+    font-size: 16px; font-weight: 800; color: var(--white);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .scenario-narrative-header .sn-severity {
+    font-size: 11px; font-weight: 700; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.6px;
+  }
+  .scenario-narrative-header .sn-analog {
+    font-size: 11.5px; color: var(--text-dim); font-weight: 500;
+    font-style: italic;
+  }
+  .sn-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; flex-shrink: 0;
+    box-shadow: 0 0 10px currentColor;
+  }
+  .scenario-narrative-body { padding: 22px 28px; }
+  .scenario-narrative-body p {
+    font-size: 14px; color: var(--text); line-height: 1.8; margin-bottom: 16px;
+  }
+  .sn-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-top: 18px;
+  }
+  .sn-block-title {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 10px;
+  }
+  .sn-kpi-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .sn-kpi {
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    display: flex; flex-direction: column; gap: 2px;
+    min-width: 100px;
+  }
+  .sn-kpi-label { font-size: 10px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .sn-kpi-val { font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .sn-risk-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sn-risk-tag {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.1px;
+  }
+  .sn-transmission {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .sn-transmission-title {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 10px;
+  }
+  .sn-chain {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    font-size: 13px; color: var(--text); font-weight: 500;
+  }
+  .sn-chain-arrow { color: var(--text-muted); font-size: 14px; }
+
+  /* ── Print ── */
+  @media print {
+    .topbar, .tab-nav { display: none; }
+    .tab-content { display: block !important; padding: 0; page-break-after: always; }
+    body { background: #fff; color: #1a1a1a; }
+    body::before { display: none; }
+    .kpi-card, .chart-card, .narrative-box, .data-table-wrapper {
+      border: 1px solid #ddd; background: #fff;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">WF</div>
+    <div>
+      <div class="topbar-title">2026 TOH BAU Stress Scenario Dashboard</div>
+      <div class="topbar-subtitle">Annual Recalibration &mdash; Five-Scenario Framework</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <span class="topbar-badge badge-date">As of March 10, 2026</span>
+    <span class="topbar-badge badge-conf">Confidential</span>
+  </div>
+</div>
+
+<!-- Tab Navigation -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('overview')">Executive Overview</button>
+  <button class="tab-btn" onclick="showTab('rates_rally')">Rates Rally</button>
+  <button class="tab-btn" onclick="showTab('moderate')">Moderate</button>
+  <button class="tab-btn" onclick="showTab('ftq')">Flight to Quality</button>
+  <button class="tab-btn" onclick="showTab('severe_rally')">Severe Rates Rally</button>
+  <button class="tab-btn" onclick="showTab('severe_stag')">Severe Stagflation</button>
+</nav>
+
+<!-- ============================================ -->
+<!-- TAB: EXECUTIVE OVERVIEW -->
+<!-- ============================================ -->
+<div id="tab-overview" class="tab-content active">
+
+  <div class="section-title">Five-Scenario Framework Overview</div>
+  <div class="gradient-line"></div>
+  <div class="section-desc">
+    The 2026 annual recalibration refreshes all five TOH BAU scenarios, updating calibrations across rate, credit, and liquidity stress vectors with symmetric severe-tail coverage for deflationary and stagflationary regimes.
+  </div>
+
+  <!-- Severity Spectrum -->
+  <div class="grid grid-5" style="margin-bottom: 28px;">
+    <div class="kpi-card" style="border-left: 3px solid var(--accent-cyan);">
+      <div class="kpi-label">Rates Rally</div>
+      <div class="severity-meter">
+        <div class="severity-track"><div class="severity-fill" style="width:35%;background:linear-gradient(90deg,var(--accent-cyan),#2563EB);"><div class="severity-marker" style="background:var(--accent-cyan);color:var(--accent-cyan);"></div></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <div class="severity-label">Disinflation</div>
+        <div class="severity-pct" style="color:var(--accent-cyan);">~67th</div>
+      </div>
+    </div>
+    <div class="kpi-card" style="border-left: 3px solid var(--accent-blue);">
+      <div class="kpi-label">Moderate</div>
+      <div class="severity-meter">
+        <div class="severity-track"><div class="severity-fill" style="width:50%;background:linear-gradient(90deg,var(--accent-blue),#4338CA);"><div class="severity-marker" style="background:var(--accent-blue);color:var(--accent-blue);"></div></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <div class="severity-label">Cyclical Downturn</div>
+        <div class="severity-pct" style="color:var(--accent-blue);">~72nd</div>
+      </div>
+    </div>
+    <div class="kpi-card" style="border-left: 3px solid var(--accent-purple);">
+      <div class="kpi-label">Flight to Quality</div>
+      <div class="severity-meter">
+        <div class="severity-track"><div class="severity-fill" style="width:50%;background:linear-gradient(90deg,var(--accent-purple),#7C3AED);"><div class="severity-marker" style="background:var(--accent-purple);color:var(--accent-purple);"></div></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <div class="severity-label">Liquidity Crisis</div>
+        <div class="severity-pct" style="color:var(--accent-purple);">~72nd</div>
+      </div>
+    </div>
+    <div class="kpi-card" style="border-left: 3px solid var(--wf-gold);">
+      <div class="kpi-label">Severe Rates Rally</div>
+      <div class="severity-meter">
+        <div class="severity-track"><div class="severity-fill" style="width:75%;background:linear-gradient(90deg,var(--wf-gold),var(--wf-gold-dark));"><div class="severity-marker" style="background:var(--wf-gold);color:var(--wf-gold);"></div></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <div class="severity-label">Deflation / Recession</div>
+        <div class="severity-pct" style="color:var(--wf-gold);">~87th</div>
+      </div>
+    </div>
+    <div class="kpi-card" style="border-left: 3px solid var(--wf-red);">
+      <div class="kpi-label">Severe Stagflation</div>
+      <div class="severity-meter">
+        <div class="severity-track"><div class="severity-fill" style="width:90%;background:linear-gradient(90deg,var(--wf-red),var(--wf-red-dark));"><div class="severity-marker" style="background:var(--wf-red);color:var(--wf-red);"></div></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <div class="severity-label">Stagflation / Energy</div>
+        <div class="severity-pct" style="color:var(--wf-red);">~90th</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Findings -->
+  <div class="alert-box alert-danger"><strong>Critical Finding:</strong> The 2025 BBB credit shock of ~7 bp produces a stressed level of ~114 bp &mdash; indistinguishable from normal market noise. The 2026 recalibration replaces this with target stressed levels ranging from +33 bp (Rates Rally) to +163 bp (Severe Stagflation).</div>
+  <div class="alert-box alert-warn"><strong>Recalibration Scope:</strong> All five scenarios refreshed &mdash; Rates Rally (NII/prepayment risk), Moderate (cyclical downturn), Flight to Quality (funding/liquidity crisis), Severe Rates Rally (deflation/MBS prepayment wave), and Severe Stagflation (inflation/energy).</div>
+  <div class="alert-box alert-info"><strong>Asset-Class Coverage:</strong> 13 asset classes fully recalibrated across all 5 scenarios: rates/curves, credit spreads, loans, structured credit/ABS, agency MBS, CMBS, CLOs, rate volatility, swap spreads/basis, funding/liquidity, sector credit overlays, EM debt, and FX/commodities/equities.</div>
+
+  <hr class="section-divider">
+
+  <!-- ── Macro Environment & Risk Catalysts ── -->
+  <div class="section-title">Current Macro Environment</div>
+  <div class="gradient-line"></div>
+  <div class="section-desc">Calibrated as of March 10, 2026. Multiple concurrent stress catalysts superimposed on a late-cycle economy with historically compressed risk premia.</div>
+
+  <div class="grid grid-4" style="margin-bottom: 20px;">
+    <div class="kpi-card">
+      <div class="kpi-label">Fed Funds Rate</div>
+      <div class="kpi-value gold">3.50&ndash;3.75%</div>
+      <div class="kpi-sub">3 cuts from Sep 2024 peak of 5.50%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">10Y UST</div>
+      <div class="kpi-value" style="color:var(--white);">4.12%</div>
+      <div class="kpi-sub">2s10s: +40 bp | SOFR: 3.65%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">GDP Growth (Q4 2025)</div>
+      <div class="kpi-value amber">+1.4%</div>
+      <div class="kpi-sub">Down from +4.4% in Q3 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Unemployment</div>
+      <div class="kpi-value amber">4.4%</div>
+      <div class="kpi-sub">Feb NFP: -92K (first neg. print)</div>
+    </div>
+  </div>
+
+  <div class="grid grid-4" style="margin-bottom: 20px;">
+    <div class="kpi-card">
+      <div class="kpi-label">Core CPI</div>
+      <div class="kpi-value" style="color:var(--white);">2.5% YoY</div>
+      <div class="kpi-sub">MoM +0.3% (5-mo high); re-accel risk</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">S&P 500</div>
+      <div class="kpi-value" style="color:var(--white);">5,738</div>
+      <div class="kpi-sub">VIX: 25.50 | Mag-7 down 15-20% YTD</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Brent Crude</div>
+      <div class="kpi-value down">$80&ndash;100</div>
+      <div class="kpi-sub">Peaked $119.50 (Hormuz crisis)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">BBB OAS</div>
+      <div class="kpi-value" style="color:var(--white);">107 bp</div>
+      <div class="kpi-sub">~15th %ile vs 20Y avg of 170 bp</div>
+    </div>
+  </div>
+
+  <!-- Risk Catalysts -->
+  <div class="narrative-box" style="margin-bottom: 24px;border-left: 3px solid var(--wf-red);">
+    <h3>Active Risk Catalysts Informing 2026 Calibration</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px;">
+      <div>
+        <p style="margin-bottom:10px;"><span style="color:var(--wf-red);font-weight:700;">Iran&ndash;Hormuz Energy Crisis</span><br>
+        <span style="font-size:13px;">Operation Epic Fury (Feb 28). Brent surged $70&rarr;$119.50. Strait transits dropped 95%. Qatar LNG force majeure. Still fluid &mdash; structural tail risk now demonstrated.</span></p>
+        <p style="margin-bottom:10px;"><span style="color:var(--wf-gold);font-weight:700;">Tariff Escalation</span><br>
+        <span style="font-size:13px;">SCOTUS struck down IEEPA tariffs; admin pivoted to Section 122 (15% universal surcharge, 150-day sunset Jul 24). Core goods inflation at 1.6% annualized &mdash; 2-year high.</span></p>
+        <p><span style="color:var(--accent-purple);font-weight:700;">AI Capex Concentration Risk</span><br>
+        <span style="font-size:13px;">Hyperscaler capex ~$602B (+36% YoY), 75% AI-linked. Without AI investment, corporate capex would be negative. Top 10 S&P stocks &gt;35% of index weight &mdash; exceeds 1929 and 2000 concentration.</span></p>
+      </div>
+      <div>
+        <p style="margin-bottom:10px;"><span style="color:var(--warn);font-weight:700;">CRE / Office Structural Stress</span><br>
+        <span style="font-size:13px;">Office CMBS delinquency peaked at 12.34% (all-time record, above GFC). National vacancy 18.2%. ~$936B CRE loans maturing in 2026; ~$57.7B CMBS likely to default at maturity.</span></p>
+        <p style="margin-bottom:10px;"><span style="color:var(--neg);font-weight:700;">Consumer Credit Deterioration</span><br>
+        <span style="font-size:13px;">Subprime auto 60+ DQ: 6.65% (highest since 1990s). Credit card 90+ DQ: 12.7% (highest since 2011). Student loan: ~25% of borrowers behind. Total HH debt: $18.8T.</span></p>
+        <p><span style="color:var(--accent-cyan);font-weight:700;">Labor Market Inflection</span><br>
+        <span style="font-size:13px;">Feb NFP: -92K (first negative since pandemic). Continuing claims: 1.87M (rising). Average unemployment duration: 25.7 weeks (longest since Dec 2021).</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Starting-Point Spread Levels -->
+  <div class="data-table-wrapper" style="margin-bottom: 24px;">
+    <div class="data-table-title">Starting-Point Credit Spread Levels (as of March 9, 2026)</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Index</th><th>Current OAS</th><th>20Y Average</th><th>Percentile</th><th>Assessment</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="val-bold">IG OAS</td><td>~85 bp</td><td>~150 bp</td><td class="val-neg">~5th</td><td class="val-neg">Near all-time tights</td></tr>
+        <tr><td class="val-bold">A OAS</td><td>~68 bp</td><td>~130 bp</td><td class="val-neg">~7th</td><td class="val-neg">Near all-time tights</td></tr>
+        <tr><td class="val-bold">BBB OAS</td><td>~107 bp</td><td>~170 bp</td><td class="val-amber">~15th</td><td class="val-amber">Well below median</td></tr>
+        <tr><td class="val-bold">HY OAS</td><td>~319 bp</td><td>~490 bp</td><td class="val-amber">~18th</td><td class="val-amber">Below median</td></tr>
+        <tr><td class="val-bold">BB OAS</td><td>~196 bp</td><td>~350 bp</td><td class="val-amber">~12th</td><td class="val-amber">Well below median</td></tr>
+        <tr><td class="val-bold">B OAS</td><td>~352 bp</td><td>~520 bp</td><td class="val-amber">~18th</td><td class="val-amber">Below median</td></tr>
+        <tr><td class="val-bold">CCC OAS</td><td>~969 bp</td><td>~1,000 bp</td><td>~42nd</td><td>Near average</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ── Methodology ── -->
+  <div class="section-title">Calibration Methodology</div>
+  <div class="gradient-line"></div>
+  <div class="section-desc">Target stressed level approach anchored to historical episode severity, replacing the 2025 incremental shock methodology.</div>
+
+  <div class="grid grid-3" style="margin-bottom: 24px;">
+    <div class="narrative-box" style="border-left:3px solid var(--wf-red);">
+      <h3 style="font-size:13px;">Target Stressed Levels</h3>
+      <p style="font-size:13px;">Shocks calibrated to produce absolute stressed OAS levels consistent with historical episodes at each scenario&rsquo;s target severity percentile, rather than arbitrary incremental widening from starting spreads.</p>
+    </div>
+    <div class="narrative-box" style="border-left:3px solid var(--wf-gold);">
+      <h3 style="font-size:13px;">Cross-Asset Coherence</h3>
+      <p style="font-size:13px;">Each scenario maintains internal consistency across rates, credit, equities, FX, commodities, funding, and volatility. 18-factor coherence matrices validated for all 5 scenarios with documented tension resolutions.</p>
+    </div>
+    <div class="narrative-box" style="border-left:3px solid var(--accent-purple);">
+      <h3 style="font-size:13px;">Gradient Monotonicity</h3>
+      <p style="font-size:13px;">Credit shocks maintain strict ordering: Rates Rally &lt; Moderate &lt; FTQ &lt; Severe Rally &lt; Severe Stagflation across all ratings and tenors, with Moderate-to-Severe multipliers in the 2.0&ndash;2.6x target range.</p>
+    </div>
+  </div>
+
+  <!-- 2025 → 2026 Headline Changes -->
+  <div class="data-table-wrapper" style="margin-bottom: 24px;">
+    <div class="data-table-title">Key Calibration Changes: 2025 &rarr; 2026</div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Asset Class</th><th>Metric</th><th>2025 Moderate</th><th>2026 Moderate</th><th>2025 Severe</th><th>2026 Severe</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="val-bold">BBB Credit (5Y)</td><td>Widening (bp)</td><td>~7</td><td class="val-amber">+63</td><td>~25</td><td class="val-neg">+163</td></tr>
+        <tr><td class="val-bold">BB Credit</td><td>Widening (bp)</td><td>~25-30</td><td class="val-amber">+154</td><td>~40</td><td class="val-neg">+329</td></tr>
+        <tr><td class="val-bold">B Credit</td><td>Widening (bp)</td><td>~40-50</td><td class="val-amber">+238</td><td>~75</td><td class="val-neg">+508</td></tr>
+        <tr><td class="val-bold">CCC/D</td><td>Widening (bp)</td><td>~75-150</td><td class="val-amber">+381</td><td>~75-150</td><td class="val-neg">+931</td></tr>
+        <tr><td class="val-bold">BBB Loans</td><td>Price decline</td><td>~5%</td><td class="val-amber">-8%</td><td>~12%</td><td class="val-neg">-18%</td></tr>
+        <tr><td class="val-bold">Agency MBS</td><td>OAS widen (bp)</td><td>N/A</td><td class="val-amber">+34</td><td>N/A</td><td class="val-neg">+94</td></tr>
+        <tr><td class="val-bold">CMBS AAA</td><td>Widening (bp)</td><td>N/A</td><td class="val-amber">+75</td><td>N/A</td><td class="val-neg">+225</td></tr>
+        <tr><td class="val-bold">CLO AAA</td><td>Widening (bp)</td><td>N/A</td><td class="val-amber">+55</td><td>N/A</td><td class="val-neg">+175</td></tr>
+        <tr><td class="val-bold">S&P 500</td><td>Decline</td><td>N/A*</td><td class="val-amber">-25%</td><td>N/A*</td><td class="val-neg">-40%</td></tr>
+        <tr><td class="val-bold">EMBI (EM Sov)</td><td>Widening (bp)</td><td>N/A</td><td class="val-amber">+153</td><td>N/A</td><td class="val-neg">+403</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ── Multi-Asset Coverage Map ── -->
+  <div class="section-title">13 Asset-Class Coverage</div>
+  <div class="gradient-line"></div>
+  <div class="section-desc">Full calibration packages across all asset classes, with scenario-specific stress dynamics for each.</div>
+
+  <div class="grid grid-4" style="margin-bottom: 24px;">
+    <div class="kpi-card" style="border-left:3px solid var(--accent-cyan);"><div class="kpi-label">Rates & Curves</div><div style="font-size:13px;color:var(--text);margin-top:6px;">Full tenor grid (2Y&ndash;30Y), curve shape (bull steep / bear steep / parallel), 2s10s slope dynamics</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--accent-blue);"><div class="kpi-label">Credit Spreads</div><div style="font-size:13px;color:var(--text);margin-top:6px;">7 ratings (AAA&ndash;CCC) &times; 6 tenors. Tenor scaling: 1.20x front-end, 0.78x back-end. Cash &amp; CDS</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--accent-purple);"><div class="kpi-label">Loans &amp; Corp Price</div><div style="font-size:13px;color:var(--text);margin-top:6px;">BBB through D/Distressed price shocks. Recovery-adjusted, with sector overlays</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--wf-gold);"><div class="kpi-label">Structured / ABS</div><div style="font-size:13px;color:var(--text);margin-top:6px;">Auto, credit card, student loan, CLO ABS by rating. Sub-sector differentiation</div></div>
+  </div>
+  <div class="grid grid-4" style="margin-bottom: 24px;">
+    <div class="kpi-card" style="border-left:3px solid var(--wf-red);"><div class="kpi-label">Agency MBS / RMBS</div><div style="font-size:13px;color:var(--text);margin-top:6px;">OAS, prepayment (CPR), duration, convexity. Scenario-dependent: prepay accel in rally, extension in stagflation</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--accent-cyan);"><div class="kpi-label">CMBS</div><div style="font-size:13px;color:var(--text);margin-top:6px;">Rating-level shocks with property-type overlays (office, retail, multifamily, industrial, hotel)</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--accent-blue);"><div class="kpi-label">CLOs</div><div style="font-size:13px;color:var(--text);margin-top:6px;">Tranche-level: AAA through equity. CLO equity carry sensitive to SOFR path and default rates</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--accent-purple);"><div class="kpi-label">Rate Volatility</div><div style="font-size:13px;color:var(--text);margin-top:6px;">MOVE index, swaption implied vol (1Y10Y, 5Y5Y), realized vol. Vol-of-vol multipliers</div></div>
+  </div>
+  <div class="grid grid-4" style="margin-bottom: 24px;">
+    <div class="kpi-card" style="border-left:3px solid var(--wf-gold);"><div class="kpi-label">Swap Spreads &amp; Basis</div><div style="font-size:13px;color:var(--text);margin-top:6px;">10Y swap spread, SOFR-FF basis, CDS-cash basis, cross-currency basis (EUR, JPY, GBP)</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--wf-red);"><div class="kpi-label">Funding &amp; Liquidity</div><div style="font-size:13px;color:var(--text);margin-top:6px;">FRA-OIS, CP (A1/P1, A2/P2), repo GC, FHLB advance. FTQ scenario: SEVERE funding stress</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--accent-cyan);"><div class="kpi-label">Sector Overlays</div><div style="font-size:13px;color:var(--text);margin-top:6px;">10 sectors with scenario-specific multipliers (0.60x&ndash;1.40x). Energy, CRE, tech differentiated by regime</div></div>
+    <div class="kpi-card" style="border-left:3px solid var(--accent-blue);"><div class="kpi-label">EM &amp; FX / Cmdty / Eq</div><div style="font-size:13px;color:var(--text);margin-top:6px;">EMBI sovereign, EM FX, EM corporate. Plus DXY, Brent, gold, S&amp;P 500, VIX by scenario</div></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ── Scenario Narrative Deep Dives ── -->
+  <div class="section-title">Scenario Narratives &amp; Stress Transmission</div>
+  <div class="gradient-line"></div>
+  <div class="section-desc">Each scenario represents a distinct macro regime with unique correlation structures, stress transmission channels, and portfolio impact profiles. The five scenarios span the ~65th to ~90th severity percentile, positioned below DFAST Severely Adverse (~95th+).</div>
+
+  <!-- 1. Rates Rally -->
+  <div class="scenario-narrative" style="border-left:3px solid var(--accent-cyan);">
+    <div class="scenario-narrative-header">
+      <h3><span class="sn-dot" style="background:var(--accent-cyan);color:var(--accent-cyan);"></span> BAU Moderate Rates Rally</h3>
+      <div style="text-align:right;">
+        <div class="sn-severity">~65&ndash;70th percentile</div>
+        <div class="sn-analog">Analog: 2019 mid-cycle easing + 2014 disinflation</div>
+      </div>
+    </div>
+    <div class="scenario-narrative-body">
+      <p>A disinflationary slowdown driven by inflation undershooting Fed expectations as tariff effects prove transient and goods deflation resumes. Consumer spending decelerates but does not collapse. The labor market softens with unemployment rising to ~4.8&ndash;5.0% without severe deterioration. AI capex continues at a reduced pace. The Fed cuts aggressively, bringing the Fed funds rate to <strong style="color:var(--accent-cyan);">2.00%</strong> as inflation drops toward 1.5&ndash;1.8%.</p>
+      <p>Growth slows to 0.5&ndash;1.0% &mdash; a slowdown, not a recession. Credit spreads widen only modestly (<strong>~52% of Moderate</strong> credit shocks). The <strong style="color:var(--accent-cyan);">primary stress vector is NII compression</strong>, reinvestment risk, and duration/convexity risk, particularly for MBS portfolios facing accelerated prepayments as mortgage rates decline.</p>
+
+      <div class="sn-grid">
+        <div>
+          <div class="sn-block-title">Headline Shocks</div>
+          <div class="sn-kpi-row">
+            <div class="sn-kpi"><div class="sn-kpi-label">10Y UST</div><div class="sn-kpi-val" style="color:var(--neg);">-132 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">BBB 5Y</div><div class="sn-kpi-val" style="color:var(--warn);">+33 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">S&amp;P 500</div><div class="sn-kpi-val" style="color:var(--neg);">-12%</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">MBS CPR</div><div class="sn-kpi-val" style="color:var(--warn);">25&ndash;30</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">Funding</div><div class="sn-kpi-val" style="color:var(--pos);">Minimal</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sn-block-title">Key Portfolio Risks</div>
+          <div class="sn-risk-tags">
+            <span class="sn-risk-tag" style="background:rgba(56,189,248,0.1);color:var(--accent-cyan);border:1px solid rgba(56,189,248,0.2);">NII compression from rate decline</span>
+            <span class="sn-risk-tag" style="background:rgba(56,189,248,0.1);color:var(--accent-cyan);border:1px solid rgba(56,189,248,0.2);">MBS prepayment acceleration</span>
+            <span class="sn-risk-tag" style="background:rgba(56,189,248,0.1);color:var(--accent-cyan);border:1px solid rgba(56,189,248,0.2);">Reinvestment risk on maturing assets</span>
+            <span class="sn-risk-tag" style="background:rgba(56,189,248,0.1);color:var(--accent-cyan);border:1px solid rgba(56,189,248,0.2);">CLO equity carry compression</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sn-transmission">
+        <div class="sn-transmission-title">Stress Transmission Chain</div>
+        <div class="sn-chain">
+          <span>Inflation undershoots</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Fed cuts aggressively</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Rates fall across curve</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Mortgage rates decline</span><span class="sn-chain-arrow">&rarr;</span>
+          <span style="color:var(--accent-cyan);font-weight:700;">MBS prepay acceleration (CPR 25&ndash;30)</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>NII compression + reinvestment risk</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Moderate -->
+  <div class="scenario-narrative" style="border-left:3px solid var(--accent-blue);">
+    <div class="scenario-narrative-header">
+      <h3><span class="sn-dot" style="background:var(--accent-blue);color:var(--accent-blue);"></span> BAU CCAR Firm Moderate</h3>
+      <div style="text-align:right;">
+        <div class="sn-severity">~70&ndash;75th percentile</div>
+        <div class="sn-analog">Analog: 2015&ndash;16 commodity downturn + moderate recession</div>
+      </div>
+    </div>
+    <div class="scenario-narrative-body">
+      <p>A broad-based cyclical downturn triggered by a convergence of: (a) consumer spending deceleration driven by eroding savings and credit deterioration; (b) AI capex retrenchment as ROI concerns trigger a 30&ndash;40% decline in technology infrastructure investment; (c) tariff-driven supply chain disruption and input cost inflation; (d) commercial real estate stress deepening in office and retail sectors; and (e) a moderate energy supply disruption (partial, transient Hormuz closure).</p>
+      <p>The Fed responds with <strong style="color:var(--accent-blue);">150&ndash;200 bp of rate cuts</strong> over the scenario horizon. Credit reprices from historically tight levels to stress levels consistent with prior moderate recessions. Equities decline 25%. Unemployment rises to 5.5&ndash;6.0%. No systemic financial crisis, but a meaningful correction in risk appetite and an <strong>acceleration of existing consumer/CRE credit deterioration</strong> trends.</p>
+
+      <div class="sn-grid">
+        <div>
+          <div class="sn-block-title">Headline Shocks</div>
+          <div class="sn-kpi-row">
+            <div class="sn-kpi"><div class="sn-kpi-label">10Y UST</div><div class="sn-kpi-val" style="color:var(--neg);">-62 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">BBB 5Y</div><div class="sn-kpi-val" style="color:var(--warn);">+63 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">S&amp;P 500</div><div class="sn-kpi-val" style="color:var(--neg);">-25%</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">Brent</div><div class="sn-kpi-val" style="color:var(--pos);">+30%</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">Funding</div><div class="sn-kpi-val" style="color:var(--warn);">Modest</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sn-block-title">Key Portfolio Risks</div>
+          <div class="sn-risk-tags">
+            <span class="sn-risk-tag" style="background:rgba(99,102,241,0.1);color:var(--accent-blue);border:1px solid rgba(99,102,241,0.2);">Broad credit repricing from tight levels</span>
+            <span class="sn-risk-tag" style="background:rgba(99,102,241,0.1);color:var(--accent-blue);border:1px solid rgba(99,102,241,0.2);">CRE office stress (DQ &gt;12%)</span>
+            <span class="sn-risk-tag" style="background:rgba(99,102,241,0.1);color:var(--accent-blue);border:1px solid rgba(99,102,241,0.2);">Consumer credit deterioration</span>
+            <span class="sn-risk-tag" style="background:rgba(99,102,241,0.1);color:var(--accent-blue);border:1px solid rgba(99,102,241,0.2);">Energy pass-through to inflation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sn-transmission">
+        <div class="sn-transmission-title">Stress Transmission Chain</div>
+        <div class="sn-chain">
+          <span>Multi-factor slowdown</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Consumer + Corp earnings weaken</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Credit reprices from tights</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>CRE refinancing wave fails</span><span class="sn-chain-arrow">&rarr;</span>
+          <span style="color:var(--accent-blue);font-weight:700;">Broad portfolio mark-to-market losses</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Fed cuts 150&ndash;200 bp</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Flight to Quality -->
+  <div class="scenario-narrative" style="border-left:3px solid var(--accent-purple);">
+    <div class="scenario-narrative-header">
+      <h3><span class="sn-dot" style="background:var(--accent-purple);color:var(--accent-purple);"></span> BAU Moderate Flight to Quality</h3>
+      <div style="text-align:right;">
+        <div class="sn-severity">~70&ndash;75th percentile</div>
+        <div class="sn-analog">Analog: March 2020 COVID liquidity crisis, 2011 EU debt crisis, 2023 SVB</div>
+      </div>
+    </div>
+    <div class="scenario-narrative-body">
+      <p>An acute risk-off event driven by geopolitical escalation (Taiwan Strait tension, European banking stress), a major credit event (private credit fund gating, EM sovereign default scare), or a sudden loss of market confidence. Safe-haven flows pour into USTs, gold, and the USD. Credit spreads widen sharply &mdash; <strong style="color:var(--accent-purple);">not because fundamentals deteriorate, but because liquidity evaporates</strong> and risk appetite collapses.</p>
+      <p>The episode is short-duration (1&ndash;3 months acute phase) but mark-to-market impact is severe. <strong style="color:var(--accent-purple);">Funding markets seize</strong>: commercial paper issuance freezes (A1/P1 +200 bp), repo spreads widen (+28 bp), money market funds experience outflows. EM suffers capital flight (-15% FX). The key distinction from the Moderate: this is a <strong>liquidity event, not a fundamentals event</strong>. Oil falls (demand destruction fears), USD strengthens sharply (safe haven), and the negative stock-bond correlation re-emerges powerfully.</p>
+
+      <div class="sn-grid">
+        <div>
+          <div class="sn-block-title">Headline Shocks</div>
+          <div class="sn-kpi-row">
+            <div class="sn-kpi"><div class="sn-kpi-label">10Y UST</div><div class="sn-kpi-val" style="color:var(--neg);">-87 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">BBB 5Y</div><div class="sn-kpi-val" style="color:var(--warn);">+78 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">S&amp;P 500</div><div class="sn-kpi-val" style="color:var(--neg);">-22%</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">A1/P1 CP</div><div class="sn-kpi-val" style="color:var(--neg);">+200 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">Funding</div><div class="sn-kpi-val" style="color:var(--neg);">SEVERE</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sn-block-title">Key Portfolio Risks</div>
+          <div class="sn-risk-tags">
+            <span class="sn-risk-tag" style="background:rgba(168,85,247,0.1);color:var(--accent-purple);border:1px solid rgba(168,85,247,0.2);">CP market seizure (A1/P1 +200 bp)</span>
+            <span class="sn-risk-tag" style="background:rgba(168,85,247,0.1);color:var(--accent-purple);border:1px solid rgba(168,85,247,0.2);">Funding liquidity freeze</span>
+            <span class="sn-risk-tag" style="background:rgba(168,85,247,0.1);color:var(--accent-purple);border:1px solid rgba(168,85,247,0.2);">EM capital flight (-15% FX)</span>
+            <span class="sn-risk-tag" style="background:rgba(168,85,247,0.1);color:var(--accent-purple);border:1px solid rgba(168,85,247,0.2);">Forced selling in illiquid markets</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sn-transmission">
+        <div class="sn-transmission-title">Stress Transmission Chain</div>
+        <div class="sn-chain">
+          <span>Risk-off catalyst</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Safe-haven flows (UST/gold/USD)</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Liquidity evaporates</span><span class="sn-chain-arrow">&rarr;</span>
+          <span style="color:var(--accent-purple);font-weight:700;">Funding markets seize (CP/repo/MMF)</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Forced selling in credit + EM</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Spread widening on illiquidity, not defaults</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Severe Rates Rally -->
+  <div class="scenario-narrative" style="border-left:3px solid var(--wf-gold);">
+    <div class="scenario-narrative-header">
+      <h3><span class="sn-dot" style="background:var(--wf-gold);color:var(--wf-gold);"></span> BAU Severe Rates Rally</h3>
+      <div style="text-align:right;">
+        <div class="sn-severity">~85&ndash;90th percentile</div>
+        <div class="sn-analog">Analog: 2008&ndash;09 recession (severity) + 2020 COVID emergency cuts (speed)</div>
+      </div>
+    </div>
+    <div class="scenario-narrative-body">
+      <p>A deep recession driven by consumer spending collapse as labor market deterioration accelerates (unemployment 7&ndash;8%), AI capex unwind amplifying GDP decline (-2 to -3%), CRE stress intensifying, and deflation risk emerging as demand destruction overwhelms supply-side inflation. The Fed cuts to <strong style="color:var(--wf-gold);">near-zero emergency levels (0.75%)</strong>, deploying QE and emergency lending facilities. Inflation drops below 2% and approaches deflation risk.</p>
+      <p>Credit spreads widen severely (recession-driven defaults), though less than in Severe Stagflation (no stagflation multiplier from energy). <strong style="color:var(--wf-gold);">THE DEFINING FEATURE is the massive MBS prepayment wave</strong>: mortgage rates fall to ~2.5%, triggering refi activity that overwhelms servicer capacity. CPR surges from 9 to 40&ndash;50, collapsing MBS effective duration from ~5.2Y to 2.5&ndash;3.0Y &mdash; a devastating negative convexity event for portfolios that are long MBS duration. Oil collapses (-30%) on demand destruction. Gold surges (+25%) on real rate collapse.</p>
+
+      <div class="sn-grid">
+        <div>
+          <div class="sn-block-title">Headline Shocks</div>
+          <div class="sn-kpi-row">
+            <div class="sn-kpi"><div class="sn-kpi-label">10Y UST</div><div class="sn-kpi-val" style="color:var(--neg);">-287 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">BBB 5Y</div><div class="sn-kpi-val" style="color:var(--neg);">+133 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">S&amp;P 500</div><div class="sn-kpi-val" style="color:var(--neg);">-33%</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">MBS CPR</div><div class="sn-kpi-val" style="color:var(--neg);">40&ndash;50</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">MBS Dur</div><div class="sn-kpi-val" style="color:var(--neg);">2.5&ndash;3.0Y</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sn-block-title">Key Portfolio Risks</div>
+          <div class="sn-risk-tags">
+            <span class="sn-risk-tag" style="background:rgba(255,205,65,0.1);color:var(--wf-gold);border:1px solid rgba(255,205,65,0.2);">Massive MBS prepayment wave (CPR 40&ndash;50)</span>
+            <span class="sn-risk-tag" style="background:rgba(255,205,65,0.1);color:var(--wf-gold);border:1px solid rgba(255,205,65,0.2);">MBS duration collapse to 2.5&ndash;3.0Y</span>
+            <span class="sn-risk-tag" style="background:rgba(255,205,65,0.1);color:var(--wf-gold);border:1px solid rgba(255,205,65,0.2);">CLO equity near zero (SOFR ~0.75%)</span>
+            <span class="sn-risk-tag" style="background:rgba(255,205,65,0.1);color:var(--wf-gold);border:1px solid rgba(255,205,65,0.2);">Oil collapse (-30%) hits EM exporters</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sn-transmission">
+        <div class="sn-transmission-title">Stress Transmission Chain</div>
+        <div class="sn-chain">
+          <span>Demand collapse</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>GDP -2 to -3%</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Fed cuts to near-zero</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Mortgage rates &rarr; ~2.5%</span><span class="sn-chain-arrow">&rarr;</span>
+          <span style="color:var(--wf-gold);font-weight:700;">MBS prepay wave (CPR 40&ndash;50, dur collapse)</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Negative convexity losses + credit defaults</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Severe Stagflation -->
+  <div class="scenario-narrative" style="border-left:3px solid var(--wf-red);">
+    <div class="scenario-narrative-header">
+      <h3><span class="sn-dot" style="background:var(--wf-red);color:var(--wf-red);"></span> BAU Severe Stagflation</h3>
+      <div style="text-align:right;">
+        <div class="sn-severity">~90th percentile</div>
+        <div class="sn-analog">Analog: 1973&ndash;74 oil crisis + stagflation</div>
+      </div>
+    </div>
+    <div class="scenario-narrative-body">
+      <p>A severe stagflationary episode driven by a sustained Hormuz closure keeping oil at $100&ndash;115/bbl, tariff escalation pushing core goods inflation toward 3%, consumer credit stress cascading from subprime auto and credit cards into broader consumption weakness, CRE loan defaults accelerating with office CMBS delinquency exceeding 20%, AI capex collapse creating a technology-sector recession, and EM capital flight amplifying global financial stress.</p>
+      <p>Oil remains elevated, driving CPI above 4%. <strong style="color:var(--wf-red);">The Fed is constrained at 4.00% &mdash; unable to cut (inflation) or hike (growth)</strong>. 10Y UST rises +138 bp to 5.50% as the market prices in persistent inflation. Credit spreads widen dramatically from compressed levels. Equities decline 40%. The defining MBS dynamic is the mirror of Severe Rates Rally: <strong style="color:var(--wf-red);">duration extension from ~5.2Y to 7.0&ndash;7.5Y</strong> as prepayments collapse (CPR drops to 5&ndash;6), amplifying mark-to-market losses in rising rates. The twin-deficit narrative (fiscal + current account) undermines USD confidence (-3%).</p>
+
+      <div class="sn-grid">
+        <div>
+          <div class="sn-block-title">Headline Shocks</div>
+          <div class="sn-kpi-row">
+            <div class="sn-kpi"><div class="sn-kpi-label">10Y UST</div><div class="sn-kpi-val" style="color:var(--pos);">+138 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">BBB 5Y</div><div class="sn-kpi-val" style="color:var(--neg);">+163 bp</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">S&amp;P 500</div><div class="sn-kpi-val" style="color:var(--neg);">-40%</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">Brent</div><div class="sn-kpi-val" style="color:var(--neg);">+80%</div></div>
+            <div class="sn-kpi"><div class="sn-kpi-label">Funding</div><div class="sn-kpi-val" style="color:var(--neg);">Severe</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="sn-block-title">Key Portfolio Risks</div>
+          <div class="sn-risk-tags">
+            <span class="sn-risk-tag" style="background:rgba(215,30,40,0.1);color:var(--wf-red);border:1px solid rgba(215,30,40,0.2);">Inflation reacceleration above 4%</span>
+            <span class="sn-risk-tag" style="background:rgba(215,30,40,0.1);color:var(--wf-red);border:1px solid rgba(215,30,40,0.2);">MBS duration extension to 7.0&ndash;7.5Y</span>
+            <span class="sn-risk-tag" style="background:rgba(215,30,40,0.1);color:var(--wf-red);border:1px solid rgba(215,30,40,0.2);">CRE crisis (office DQ &gt;20%)</span>
+            <span class="sn-risk-tag" style="background:rgba(215,30,40,0.1);color:var(--wf-red);border:1px solid rgba(215,30,40,0.2);">Twin-deficit USD weakness</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sn-transmission">
+        <div class="sn-transmission-title">Stress Transmission Chain</div>
+        <div class="sn-chain">
+          <span>Sustained energy shock (Brent +80%)</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>CPI &gt;4%, Fed constrained</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>10Y rises to 5.50%</span><span class="sn-chain-arrow">&rarr;</span>
+          <span style="color:var(--wf-red);font-weight:700;">MBS duration extends (5.2Y &rarr; 7.5Y)</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Credit defaults + CRE collapse</span><span class="sn-chain-arrow">&rarr;</span>
+          <span>Stagflation earnings compression</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Headline Comparison Table -->
+  <div class="data-table-wrapper" style="margin-bottom: 24px;">
+    <div class="data-table-title">Headline Shock Comparison &mdash; All Five Scenarios</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Risk Factor</th>
+          <th style="color:var(--accent-cyan);">Rates Rally</th>
+          <th style="color:var(--accent-blue);">Moderate</th>
+          <th style="color:var(--accent-purple);">Flight to Quality</th>
+          <th style="color:var(--wf-gold);">Severe Rally</th>
+          <th style="color:var(--wf-red);">Severe Stag.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="val-bold">10Y UST (bp)</td><td class="val-neg">-132</td><td class="val-neg">-62</td><td class="val-neg">-87</td><td class="val-neg">-287</td><td class="val-pos">+138</td></tr>
+        <tr><td class="val-bold">Fed Funds Target</td><td>2.00%</td><td>2.50%</td><td>2.75%</td><td>0.75%</td><td>4.00%</td></tr>
+        <tr><td class="val-bold">BBB Credit (5Y, bp)</td><td class="val-amber">+33</td><td class="val-amber">+63</td><td class="val-amber">+78</td><td class="val-neg">+133</td><td class="val-neg">+163</td></tr>
+        <tr><td class="val-bold">B Credit (5Y, bp)</td><td class="val-amber">+113</td><td class="val-amber">+238</td><td class="val-amber">+258</td><td class="val-neg">+428</td><td class="val-neg">+508</td></tr>
+        <tr><td class="val-bold">S&P 500</td><td class="val-neg">-12%</td><td class="val-neg">-25%</td><td class="val-neg">-22%</td><td class="val-neg">-33%</td><td class="val-neg">-40%</td></tr>
+        <tr><td class="val-bold">VIX (peak)</td><td>30</td><td>40</td><td>42</td><td>55</td><td>65</td></tr>
+        <tr><td class="val-bold">Agency MBS OAS (bp)</td><td class="val-amber">+20</td><td class="val-amber">+34</td><td class="val-amber">+45</td><td class="val-neg">+70</td><td class="val-neg">+94</td></tr>
+        <tr><td class="val-bold">CMBS AAA (bp)</td><td class="val-amber">+38</td><td class="val-amber">+75</td><td class="val-amber">+90</td><td class="val-neg">+150</td><td class="val-neg">+225</td></tr>
+        <tr><td class="val-bold">CLO AAA (bp)</td><td class="val-amber">+28</td><td class="val-amber">+55</td><td class="val-amber">+65</td><td class="val-neg">+120</td><td class="val-neg">+175</td></tr>
+        <tr><td class="val-bold">MOVE Index</td><td>105</td><td>120</td><td>115</td><td>165</td><td>200</td></tr>
+        <tr><td class="val-bold">DXY (USD)</td><td class="val-neg">-4%</td><td class="val-pos">+5%</td><td class="val-pos">+8%</td><td class="val-neg">-2%</td><td class="val-neg">-3%</td></tr>
+        <tr><td class="val-bold">Brent Crude</td><td class="val-neg">-10%</td><td class="val-pos">+30%</td><td class="val-neg">-15%</td><td class="val-neg">-30%</td><td class="val-pos">+80%</td></tr>
+        <tr><td class="val-bold">Gold</td><td class="val-pos">+8%</td><td class="val-pos">+15%</td><td class="val-pos">+18%</td><td class="val-pos">+25%</td><td class="val-pos">+30%</td></tr>
+        <tr><td class="val-bold">EMBI (bp)</td><td class="val-amber">+60</td><td class="val-amber">+153</td><td class="val-amber">+200</td><td class="val-neg">+300</td><td class="val-neg">+403</td></tr>
+        <tr><td class="val-bold">FRA-OIS (bp)</td><td>+10</td><td>+20</td><td class="val-neg">+40</td><td class="val-amber">+35</td><td class="val-neg">+55</td></tr>
+        <tr><td class="val-bold">EM FX</td><td class="val-neg">-5%</td><td class="val-neg">-10%</td><td class="val-neg">-15%</td><td class="val-neg">-12%</td><td class="val-neg">-20%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Directional Coherence -->
+  <div class="section-title">Directional Coherence</div>
+  <div class="gradient-line"></div>
+  <div class="section-desc">Five distinct macro regimes with internally consistent correlation structures.</div>
+
+  <div class="data-table-wrapper">
+    <div class="data-table-title">Cross-Scenario Direction Map</div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Factor</th>
+          <th style="color:var(--accent-cyan);">Rates Rally</th>
+          <th style="color:var(--accent-blue);">Moderate</th>
+          <th style="color:var(--accent-purple);">Flight to Quality</th>
+          <th style="color:var(--wf-gold);">Severe Rally</th>
+          <th style="color:var(--wf-red);">Severe Stag.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="val-bold">Rates</td><td class="val-neg">&darr; Down</td><td class="val-neg">&darr; Down</td><td class="val-neg">&darr; Down</td><td class="val-neg">&darr;&darr; Way Down</td><td class="val-pos">&uarr; Up</td></tr>
+        <tr><td class="val-bold">USD</td><td class="val-neg">&darr; Down</td><td class="val-pos">&uarr; Up</td><td class="val-pos">&uarr;&uarr; Strong Up</td><td class="val-neg">&darr; Down</td><td class="val-neg">&darr; Down</td></tr>
+        <tr><td class="val-bold">Oil</td><td class="val-neg">&darr; Down</td><td class="val-pos">&uarr; Up</td><td class="val-neg">&darr; Down</td><td class="val-neg">&darr;&darr; Way Down</td><td class="val-pos">&uarr;&uarr; Way Up</td></tr>
+        <tr><td class="val-bold">Gold</td><td class="val-pos">&uarr; Up</td><td class="val-pos">&uarr; Up</td><td class="val-pos">&uarr;&uarr; Up</td><td class="val-pos">&uarr;&uarr; Way Up</td><td class="val-pos">&uarr;&uarr; Way Up</td></tr>
+        <tr><td class="val-bold">Credit</td><td class="val-amber">Mild Wider</td><td class="val-amber">Wider</td><td class="val-amber">Wider (liq.)</td><td class="val-neg">Much Wider</td><td class="val-neg">Widest</td></tr>
+        <tr><td class="val-bold">Funding</td><td class="val-pos">Minimal</td><td class="val-amber">Modest</td><td class="val-neg">Severe</td><td class="val-amber">Moderate</td><td class="val-neg">Severe</td></tr>
+        <tr><td class="val-bold">Curve</td><td>Bull Steep</td><td>Bull Steep</td><td>Parallel</td><td>Bull Steep (ZLB)</td><td>Bear Steep</td></tr>
+        <tr><td class="val-bold">Regime</td><td>Disinflation</td><td>Cyclical</td><td>Liquidity</td><td>Deflationary</td><td>Stagflation</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Visual: Credit Spread Gradient -->
+  <div class="grid grid-2" style="margin-bottom: 20px;">
+    <div class="chart-card">
+      <div class="chart-title">BBB Credit Spread Shocks (5Y anchor, bp)</div>
+      <div id="bbb-bars"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">S&P 500 Drawdown by Scenario</div>
+      <div id="sp-bars"></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom: 20px;">
+    <div class="chart-card">
+      <div class="chart-title">10Y UST Rate Change (bp)</div>
+      <div id="ust-bars"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Funding Stress: FRA-OIS Spread (bp)</div>
+      <div id="frao-bars"></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom: 20px;">
+    <div class="chart-card">
+      <div class="chart-title">Agency MBS OAS Widening (bp)</div>
+      <div id="mbs-bars"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">CMBS AAA Spread Widening (bp)</div>
+      <div id="cmbs-bars"></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="chart-card">
+      <div class="chart-title">CLO AAA Spread Widening (bp)</div>
+      <div id="clo-bars"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">EMBI Sovereign Spread Widening (bp)</div>
+      <div id="embi-bars"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================================ -->
+<!-- SCENARIO TABS (generated by JS) -->
+<!-- ============================================ -->
+<div id="tab-rates_rally" class="tab-content"></div>
+<div id="tab-moderate" class="tab-content"></div>
+<div id="tab-ftq" class="tab-content"></div>
+<div id="tab-severe_rally" class="tab-content"></div>
+<div id="tab-severe_stag" class="tab-content"></div>
+
+<script>
+// ── Data ──
+const scenarios = {
+  rates_rally: {
+    name: "BAU Moderate Rates Rally",
+    short: "Rates Rally",
+    severity: "~65-70th percentile",
+    sevPct: 35,
+    color: "var(--accent-cyan)",
+    colorHex: "#38BDF8",
+    regime: "Disinflationary Slowdown",
+    narrative: "Inflation undershoots, Fed cuts aggressively to 2.00%. Growth slows to 0.5-1.0% but avoids recession. Primary stress is rate decline driving NII compression and MBS prepayment acceleration, not credit deterioration.",
+    keyRisks: ["NII compression from rate decline", "MBS prepayment acceleration (CPR 25-30)", "Reinvestment risk on maturing assets", "CLO equity carry compression"],
+    analog: "2019 mid-cycle easing + 2014 disinflation",
+    macro: { gdp: "0.5-1.0%", unemp: "4.5-5.0%", cpi: "<2.0%", ff: "2.00%", curve: "Bull steepener" },
+    rates: { "2Y": { level: "2.10%", chg: -162 }, "5Y": { level: "2.35%", chg: -123 }, "10Y": { level: "2.80%", chg: -132 }, "30Y": { level: "3.50%", chg: -122 }, "2s10s": "+70 bp" },
+    credit: { AAA: 7, AA: 13, A: 22, BBB: 33, BB: 69, B: 113, CCC: 131 },
+    markets: { sp: "-12%", vix: 30, move: 105, dxy: "-4%", brent: "-10%", gold: "+8%", embi: "+60 bp", emfx: "-5%" },
+    structured: { mbs_oas: "+20 bp", mbs_cpr: "25-30", mbs_dur: "3.2-3.5Y", cmbs_aaa: "+38 bp", clo_aaa: "+28 bp" },
+    funding: { frao: "+10 bp", cp: "+10 bp", repo: "+3 bp", assessment: "Minimal" },
+    coherence: "PASS",
+    tensions: []
+  },
+  moderate: {
+    name: "BAU CCAR Firm Moderate",
+    short: "Moderate",
+    severity: "~70-75th percentile",
+    sevPct: 50,
+    color: "var(--accent-blue)",
+    colorHex: "#6366F1",
+    regime: "Broad Cyclical Downturn",
+    narrative: "Growth decelerates to near-recession. Iran-Hormuz energy shock compounds with tariff-driven inflation, AI capex retrenchment, and consumer credit deterioration. Fed cuts to 2.50% but constrained by persistent inflation. Broad-based credit repricing from compressed levels.",
+    keyRisks: ["Broad credit repricing from tight starting levels", "CRE office stress (delinquency >12%)", "Consumer credit deterioration", "Energy pass-through to inflation"],
+    analog: "2015-16 commodity downturn + moderate recession",
+    macro: { gdp: "0.0-0.5%", unemp: "5.5-6.0%", cpi: "2.5-3.0%", ff: "2.50%", curve: "Bull steepener" },
+    rates: { "2Y": { level: "2.65%", chg: -107 }, "5Y": { level: "2.63%", chg: -95 }, "10Y": { level: "3.50%", chg: -62 }, "30Y": { level: "4.25%", chg: -47 }, "2s10s": "+85 bp" },
+    credit: { AAA: 15, AA: 25, A: 47, BBB: 63, BB: 154, B: 238, CCC: 381 },
+    markets: { sp: "-25%", vix: 40, move: 120, dxy: "+5%", brent: "+30%", gold: "+15%", embi: "+153 bp", emfx: "-10%" },
+    structured: { mbs_oas: "+34 bp", mbs_cpr: "15-20", mbs_dur: "4.0-4.5Y", cmbs_aaa: "+75 bp", clo_aaa: "+55 bp" },
+    funding: { frao: "+20 bp", cp: "+40 bp", repo: "+13 bp", assessment: "Modest" },
+    coherence: "PASS",
+    tensions: ["Rates falling while oil rises (+30%) and inflation elevated. Resolved: Fed prioritizes growth over inflation."]
+  },
+  ftq: {
+    name: "BAU Moderate Flight to Quality",
+    short: "Flight to Quality",
+    severity: "~70-75th percentile",
+    sevPct: 50,
+    color: "var(--accent-purple)",
+    colorHex: "#A855F7",
+    regime: "Acute Liquidity Crisis",
+    narrative: "Acute risk-off event (geopolitical or credit catalyst) triggers massive safe-haven flows into UST/gold/USD. Credit widens on LIQUIDITY, not fundamentals. Short duration (1-3 months acute). Funding markets seize: CP rolls fail, repo haircuts widen, prime MMF outflows trigger forced selling.",
+    keyRisks: ["CP market seizure (A1/P1 +200 bp)", "Funding liquidity freeze", "EM capital flight (-15% FX)", "Forced selling in illiquid markets (CMBS, CLOs)"],
+    analog: "March 2020 COVID liquidity crisis (at ~90% severity)",
+    macro: { gdp: "1.0-1.5%", unemp: "4.5-5.0%", cpi: "2.0-2.5%", ff: "2.75%", curve: "Parallel shift" },
+    rates: { "2Y": { level: "2.85%", chg: -87 }, "5Y": { level: "2.70%", chg: -88 }, "10Y": { level: "3.25%", chg: -87 }, "30Y": { level: "3.90%", chg: -82 }, "2s10s": "+40 bp (unchanged)" },
+    credit: { AAA: 17, AA: 30, A: 57, BBB: 78, BB: 174, B: 258, CCC: 431 },
+    markets: { sp: "-22%", vix: 42, move: 115, dxy: "+8%", brent: "-15%", gold: "+18%", embi: "+200 bp", emfx: "-15%" },
+    structured: { mbs_oas: "+45 bp", mbs_cpr: "12-15", mbs_dur: "4.5Y", cmbs_aaa: "+90 bp", clo_aaa: "+65 bp" },
+    funding: { frao: "+40 bp", cp: "+200 bp", repo: "+28 bp", assessment: "SEVERE" },
+    coherence: "PASS with documented tensions",
+    tensions: [
+      "Credit wider than Moderate despite similar macro. Resolved: FTQ widens on LIQUIDITY, not fundamentals (~124% ratio reflects liquidity premium).",
+      "USD strengthening while rates fall. Resolved: Both are FTQ expressions (safe-haven demand for UST + USD).",
+      "Funding stress exceeds Moderate and approaches Severe. Resolved: FTQ is specifically a LIQUIDITY scenario; funding IS the transmission."
+    ]
+  },
+  severe_rally: {
+    name: "BAU Severe Rates Rally",
+    short: "Severe Rates Rally",
+    severity: "~85-90th percentile",
+    sevPct: 75,
+    color: "var(--wf-gold)",
+    colorHex: "#FFCD41",
+    regime: "Deep Recession / Deflation Scare",
+    narrative: "GDP contracts 2-3%, unemployment reaches 7-8%, inflation falls sub-2%. Fed cuts to near-zero (0.75%). THE DEFINING FEATURE is a massive MBS prepayment wave as mortgage rates drop to ~2.50%, driving CPR to 40-50 and collapsing MBS duration from ~5.2Y to 2.5-3.0Y.",
+    keyRisks: ["Massive MBS prepayment wave (CPR 40-50)", "MBS duration collapse to 2.5-3.0Y", "CLO equity returns near zero (SOFR ~0.75%)", "Oil collapse (-30%) hits EM exporters"],
+    analog: "2008-09 recession severity + 2020 rate dynamics",
+    macro: { gdp: "-2 to -3%", unemp: "7-8%", cpi: "<2.0%", ff: "0.75%", curve: "Bull steepener (ZLB)" },
+    rates: { "2Y": { level: "0.50%", chg: -322 }, "5Y": { level: "0.85%", chg: -273 }, "10Y": { level: "1.25%", chg: -287 }, "30Y": { level: "2.10%", chg: -262 }, "2s10s": "+75 bp" },
+    credit: { AAA: 25, AA: 45, A: 92, BBB: 133, BB: 284, B: 428, CCC: 781 },
+    markets: { sp: "-33%", vix: 55, move: 165, dxy: "-2%", brent: "-30%", gold: "+25%", embi: "+300 bp", emfx: "-12%" },
+    structured: { mbs_oas: "+70 bp", mbs_cpr: "40-50", mbs_dur: "2.5-3.0Y", cmbs_aaa: "+150 bp", clo_aaa: "+120 bp" },
+    funding: { frao: "+35 bp", cp: "+115 bp", repo: "+28 bp", assessment: "Moderate (Fed backstop)" },
+    coherence: "PASS with documented tensions",
+    tensions: [
+      "Near-zero rates but significant funding stress (FRA-OIS +35 bp). Resolved: Credit concerns drive stress; 2008-09 had near-zero rates AND funding dysfunction.",
+      "MBS OAS widening despite rate collapse. Resolved: Prepayment wave creates negative convexity losses; OAS reflects convexity cost + duration collapse."
+    ]
+  },
+  severe_stag: {
+    name: "BAU Severe Stagflation",
+    short: "Severe Stagflation",
+    severity: "~90th percentile",
+    sevPct: 90,
+    color: "var(--wf-red)",
+    colorHex: "#D71E28",
+    regime: "Persistent Inflation + Weak Growth",
+    narrative: "Sustained Hormuz closure drives Brent +80%. Inflation reaccelerates above 4%. Fed constrained at 4.00%, cannot cut. 10Y UST rises +138 bp to 5.50%. Severe credit stress as stagflation compresses earnings, widens spreads, and forces corporate deleveraging. MBS duration extends to 7.0-7.5Y as prepayments collapse.",
+    keyRisks: ["Inflation reacceleration above 4%", "MBS duration extension to 7.0-7.5Y", "CRE crisis deepens (office delinquency >20%)", "Twin-deficit concerns weaken USD"],
+    analog: "1973-74 oil crisis + stagflation",
+    macro: { gdp: "0.5-1.0%", unemp: "5.5-6.5%", cpi: ">4.0%", ff: "4.00% (hold)", curve: "Bear steepener" },
+    rates: { "2Y": { level: "4.50%", chg: +78 }, "5Y": { level: "4.60%", chg: +102 }, "10Y": { level: "5.50%", chg: +138 }, "30Y": { level: "6.00%", chg: +128 }, "2s10s": "+100 bp" },
+    credit: { AAA: 30, AA: 55, A: 107, BBB: 163, BB: 329, B: 508, CCC: 931 },
+    markets: { sp: "-40%", vix: 65, move: 200, dxy: "-3%", brent: "+80%", gold: "+30%", embi: "+403 bp", emfx: "-20%" },
+    structured: { mbs_oas: "+94 bp", mbs_cpr: "5-6", mbs_dur: "7.0-7.5Y", cmbs_aaa: "+225 bp", clo_aaa: "+175 bp" },
+    funding: { frao: "+55 bp", cp: "+190 bp", repo: "+48 bp", assessment: "Severe" },
+    coherence: "PASS with documented tensions",
+    tensions: [
+      "Rates rising in weak growth. Resolved: Defining feature of stagflation. 1973-74 precedent: 10Y rose ~150 bp despite GDP -3.2%.",
+      "USD weakening while rates rise. Resolved: Twin-deficit narrative undermines USD confidence.",
+      "MBS duration extension in rising rates amplifies losses (5.2Y to 7.0-7.5Y)."
+    ]
+  }
+};
+
+// ── Build Scenario Tabs ──
+Object.entries(scenarios).forEach(([key, s]) => {
+  const el = document.getElementById(`tab-${key}`);
+  const fundingClass = s.funding.assessment === "SEVERE" ? "val-neg" : s.funding.assessment === "Severe" ? "val-neg" : s.funding.assessment.startsWith("Moderate") ? "val-amber" : "val-pos";
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:8px;">
+      <div class="scenario-badge" style="background:${s.colorHex}14;color:${s.colorHex};border:1px solid ${s.colorHex}28;">
+        <span class="badge-dot" style="background:${s.colorHex};"></span>${s.short}
+      </div>
+      <span style="font-size:13px;color:var(--text-dim);font-weight:500;">${s.severity}</span>
+    </div>
+    <div class="section-title">${s.name}</div>
+    <div class="gradient-line"></div>
+    <div class="section-desc">${s.regime}</div>
+
+    <!-- Narrative -->
+    <div class="narrative-box" style="margin-bottom:24px;border-left:3px solid ${s.colorHex};">
+      <h3>Scenario Narrative</h3>
+      <p>${s.narrative}</p>
+      <div style="margin-top:14px;">
+        ${s.keyRisks.map(r => `<span class="tag" style="background:${s.colorHex}12;color:${s.colorHex};border:1px solid ${s.colorHex}20;">${r}</span>`).join("")}
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--text-dim);"><strong style="color:var(--white);">Historical Analog:</strong> ${s.analog}</p>
+    </div>
+
+    <!-- KPIs -->
+    <div class="grid grid-5" style="margin-bottom:24px;">
+      <div class="kpi-card">
+        <div class="kpi-label">10Y UST</div>
+        <div class="kpi-value ${s.rates['10Y'].chg < 0 ? 'down' : 'up'}">${s.rates['10Y'].chg > 0 ? '+' : ''}${s.rates['10Y'].chg} bp</div>
+        <div class="kpi-sub">Target: ${s.rates['10Y'].level}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">BBB Credit (5Y)</div>
+        <div class="kpi-value amber">+${s.credit.BBB} bp</div>
+        <div class="kpi-sub">Target: ${107 + s.credit.BBB} bp OAS</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">S&P 500</div>
+        <div class="kpi-value down">${s.markets.sp}</div>
+        <div class="kpi-sub">VIX peak: ${s.markets.vix}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">MBS OAS</div>
+        <div class="kpi-value amber">${s.structured.mbs_oas}</div>
+        <div class="kpi-sub">CPR: ${s.structured.mbs_cpr} | Dur: ${s.structured.mbs_dur}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Funding (FRA-OIS)</div>
+        <div class="kpi-value ${fundingClass === 'val-neg' ? 'down' : fundingClass === 'val-amber' ? 'amber' : 'up'}">${s.funding.frao}</div>
+        <div class="kpi-sub">${s.funding.assessment}</div>
+      </div>
+    </div>
+
+    <!-- Macro + Rates -->
+    <div class="grid grid-2" style="margin-bottom:24px;">
+      <div class="data-table-wrapper">
+        <div class="data-table-title">Macro Assumptions</div>
+        <table class="data-table">
+          <tbody>
+            <tr><td class="val-bold">GDP Growth</td><td>${s.macro.gdp}</td></tr>
+            <tr><td class="val-bold">Unemployment</td><td>${s.macro.unemp}</td></tr>
+            <tr><td class="val-bold">CPI</td><td>${s.macro.cpi}</td></tr>
+            <tr><td class="val-bold">Fed Funds</td><td>${s.macro.ff}</td></tr>
+            <tr><td class="val-bold">Curve Shape</td><td>${s.macro.curve}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="data-table-wrapper">
+        <div class="data-table-title">Rates Curve (Target Levels)</div>
+        <table class="data-table">
+          <thead><tr><th>Tenor</th><th>Level</th><th>Change (bp)</th></tr></thead>
+          <tbody>
+            ${Object.entries(s.rates).filter(([k]) => k !== '2s10s').map(([t, v]) => `<tr><td class="val-bold">${t}</td><td>${v.level}</td><td class="${v.chg < 0 ? 'val-neg' : 'val-pos'}">${v.chg > 0 ? '+' : ''}${v.chg}</td></tr>`).join("")}
+            <tr><td class="val-bold">2s10s Slope</td><td colspan="2">${s.rates['2s10s']}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Credit + Markets -->
+    <div class="grid grid-2" style="margin-bottom:24px;">
+      <div class="data-table-wrapper">
+        <div class="data-table-title">Credit Spread Shocks (5Y Anchor, bp)</div>
+        <table class="data-table">
+          <thead><tr><th>Rating</th><th>Shock (bp)</th><th>Target OAS</th></tr></thead>
+          <tbody>
+            ${Object.entries(s.credit).map(([r, v]) => {
+              const starts = { AAA: 8, AA: 15, A: 68, BBB: 107, BB: 196, B: 352, CCC: 969 };
+              return `<tr><td class="val-bold">${r}</td><td class="val-amber">+${v}</td><td>${(starts[r]||0) + v} bp</td></tr>`;
+            }).join("")}
+          </tbody>
+        </table>
+      </div>
+      <div class="data-table-wrapper">
+        <div class="data-table-title">Markets, FX & Commodities</div>
+        <table class="data-table">
+          <tbody>
+            <tr><td class="val-bold">S&P 500</td><td class="val-neg">${s.markets.sp}</td></tr>
+            <tr><td class="val-bold">VIX (peak)</td><td>${s.markets.vix}</td></tr>
+            <tr><td class="val-bold">MOVE Index</td><td>${s.markets.move}</td></tr>
+            <tr><td class="val-bold">DXY (USD)</td><td class="${s.markets.dxy.startsWith('+') ? 'val-pos' : 'val-neg'}">${s.markets.dxy}</td></tr>
+            <tr><td class="val-bold">Brent Crude</td><td class="${s.markets.brent.startsWith('+') ? 'val-pos' : 'val-neg'}">${s.markets.brent}</td></tr>
+            <tr><td class="val-bold">Gold</td><td class="val-pos">${s.markets.gold}</td></tr>
+            <tr><td class="val-bold">EMBI Spread</td><td class="val-amber">${s.markets.embi}</td></tr>
+            <tr><td class="val-bold">EM FX</td><td class="val-neg">${s.markets.emfx}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Structured + Funding -->
+    <div class="grid grid-2" style="margin-bottom:24px;">
+      <div class="data-table-wrapper">
+        <div class="data-table-title">Structured Credit & MBS</div>
+        <table class="data-table">
+          <tbody>
+            <tr><td class="val-bold">Agency MBS OAS</td><td class="val-amber">${s.structured.mbs_oas}</td></tr>
+            <tr><td class="val-bold">MBS CPR (from 9%)</td><td>${s.structured.mbs_cpr}</td></tr>
+            <tr><td class="val-bold">MBS Duration (from ~5.2Y)</td><td>${s.structured.mbs_dur}</td></tr>
+            <tr><td class="val-bold">CMBS AAA</td><td class="val-amber">${s.structured.cmbs_aaa}</td></tr>
+            <tr><td class="val-bold">CLO AAA</td><td class="val-amber">${s.structured.clo_aaa}</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="data-table-wrapper">
+        <div class="data-table-title">Funding & Liquidity</div>
+        <table class="data-table">
+          <tbody>
+            <tr><td class="val-bold">FRA-OIS (3M)</td><td class="${fundingClass}">${s.funding.frao}</td></tr>
+            <tr><td class="val-bold">A1/P1 CP Spread</td><td class="${fundingClass}">${s.funding.cp}</td></tr>
+            <tr><td class="val-bold">Repo GC Spread</td><td>${s.funding.repo}</td></tr>
+            <tr><td class="val-bold">Assessment</td><td class="${fundingClass}" style="font-weight:700;">${s.funding.assessment}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Coherence -->
+    <div class="narrative-box" style="border-left:3px solid ${s.coherence === 'PASS' ? 'var(--accent-green)' : 'var(--wf-gold)'};">
+      <h3 style="display:flex;align-items:center;gap:8px;">
+        <span style="color:${s.coherence === 'PASS' ? 'var(--accent-green)' : 'var(--wf-gold)'};">${s.coherence === 'PASS' ? '\u2713' : '\u26A0'}</span>
+        Coherence Assessment: ${s.coherence}
+      </h3>
+      ${s.tensions.length ? '<div style="margin-top:12px;">' + s.tensions.map(t => `<div class="alert-box alert-warn" style="margin-bottom:8px;">${t}</div>`).join("") + '</div>' : '<p style="color:var(--accent-green);font-weight:600;margin-top:10px;">All risk factors internally consistent. No material tensions.</p>'}
+    </div>
+  `;
+});
+
+// ── Tab Logic ──
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  const tabIds = ['overview','rates_rally','moderate','ftq','severe_rally','severe_stag'];
+  const idx = tabIds.indexOf(id);
+  if (idx >= 0) btns[idx].classList.add('active');
+}
+
+// ── CSS Bar Charts ──
+function renderBars(containerId, data, maxAbs, colorFn, suffix) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = data.map(d => {
+    const pct = Math.abs(d.val) / maxAbs * 100;
+    const c = colorFn(d);
+    return `<div class="bar-group">
+      <div class="bar-label"><span>${d.label}</span><span style="color:${c};font-weight:700;">${d.val > 0 ? '+' : ''}${d.val}${suffix}</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,${c},${c}cc);"></div></div>
+    </div>`;
+  }).join("");
+}
+
+const scenarioColors = {
+  "Rates Rally": "#38BDF8",
+  "Moderate": "#6366F1",
+  "FTQ": "#A855F7",
+  "Sev. Rally": "#FFCD41",
+  "Sev. Stag.": "#D71E28"
+};
+function scColor(d) { return scenarioColors[d.label] || "#6366F1"; }
+
+renderBars("bbb-bars", [
+  { label: "Rates Rally", val: 33 },
+  { label: "Moderate", val: 63 },
+  { label: "FTQ", val: 78 },
+  { label: "Sev. Rally", val: 133 },
+  { label: "Sev. Stag.", val: 163 }
+], 180, scColor, " bp");
+
+renderBars("sp-bars", [
+  { label: "Rates Rally", val: -12 },
+  { label: "Moderate", val: -25 },
+  { label: "FTQ", val: -22 },
+  { label: "Sev. Rally", val: -33 },
+  { label: "Sev. Stag.", val: -40 }
+], 45, scColor, "%");
+
+renderBars("ust-bars", [
+  { label: "Rates Rally", val: -132 },
+  { label: "Moderate", val: -62 },
+  { label: "FTQ", val: -87 },
+  { label: "Sev. Rally", val: -287 },
+  { label: "Sev. Stag.", val: 138 }
+], 300, scColor, " bp");
+
+renderBars("frao-bars", [
+  { label: "Rates Rally", val: 10 },
+  { label: "Moderate", val: 20 },
+  { label: "FTQ", val: 40 },
+  { label: "Sev. Rally", val: 35 },
+  { label: "Sev. Stag.", val: 55 }
+], 60, scColor, " bp");
+
+renderBars("mbs-bars", [
+  { label: "Rates Rally", val: 20 },
+  { label: "Moderate", val: 34 },
+  { label: "FTQ", val: 45 },
+  { label: "Sev. Rally", val: 70 },
+  { label: "Sev. Stag.", val: 94 }
+], 100, scColor, " bp");
+
+renderBars("cmbs-bars", [
+  { label: "Rates Rally", val: 38 },
+  { label: "Moderate", val: 75 },
+  { label: "FTQ", val: 90 },
+  { label: "Sev. Rally", val: 150 },
+  { label: "Sev. Stag.", val: 225 }
+], 240, scColor, " bp");
+
+renderBars("clo-bars", [
+  { label: "Rates Rally", val: 28 },
+  { label: "Moderate", val: 55 },
+  { label: "FTQ", val: 65 },
+  { label: "Sev. Rally", val: 120 },
+  { label: "Sev. Stag.", val: 175 }
+], 190, scColor, " bp");
+
+renderBars("embi-bars", [
+  { label: "Rates Rally", val: 60 },
+  { label: "Moderate", val: 153 },
+  { label: "FTQ", val: 200 },
+  { label: "Sev. Rally", val: 300 },
+  { label: "Sev. Stag.", val: 403 }
+], 420, scColor, " bp");
+</script>
+
+</body>
+</html>
