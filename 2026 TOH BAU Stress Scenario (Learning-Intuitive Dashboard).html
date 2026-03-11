@@ -1,0 +1,3307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 TOH Scenario School Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #04070d;
+      --bg-2: #0a0f18;
+      --bg-3: #101724;
+      --bg-4: #151e2d;
+      --surface: linear-gradient(180deg, rgba(15, 24, 38, 0.96) 0%, rgba(10, 16, 27, 0.96) 100%);
+      --surface-soft: rgba(14, 22, 34, 0.9);
+      --border: rgba(92, 124, 172, 0.22);
+      --border-strong: rgba(92, 124, 172, 0.38);
+      --text: #d7e2f2;
+      --text-soft: #95a9c7;
+      --text-dim: #6680a6;
+      --blue: #3d8bff;
+      --blue-2: #7eb6ff;
+      --ice: #5ad8ff;
+      --gold: #ffc940;
+      --orange: #ff9a4d;
+      --violet: #b295ff;
+      --rose: #ff8277;
+      --good: #5ad8ff;
+      --warn: #ffc940;
+      --bad: #ff9a4d;
+      --shadow: 0 18px 54px rgba(0, 0, 0, 0.34);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+      --mono: "IBM Plex Mono", monospace;
+      --display: "Rajdhani", sans-serif;
+      --body: "IBM Plex Sans", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: var(--body);
+      background:
+        radial-gradient(circle at top left, rgba(61, 139, 255, 0.18), transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(255, 201, 64, 0.12), transparent 24%),
+        linear-gradient(180deg, #05080f 0%, #060a13 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(61, 139, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(61, 139, 255, 0.03) 1px, transparent 1px);
+      background-size: 36px 36px;
+      z-index: 0;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    p {
+      margin: 0;
+      line-height: 1.72;
+      color: var(--text-soft);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      font-family: var(--display);
+      letter-spacing: 0.03em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .ticker {
+      position: sticky;
+      top: 0;
+      z-index: 240;
+      height: 26px;
+      overflow: hidden;
+      background: linear-gradient(90deg, #083aa3 0%, #0e57db 50%, #083aa3 100%);
+      border-bottom: 1px solid rgba(126, 182, 255, 0.35);
+      box-shadow: 0 6px 24px rgba(61, 139, 255, 0.24);
+      display: flex;
+      align-items: center;
+      color: #f4f8ff;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .ticker-inner {
+      display: inline-flex;
+      animation: ticker 96s linear infinite;
+    }
+
+    .ticker-inner span {
+      flex-shrink: 0;
+      padding: 0 32px;
+    }
+
+    @keyframes ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .mast {
+      position: sticky;
+      top: 26px;
+      z-index: 220;
+      background: linear-gradient(180deg, rgba(7, 12, 19, 0.98) 0%, rgba(4, 8, 13, 0.98) 100%);
+      border-bottom: 2px solid rgba(61, 139, 255, 0.75);
+      box-shadow: 0 14px 44px rgba(0, 0, 0, 0.24);
+    }
+
+    .mast-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 12px 24px 10px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.7fr);
+      gap: 16px;
+      align-items: center;
+    }
+
+    .mast-eye {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+      color: var(--blue-2);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(61, 139, 255, 0.18);
+      border: 1px solid rgba(61, 139, 255, 0.32);
+      color: #ffffff;
+      font-size: 9px;
+    }
+
+    .live::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ice);
+      box-shadow: 0 0 14px rgba(90, 216, 255, 0.9);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    .mast h1 {
+      font-size: clamp(24px, 3.2vw, 40px);
+      font-weight: 700;
+      color: #f7fbff;
+      margin-bottom: 4px;
+    }
+
+    .mast h1 span {
+      color: var(--blue-2);
+    }
+
+    .mast-copy {
+      max-width: 70ch;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-soft);
+    }
+
+    .mast-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(92, 124, 172, 0.32);
+      background: rgba(61, 139, 255, 0.08);
+      color: var(--blue-2);
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .badge.gold {
+      background: rgba(255, 201, 64, 0.08);
+      border-color: rgba(255, 201, 64, 0.22);
+      color: var(--gold);
+    }
+
+    .badge.ice {
+      background: rgba(90, 216, 255, 0.08);
+      border-color: rgba(90, 216, 255, 0.2);
+      color: var(--ice);
+    }
+
+    .mast-side {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      justify-items: stretch;
+      align-self: stretch;
+    }
+
+    .side-card {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: rgba(13, 21, 33, 0.88);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    .side-card-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .side-card-value {
+      color: #f7fbff;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 0;
+    }
+
+    .nav {
+      position: sticky;
+      top: 96px;
+      z-index: 200;
+      display: flex;
+      gap: 2px;
+      overflow-x: auto;
+      padding: 0 24px;
+      background: rgba(8, 13, 21, 0.98);
+      border-bottom: 1px solid var(--border);
+      scrollbar-width: none;
+    }
+
+    .nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-tab {
+      border: 0;
+      background: transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      padding: 13px 14px 11px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    .nav-tab:hover {
+      color: var(--text);
+    }
+
+    .nav-tab.active {
+      color: var(--blue-2);
+      border-bottom-color: var(--blue);
+      background: rgba(61, 139, 255, 0.08);
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 22px 24px 72px;
+    }
+
+    .control-shell {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .panel {
+      display: none;
+      animation: fadeIn 180ms ease;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card,
+    .control-card {
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .control-card {
+      padding: 18px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--blue-2);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .control-card p {
+      font-size: 13px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      appearance: none;
+      border: 1px solid rgba(110, 140, 190, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, box-shadow 150ms ease;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      border-color: rgba(126, 182, 255, 0.45);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .chip.active {
+      color: #ffffff;
+      border-color: transparent;
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.24);
+    }
+
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(110, 140, 190, 0.18);
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .legend-dot.tip { background: var(--ice); }
+    .legend-dot.compare { background: var(--gold); }
+    .legend-dot.role { background: var(--violet); }
+
+    .ph {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ph h2 {
+      font-size: 32px;
+      color: #f7fbff;
+      margin-bottom: 8px;
+    }
+
+    .ph p {
+      max-width: 86ch;
+      font-size: 13px;
+    }
+
+    .g2,
+    .g3,
+    .g4 {
+      display: grid;
+      gap: 14px;
+    }
+
+    .g2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .g3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .g4 {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .span-2 {
+      grid-column: span 2;
+    }
+
+    .stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: start;
+      padding: 18px 20px 0;
+    }
+
+    .card-head h3,
+    .card-head h4 {
+      font-size: 24px;
+      color: #f7fbff;
+    }
+
+    .card-head p {
+      max-width: 72ch;
+      font-size: 13px;
+      margin-top: 4px;
+    }
+
+    .card-body {
+      padding: 18px 20px 20px;
+    }
+
+    .scenario-hero {
+      display: grid;
+      gap: 18px;
+    }
+
+    .scenario-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .scenario-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .scenario-code {
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+    }
+
+    .scenario-title {
+      font-size: clamp(30px, 3vw, 48px);
+      color: #f7fbff;
+    }
+
+    .scenario-one-liner {
+      font-size: 15px;
+      color: var(--text);
+      max-width: 72ch;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat-card {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(110, 140, 190, 0.16);
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #f7fbff;
+      margin-bottom: 5px;
+    }
+
+    .stat-card p {
+      font-size: 12px;
+    }
+
+    .translation-grid,
+    .mini-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .translation-card,
+    .mini-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+    }
+
+    .translation-card h4,
+    .mini-card h4 {
+      font-size: 18px;
+      color: #f7fbff;
+      margin-bottom: 8px;
+    }
+
+    .pill-note {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(110, 140, 190, 0.18);
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .primer-list,
+    .myth-list,
+    .coherence-list,
+    .business-note-grid,
+    .mistake-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .primer-item,
+    .myth-item,
+    .coherence-item,
+    .business-note,
+    .mistake-card {
+      padding: 15px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+    }
+
+    .primer-item strong,
+    .myth-item strong,
+    .coherence-item strong,
+    .business-note strong,
+    .mistake-card strong {
+      display: block;
+      color: #f7fbff;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .primer-item p,
+    .myth-item p,
+    .coherence-item p,
+    .business-note p,
+    .mistake-card p {
+      font-size: 12px;
+    }
+
+    .az-grid,
+    .asset-lens-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    .az-card,
+    .asset-lens-card {
+      padding: 15px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+    }
+
+    .az-step,
+    .asset-step {
+      color: var(--blue-2);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .az-card h4,
+    .asset-lens-card h4 {
+      font-size: 16px;
+      color: #f7fbff;
+      margin-bottom: 8px;
+    }
+
+    .az-card p,
+    .asset-lens-card p {
+      font-size: 12px;
+    }
+
+    .scenario-ladder {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .ladder-card {
+      min-width: 0;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.16);
+      cursor: pointer;
+      transition: transform 150ms ease, border-color 150ms ease, background 150ms ease;
+    }
+
+    .ladder-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(126, 182, 255, 0.42);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .ladder-card.active {
+      border-color: rgba(255, 255, 255, 0.26);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .ladder-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .ladder-title {
+      color: #f7fbff;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .ladder-severity {
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    .ladder-card p {
+      font-size: 12px;
+      min-height: 0;
+      line-height: 1.5;
+    }
+
+    .score-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .score-row {
+      display: grid;
+      grid-template-columns: 170px 1fr 46px;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .score-row span {
+      font-size: 13px;
+      color: #f7fbff;
+      font-weight: 600;
+    }
+
+    .score-track,
+    .driver-track,
+    .metric-track {
+      position: relative;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .score-track,
+    .driver-track {
+      height: 12px;
+    }
+
+    .score-fill,
+    .driver-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue) 0%, var(--gold) 100%);
+    }
+
+    .score-value,
+    .driver-value {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      text-align: right;
+    }
+
+    .contribution-strip {
+      display: flex;
+      height: 20px;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(110, 140, 190, 0.18);
+      background: rgba(255, 255, 255, 0.02);
+      margin-bottom: 14px;
+    }
+
+    .segment {
+      height: 100%;
+      min-width: 10px;
+    }
+
+    .contribution-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .contribution-item {
+      display: grid;
+      grid-template-columns: 18px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .timeline-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+      min-height: 180px;
+    }
+
+    .timeline-label {
+      color: var(--blue-2);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .timeline-card strong {
+      display: block;
+      font-size: 17px;
+      color: #f7fbff;
+      margin-bottom: 8px;
+    }
+
+    .map-wrap {
+      padding: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+    }
+
+    .map-note {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .metric-grid,
+    .driver-grid,
+    .book-grid,
+    .glossary-grid,
+    .compare-highlights {
+      display: grid;
+      gap: 12px;
+    }
+
+    .metric-card,
+    .driver-card,
+    .book-card,
+    .glossary-card,
+    .compare-highlight {
+      padding: 15px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+    }
+
+    .metric-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .metric-name,
+    .book-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #f7fbff;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .metric-value {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .metric-track {
+      height: 14px;
+      margin-bottom: 8px;
+    }
+
+    .metric-zero {
+      position: absolute;
+      inset: 0 auto 0 50%;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .metric-bar {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      border-radius: 999px;
+    }
+
+    .metric-card p,
+    .driver-card p,
+    .book-card p,
+    .glossary-card p,
+    .compare-highlight p {
+      font-size: 12px;
+    }
+
+    .driver-row {
+      display: grid;
+      grid-template-columns: 140px 1fr 56px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .driver-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .driver-label {
+      color: #f7fbff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .formula-box {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(61, 139, 255, 0.08);
+      border: 1px solid rgba(61, 139, 255, 0.16);
+      margin-bottom: 16px;
+    }
+
+    .formula-box code {
+      display: block;
+      color: #f7fbff;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.75;
+      white-space: normal;
+    }
+
+    .callout {
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 201, 64, 0.08);
+      border-left: 3px solid var(--gold);
+    }
+
+    .callout strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: #f7fbff;
+    }
+
+    .details {
+      margin-top: 14px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+      overflow: hidden;
+    }
+
+    .details summary {
+      cursor: pointer;
+      padding: 14px 16px;
+      color: #f7fbff;
+      font-size: 13px;
+      font-weight: 700;
+      list-style: none;
+    }
+
+    .details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .details-body {
+      padding: 0 16px 16px;
+    }
+
+    .impact-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      border: 1px solid transparent;
+    }
+
+    .impact-good {
+      color: var(--ice);
+      background: rgba(90, 216, 255, 0.08);
+      border-color: rgba(90, 216, 255, 0.18);
+    }
+
+    .impact-mixed {
+      color: var(--gold);
+      background: rgba(255, 201, 64, 0.08);
+      border-color: rgba(255, 201, 64, 0.18);
+    }
+
+    .impact-bad {
+      color: var(--orange);
+      background: rgba(255, 154, 77, 0.08);
+      border-color: rgba(255, 154, 77, 0.18);
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .role-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+    }
+
+    .role-card h4 {
+      font-size: 17px;
+      color: #f7fbff;
+      margin-bottom: 8px;
+    }
+
+    .role-card p {
+      font-size: 12px;
+    }
+
+    .compare-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .compare-toolbar label {
+      color: #f7fbff;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .select {
+      min-width: 280px;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(110, 140, 190, 0.28);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .head-to-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr) minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .scenario-compare-card {
+      padding: 16px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(110, 140, 190, 0.14);
+    }
+
+    .scenario-compare-card h4 {
+      font-size: 20px;
+      color: #f7fbff;
+      margin-bottom: 8px;
+    }
+
+    .scenario-compare-card p {
+      font-size: 12px;
+    }
+
+    .compare-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .compare-highlights {
+      grid-template-columns: 1fr;
+      align-content: start;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(110, 140, 190, 0.16);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    table {
+      width: 100%;
+      min-width: 1000px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 14px 16px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(110, 140, 190, 0.12);
+    }
+
+    th {
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(61, 139, 255, 0.06);
+      position: sticky;
+      top: 0;
+    }
+
+    td {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    td strong {
+      display: block;
+      color: #f7fbff;
+      margin-bottom: 4px;
+    }
+
+    .row-active {
+      background: rgba(61, 139, 255, 0.08);
+    }
+
+    .heatmap {
+      display: grid;
+      gap: 10px;
+    }
+
+    .heatmap-header,
+    .heatmap-row {
+      display: grid;
+      grid-template-columns: 180px repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .heatmap-label,
+    .heatmap-scenario,
+    .heatmap-cell {
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(110, 140, 190, 0.16);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 12px;
+    }
+
+    .heatmap-label,
+    .heatmap-scenario {
+      color: #f7fbff;
+      font-weight: 700;
+    }
+
+    .search {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(110, 140, 190, 0.28);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      margin-top: 10px;
+    }
+
+    .glossary-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .glossary-card h4 {
+      font-size: 18px;
+      color: #f7fbff;
+      margin-bottom: 8px;
+    }
+
+    .empty-state {
+      padding: 18px;
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px dashed rgba(110, 140, 190, 0.28);
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .footnote {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .term {
+      color: #eef6ff;
+      border-bottom: 1px dotted rgba(126, 182, 255, 0.85);
+      cursor: help;
+      white-space: nowrap;
+    }
+
+    .info-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(126, 182, 255, 0.3);
+      background: rgba(61, 139, 255, 0.08);
+      color: var(--blue-2);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1;
+      padding: 0;
+      cursor: help;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tooltip {
+      position: fixed;
+      z-index: 999;
+      pointer-events: none;
+      max-width: 280px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(7, 12, 19, 0.96);
+      border: 1px solid rgba(126, 182, 255, 0.28);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.55;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 120ms ease, transform 120ms ease;
+    }
+
+    .tooltip.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1220px) {
+      .mast-inner,
+      .control-shell,
+      .g3,
+      .g4,
+      .translation-grid,
+      .mini-card-grid,
+      .role-grid,
+      .glossary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .scenario-ladder {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      }
+
+      .timeline,
+      .head-to-head {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .mast {
+        position: relative;
+        top: 0;
+      }
+
+      .nav {
+        top: 0;
+      }
+
+      .mast-inner,
+      .control-shell,
+      .g2,
+      .g3,
+      .g4,
+      .translation-grid,
+      .mini-card-grid,
+      .role-grid,
+      .glossary-grid,
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scenario-ladder,
+      .timeline {
+        grid-template-columns: 1fr;
+      }
+
+      .span-2 {
+        grid-column: auto;
+      }
+
+      .mast-side {
+        grid-template-columns: 1fr;
+        justify-items: stretch;
+      }
+
+      .score-row,
+      .driver-row {
+        grid-template-columns: 1fr;
+      }
+
+      .heatmap-header,
+      .heatmap-row {
+        grid-template-columns: 140px repeat(5, minmax(90px, 1fr));
+      }
+    }
+
+    @media (max-width: 720px) {
+      .content,
+      .mast-inner {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .nav {
+        padding: 0 14px;
+      }
+
+      .card-head,
+      .card-body,
+      .control-card {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+
+      .glossary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span>TOH / BAU SCENARIO SCHOOL</span>
+      <span>START WITH THE MOVIE, THEN CHECK THE FINGERPRINT, THEN ASK WHO BLEEDS</span>
+      <span>HOVER DOTTED TERMS FOR DEFINITIONS</span>
+      <span>USE THE ROLE LENS TO TRANSLATE MARKETS INTO BUSINESS LANGUAGE</span>
+      <span>COMPARE MODERATE VS FTQ TO LEARN CYCLE RISK VS PLUMBING RISK</span>
+      <span>SEVERE STAGFLATION IS THE TAIL WHERE RATES DO NOT BAIL YOU OUT</span>
+      <span>TOH / BAU SCENARIO SCHOOL</span>
+      <span>START WITH THE MOVIE, THEN CHECK THE FINGERPRINT, THEN ASK WHO BLEEDS</span>
+      <span>HOVER DOTTED TERMS FOR DEFINITIONS</span>
+      <span>USE THE ROLE LENS TO TRANSLATE MARKETS INTO BUSINESS LANGUAGE</span>
+      <span>COMPARE MODERATE VS FTQ TO LEARN CYCLE RISK VS PLUMBING RISK</span>
+      <span>SEVERE STAGFLATION IS THE TAIL WHERE RATES DO NOT BAIL YOU OUT</span>
+    </div>
+  </div>
+
+  <header class="mast">
+    <div class="mast-inner">
+      <div>
+        <div class="mast-eye">
+          <span>2026 Top-of-House / BAU Stress Learning Build</span>
+          <span class="live">Interactive guide</span>
+        </div>
+        <h1>Scenario School <span>for new joiners</span></h1>
+        <p class="mast-copy">
+          Learn the five reviewed BAU scenarios fast: what happens, how markets translate it, and where the firm gets hurt.
+        </p>
+        <div class="mast-badges">
+          <span class="badge">5 core scenarios</span>
+          <span class="badge gold">Plain English + quant + business</span>
+          <span class="badge ice">Hover definitions</span>
+          <span class="badge">Head-to-head comparison</span>
+        </div>
+      </div>
+
+      <div class="mast-side">
+        <div class="side-card">
+          <div class="side-card-label">Read order</div>
+          <div class="side-card-value">Story -> factors -> books</div>
+        </div>
+        <div class="side-card">
+          <div class="side-card-label">Use case</div>
+          <div class="side-card-value">Teaching layer, not pricing engine</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav" id="tabNav">
+    <button class="nav-tab active" data-panel="start">01 Start Here</button>
+    <button class="nav-tab" data-panel="lab">02 Scenario Lab</button>
+    <button class="nav-tab" data-panel="factors">03 Factor Playground</button>
+    <button class="nav-tab" data-panel="business">04 Business Lens</button>
+    <button class="nav-tab" data-panel="compare">05 Compare Board</button>
+    <button class="nav-tab" data-panel="glossary">06 Glossary</button>
+  </nav>
+
+  <main class="content">
+    <section class="control-shell">
+      <div class="control-card">
+        <div class="eyebrow">Choose a scenario</div>
+        <div class="chip-row" id="scenarioButtons"></div>
+      </div>
+
+      <div class="control-card">
+        <div class="eyebrow">Choose your lens</div>
+        <div class="chip-row" id="roleButtons"></div>
+      </div>
+
+      <div class="control-card">
+        <div class="eyebrow">Use the interactive features</div>
+        <p>
+          The selected scenario follows you across every tab. Hover dotted terms or the small
+          <button class="info-dot" type="button" data-tooltip="Hover or focus this icon anywhere on the page to get a quick definition or framing note.">i</button>
+          icons to decode jargon. Use the Compare Board to understand why two risk-off scenarios can still mean very different things.
+        </p>
+        <div class="legend-row">
+          <span class="legend-pill"><span class="legend-dot tip"></span>Hover definitions</span>
+          <span class="legend-pill"><span class="legend-dot role"></span>Role translation</span>
+          <span class="legend-pill"><span class="legend-dot compare"></span>Side-by-side compare</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel active" id="start">
+      <div class="ph">
+        <h2>Start Here</h2>
+        <p>
+          If you are new to this space, this is the tab to learn the core grammar. A good stress scenario answers four things cleanly:
+          what happens, why it happens, how markets translate it, and where the firm gets hurt.
+        </p>
+      </div>
+
+      <div class="g2">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Selected scenario in 15 seconds</h3>
+              <p>One screen to understand the movie, the business meaning, and the shape of the pain.</p>
+            </div>
+          </div>
+          <div class="card-body" id="selectedSummary"></div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>How to read any stress scenario</h3>
+              <p>This is the shortest learning path from jargon to intuition.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="primer-list">
+              <div class="primer-item">
+                <strong>1. Start with the movie</strong>
+                <p>The movie is the causal chain: inflation cools, growth cracks, liquidity dries up, or inflation stays sticky. Do not start with a spreadsheet.</p>
+              </div>
+              <div class="primer-item">
+                <strong>2. Check the regime fingerprint</strong>
+                <p>If the movie is true, rates, spreads, equities, oil, the <span class="term" tabindex="0" data-tooltip="The U.S. dollar index. It is a shorthand for broad dollar strength or weakness against major currencies.">DXY</span>, and funding measures should move in a way that hangs together.</p>
+              </div>
+              <div class="primer-item">
+                <strong>3. Ask who bleeds first</strong>
+                <p>Losses usually show up first in the books with the largest sensitivity, weakest liquidity, or nastiest optionality.</p>
+              </div>
+              <div class="primer-item">
+                <strong>4. Ask what people often get wrong</strong>
+                <p>The best learning happens where intuition fails: lower rates can still hurt, and a short shock can be worse than a long one if plumbing breaks.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="g3" style="margin-top:14px;">
+        <article class="card span-2">
+          <div class="card-head">
+            <div>
+              <h3>Scenario ladder</h3>
+              <p>Click any card to switch the whole dashboard.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="scenario-ladder" id="scenarioLadder"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Simple model of pain</h3>
+              <p>The selected scenario's dominant loss engines as a share of total intuitive stress weight.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="driverShareStrip"></div>
+            <div class="contribution-list" id="driverShareList"></div>
+            <p class="footnote">This is a teaching allocation based on the driver weights in the reviewed scenario set, not a measured P&amp;L decomposition.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Myths to kill early</h3>
+              <p>These are the beginner mistakes that make scenario discussions confusing.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="myth-list">
+              <div class="myth-item">
+                <strong>"Rates down is always good."</strong>
+                <p>No. Lower yields can hurt <span class="term" tabindex="0" data-tooltip="Net interest income. The spread between what assets earn and what liabilities cost over time.">NII</span>, <span class="term" tabindex="0" data-tooltip="Expected recurring income from holding an asset or spread position if markets do not move much.">carry</span>, and mortgage optionality even while government bonds rally.</p>
+              </div>
+              <div class="myth-item">
+                <strong>"Spread widening only comes from defaults."</strong>
+                <p>No. Spreads can gap wider because of liquidity, positioning, forced selling, or a higher risk premium before defaults visibly rise.</p>
+              </div>
+              <div class="myth-item">
+                <strong>"Flight to quality equals recession."</strong>
+                <p>No. A <span class="term" tabindex="0" data-tooltip="A rush into cash, Treasuries, and dollars, usually driven by fear, uncertainty, or a sudden need for liquidity.">flight to quality</span> is often about speed and market plumbing. Macro data can look fine while P&amp;L is already bleeding.</p>
+              </div>
+              <div class="myth-item">
+                <strong>"Severe just means Moderate with bigger numbers."</strong>
+                <p>No. A strong scenario set changes the regime logic too: policy response, market functioning, optionality, and cross-asset relationships can all shift.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <article class="card" style="margin-top:14px;">
+        <div class="card-head">
+          <div>
+            <h3>TOH multi-asset checklist from A to Z</h3>
+            <p>
+              These five scenarios are <span class="term" tabindex="0" data-tooltip="Top of House. A firmwide scenario set used across businesses and governance rather than for only one desk.">TOH</span>
+              scenarios because the same story has to make sense across the whole firm, not just one asset class.
+              If a scenario cannot answer the ten questions below, it is not complete enough for a new joiner or for governance.
+            </p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="az-grid" id="atozChecklistGrid"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel" id="lab">
+      <div class="ph">
+        <h2>Scenario Lab</h2>
+        <p>
+          This tab teaches the selected scenario in layers. First comes the translation into plain English, quant language, and business language.
+          Then comes the timeline and the map that shows where the scenario sits relative to the rest of the set.
+        </p>
+      </div>
+
+      <div class="g2">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Three ways to explain the same scenario</h3>
+              <p>A good stress tester can talk to a new joiner, a desk head, and a governance committee without changing the core logic.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="translation-grid" id="translationGrid"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Scenario map</h3>
+              <p>Read the set as a map. Left to right is deflationary to inflationary pressure. Bottom to top is orderly to dislocated market functioning.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="map-wrap">
+              <svg id="scenarioMap" viewBox="0 0 560 400" aria-label="Scenario map"></svg>
+              <div class="map-note">
+                <span>Left: disinflation / recession</span>
+                <span>Up: market dislocation</span>
+                <span>Right: inflation / commodity pressure</span>
+              </div>
+            </div>
+            <p class="footnote">Bubble size is a teaching proxy for severity percentile, not a formal quantitative output.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="g2" style="margin-top:14px;">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>What happens, in order</h3>
+              <p>The timeline is the easiest way to see whether the narrative is causal instead of decorative.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="timeline" id="timeline"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Why the story hangs together</h3>
+              <p>These are the coherence tests you should mentally run when someone describes a scenario.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="coherence-list" id="coherenceList"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="factors">
+      <div class="ph">
+        <h2>Factor Playground</h2>
+        <p>
+          This is where the macro movie turns into a market fingerprint. The selected factor bars show what should move together if the scenario is internally coherent.
+          The right side shows the simple math of which risk engines dominate.
+        </p>
+      </div>
+
+      <div class="g2">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Market fingerprint</h3>
+              <p>Bars are scaled relative to the largest move for each factor across the five scenarios.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="metric-grid" id="factorGrid"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>What actually hurts</h3>
+              <p>The mental model here is not exact math. It is the shortest path to identifying the dominant source of pain.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="formula-box">
+              <code>Stress P&amp;L ~= rates x duration + spreads x spread DV01 + equities x beta + funding penalty + inflation effect + optionality effect</code>
+            </div>
+            <div class="driver-grid" id="driverGrid"></div>
+            <div class="callout" style="margin-top:14px;">
+              <strong>Key intuition</strong>
+              <p id="driverNote"></p>
+            </div>
+            <details class="details">
+              <summary>Advanced note: why governance packets often use ranges instead of one exact number</summary>
+              <div class="details-body">
+                <p>Ranges are useful because they acknowledge calibration uncertainty and portfolio heterogeneity. They force the reviewer to focus on regime logic and relative severity, not on false precision.</p>
+              </div>
+            </details>
+          </div>
+        </article>
+      </div>
+
+      <div class="g2" style="margin-top:14px;">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>If you only remember three numbers</h3>
+              <p>The three biggest moves for the selected scenario, scaled by economic significance.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="mini-card-grid" id="keyNumbers"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Scoreboard</h3>
+              <p>Five teaching scores to understand how the selected scenario behaves as a regime.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="score-grid" id="scoreGrid"></div>
+            <p class="footnote">Scores are an educational overlay for speed, breadth, funding stress, diversification failure, and policy cushion. They are not governance calibration statistics.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="business">
+      <div class="ph">
+        <h2>Business Lens</h2>
+        <p>
+          Stress testing only becomes decision-useful when you can connect macro regimes to books, desks, earnings, funding, and management questions.
+          This tab translates the selected scenario into business language.
+        </p>
+      </div>
+
+      <div class="g2">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Role-based translation</h3>
+              <p>The scenario should sound different to each role without changing the underlying economics.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="role-grid" id="roleGrid"></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Generic portfolio impact</h3>
+              <p>These are generic books and channels, not your actual firm inventory. They help a new learner see where the pain lands first.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="book-grid" id="bookGrid"></div>
+            <p class="footnote">A positive tag means potential buffer, not guaranteed gain. A book can still lose from basis, financing, or optionality.</p>
+          </div>
+        </article>
+      </div>
+
+      <article class="card" style="margin-top:14px;">
+        <div class="card-head">
+          <div>
+            <h3>Complete multi-asset lens</h3>
+            <p>
+              This is the selected scenario translated across the full TOH stack:
+              macro story, rates, credit, equities, FX, commodities, funding, optionality, first books hit, and the management question.
+            </p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="asset-lens-grid" id="assetLensGrid"></div>
+        </div>
+      </article>
+
+      <div class="g4" style="margin-top:14px;" id="businessNotes"></div>
+    </section>
+
+    <section class="panel" id="compare">
+      <div class="ph">
+        <h2>Compare Board</h2>
+        <p>
+          The fastest way to build real intuition is to compare similar-looking scenarios that are actually different. Start by comparing Moderate and Flight to Quality,
+          then compare Moderate and Severe Rates Rally, then compare any deflationary scenario against Severe Stagflation.
+        </p>
+      </div>
+
+      <article class="card" style="margin-bottom:14px;">
+        <div class="card-head">
+          <div>
+            <h3>Head-to-head compare</h3>
+            <p>The left card is always the selected scenario. Use the selector to choose the comparison case.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="compare-toolbar">
+            <label for="compareSelect">Compare selected scenario against</label>
+            <select class="select" id="compareSelect"></select>
+          </div>
+          <div class="head-to-head">
+            <div class="scenario-compare-card" id="compareLeft"></div>
+            <div class="compare-highlights" id="compareHighlights"></div>
+            <div class="scenario-compare-card" id="compareRight"></div>
+          </div>
+        </div>
+      </article>
+
+      <div class="g2">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>All five at a glance</h3>
+              <p>Use this as the board-level cheat sheet: regime, signature, main engine, and business use.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Scenario</th>
+                    <th>Regime</th>
+                    <th>Main engine</th>
+                    <th>Signature</th>
+                    <th>Business use</th>
+                  </tr>
+                </thead>
+                <tbody id="compareTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Portfolio relevance heatmap</h3>
+              <p>Darker cells mean the channel is more central to the scenario's teaching relevance.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="heatmap" id="heatmap"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="glossary">
+      <div class="ph">
+        <h2>Glossary</h2>
+        <p>
+          Stress testing sounds harder than it is because people compress a lot of meaning into shorthand. Use this tab as the decoder ring.
+          You can also hover highlighted terms anywhere in the dashboard.
+        </p>
+      </div>
+
+      <div class="g2">
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Search the language</h3>
+              <p>Try terms like convexity, carry, beta, FRA-OIS, flight to quality, or stagflation.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <input class="search" id="glossarySearch" type="search" placeholder="Search glossary terms">
+            <p class="footnote">Tip: glossary terms also power the hover tooltips throughout the page.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <div>
+              <h3>Common beginner mistakes</h3>
+              <p>These are worth memorizing because they show up in real meetings.</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="mistake-grid">
+              <div class="mistake-card">
+                <strong>Confusing level and direction</strong>
+                <p>High rates and falling rates are not the same as low rates and falling rates. The starting point matters for business pain.</p>
+              </div>
+              <div class="mistake-card">
+                <strong>Ignoring starting valuations</strong>
+                <p>Tight spreads, rich equities, and low implied liquidity buffers make a moderate downturn more dangerous than the label sounds.</p>
+              </div>
+              <div class="mistake-card">
+                <strong>Forgetting optionality</strong>
+                <p>A book can have small linear risk and still blow out under large moves because the hedge profile changes.</p>
+              </div>
+              <div class="mistake-card">
+                <strong>Using macro words without book translation</strong>
+                <p>If you cannot say which desk or sensitivity gets hit, you do not yet understand the scenario in business terms.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="card" style="margin-top:14px;">
+        <div class="card-head">
+          <div>
+            <h3>Glossary cards</h3>
+            <p>Short definitions meant to be remembered, not admired.</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="glossary-grid" id="glossaryGrid"></div>
+          <div class="footnote">Source basis: the reviewed approval-ready scenario packet in this folder, adapted here into a learning-first interface.</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script>
+    const roles = {
+      newcomer: { label: "New joiner" },
+      crossasset: { label: "Cross-asset / all desks" },
+      rates: { label: "Rates / MBS" },
+      credit: { label: "Credit / loans" },
+      funding: { label: "Treasury / funding" },
+      executive: { label: "Senior manager" }
+    };
+
+    const channels = [
+      "Duration / NII",
+      "MBS convexity",
+      "Credit spreads",
+      "Funding / liquidity",
+      "Inflation / commodities",
+      "Equity beta",
+      "EM / FX"
+    ];
+
+    const scoreLabels = {
+      speed: "Speed of stress",
+      breadth: "Breadth of impact",
+      funding: "Funding pressure",
+      diversification: "Diversification failure",
+      policy: "Policy cushion"
+    };
+
+    const aToZChecklist = [
+      { step: "A", title: "Macro movie", body: "What changed first in the world: growth, inflation, policy, geopolitics, or market plumbing?" },
+      { step: "B", title: "Rates", body: "Do government yields rise or fall, and why? A TOH scenario must say whether rates cushion the firm, hurt it, or somehow do both." },
+      { step: "C", title: "Credit", body: "How much do spreads widen, and is that because of defaults, liquidity, or a higher risk premium?" },
+      { step: "D", title: "Equities", body: "Are equities down because earnings weaken, discount rates rise, or investors suddenly want less risk?" },
+      { step: "E", title: "FX / dollar", body: "Does the dollar strengthen because investors want safety, or weaken because U.S. rates and growth are falling?" },
+      { step: "F", title: "Commodities / inflation", body: "Do oil and inflation cool or surge? This often decides whether the regime is cyclical, deflationary, or stagflationary." },
+      { step: "G", title: "Funding / liquidity", body: "Are financing and exit conditions still open, or is the market becoming expensive to fund and hard to trade?" },
+      { step: "H", title: "Optionality / basis", body: "Could mortgage convexity, basis gaps, or hedge slippage turn a manageable move into a nonlinear one?" },
+      { step: "I", title: "Books hit first", body: "Which desks or balance-sheet channels feel the pain first: duration, MBS, credit, equities, FX, or treasury?" },
+      { step: "J", title: "Management question", body: "What one question should a committee ask if this scenario starts unfolding in real life?" }
+    ];
+
+    const driverPalette = {
+      "Rates": "#5ad8ff",
+      "Spreads": "#ff9a4d",
+      "Equities": "#b295ff",
+      "Funding": "#ffc940",
+      "Inflation": "#ff8277",
+      "Convexity": "#7eb6ff"
+    };
+
+    const termDefinitions = {
+      "TOH": "Top of House. A firmwide scenario set used across businesses and governance rather than for only one desk.",
+      "multi-asset": "A scenario that must be coherent across rates, credit, equities, FX, commodities, funding, and optionality instead of only one market.",
+      "10Y UST": "The 10-year U.S. Treasury yield. It is the standard shorthand for long-end risk-free rates in U.S. stress discussions.",
+      "BBB spreads": "The extra yield demanded over Treasuries for BBB-rated corporate credit. It is a common proxy for mainstream investment-grade risk premium.",
+      "B spreads": "The extra yield demanded over Treasuries for B-rated high-yield credit. It is a common shorthand for lower-quality risk appetite.",
+      "S&P 500": "A broad U.S. equity benchmark often used as the simplest proxy for general equity beta.",
+      "Brent": "Brent crude oil. In stress design it is often the easiest high-level proxy for energy and commodity inflation pressure.",
+      "Prepayment speed": "How quickly mortgage borrowers pay off loans ahead of schedule. Faster speeds matter because they change MBS cash flows and duration.",
+      "duration": "Sensitivity of price to a change in interest rates. Higher duration means bigger price moves for the same rate shock.",
+      "NII": "Net interest income. The spread between what assets earn and what liabilities cost over time.",
+      "carry": "Expected recurring income from holding a position if markets do not move much.",
+      "convexity": "How duration changes when yields move. Mortgage books often have negative convexity, which makes hedging harder when rates move a lot.",
+      "basis": "The gap between two prices that should be related but do not move exactly together, such as cash bonds versus futures or mortgages versus swaps.",
+      "risk premium": "The extra return investors demand for holding a risky asset instead of a safe one. In stress, that premium often rises sharply.",
+      "volatility": "How violently prices are moving or expected to move. High volatility often makes hedging and liquidity worse at the same time.",
+      "mark-to-market": "The current value of a position based on live market prices rather than original cost.",
+      "beta": "How strongly a position tends to move when a broader market factor moves.",
+      "FRA-OIS": "A common shorthand for stress in unsecured versus near-risk-free funding markets.",
+      "OAS": "Option-adjusted spread. A cleaner spread measure for securities with embedded optionality.",
+      "spread DV01": "The price sensitivity of a position to a 1 basis point change in credit spread.",
+      "DXY": "The U.S. dollar index. It is a shorthand for broad dollar strength or weakness against major currencies.",
+      "liquidity": "How easily you can buy, sell, or finance a position without moving the market too much.",
+      "flight to quality": "A rush into cash, Treasuries, and dollars, usually driven by fear, uncertainty, or a sudden need for safety or liquidity.",
+      "regime fingerprint": "The pattern of market moves that should appear together if the scenario narrative is internally coherent.",
+      "MBS": "Mortgage-backed securities. Their cash flows change when borrowers refinance or prepay, so they often have optionality risk.",
+      "prepayment": "Borrowers paying off mortgages early, usually because refinancing becomes attractive when rates fall.",
+      "Treasuries": "U.S. government bonds. They are usually treated as the safe asset in stress scenarios.",
+      "stagflation": "Weak growth plus sticky inflation. The key pain point is that rates do not automatically fall to cushion other losses.",
+      "dollar": "In market shorthand this often means broad USD strength, not just the cash currency in your wallet.",
+      "swap spreads": "The difference between swap rates and Treasury yields of similar maturity. They matter for hedges and basis behavior.",
+      "repo": "Short-term secured funding used to finance securities inventory.",
+      "MBS convexity": "The hedge instability that arises because mortgage duration shortens when rates fall and extends when rates rise."
+    };
+
+    const glossary = [
+      { term: "TOH", body: "Top of House. A firmwide scenario set meant to be coherent across the whole bank, not just one desk." },
+      { term: "Multi-asset", body: "A scenario that must make sense across rates, credit, equities, FX, commodities, funding, and optionality at the same time." },
+      { term: "Bull steepener", body: "Rates fall across the curve, but the front end falls more than the long end. This usually happens when the market prices easier policy." },
+      { term: "Flight to quality", body: "Investors move abruptly into cash, Treasuries, and dollars. It is a market-functioning story as much as a macro story." },
+      { term: "OAS", body: "Option-adjusted spread. Useful for comparing bonds with embedded options because it strips out part of the option effect." },
+      { term: "Spread DV01", body: "The price sensitivity of a position to a 1 basis point change in spread. Large spread DV01 means even mild widening can hurt." },
+      { term: "Convexity", body: "How duration changes as yields move. Mortgage books often have negative convexity, so hedge needs can get worse just when markets are moving fastest." },
+      { term: "FRA-OIS", body: "A funding-stress shorthand. When it widens sharply, money-market plumbing is under strain." },
+      { term: "Stagflation", body: "Weak growth plus sticky inflation. The main intuition is that rates may stay high or move higher when you wish they would fall." },
+      { term: "Regime fingerprint", body: "The pattern of market moves that should hang together if the scenario story is coherent." },
+      { term: "Carry", body: "Expected income from holding a position in normal conditions. A carry-rich book can still be vulnerable if the scenario reshapes rates or spreads." },
+      { term: "Basis", body: "The gap between two linked prices. Basis risk matters when your hedge and your asset do not move together in stress." },
+      { term: "Mark-to-market", body: "The current value of a position based on live market prices. Stress losses often arrive in marks before they arrive in defaults." },
+      { term: "NII", body: "Net interest income. Lower or higher rates can change earnings even if mark-to-market looks better." },
+      { term: "DXY", body: "A broad U.S. dollar index used as a quick proxy for dollar strength or weakness." },
+      { term: "Prepayment", body: "Borrowers paying mortgages off early, often because lower rates make refinancing attractive." }
+    ];
+
+    const coherenceMap = {
+      ratesRally: [
+        { title: "Rates and growth line up", body: "A large 10Y rally plus only mild spread widening fits a world where inflation cools fast but systemic stress stays contained." },
+        { title: "Dollar and oil support the disinflation story", body: "A softer dollar and lower Brent reinforce the idea that this is not a funding panic or commodity shock." },
+        { title: "Optionality matters more than defaults", body: "Mortgage prepayments accelerate, so the real hidden pain is convexity and reinvestment drag rather than widespread credit collapse." },
+        { title: "Business question is subtle", body: "This is the classic case where mark-to-market can look friendlier than the medium-term earnings and hedge story." }
+      ],
+      moderate: [
+        { title: "Cycle turns, but plumbing still works", body: "Rates fall some, spreads widen, equities reprice, and the dollar firms modestly. That is a normal downturn fingerprint, not a market seizure." },
+        { title: "Risk premia do the heavy lifting", body: "BBB and B widening matter more than a dramatic rates collapse, which is exactly what you expect when growth weakens without emergency policy." },
+        { title: "Oil does not hijack the story", body: "Flat to lower Brent helps keep this from becoming a stagflation narrative." },
+        { title: "Decision-useful because it is broad", body: "Many desks lose together without needing a once-in-a-generation shock. That is why this type of scenario is often the most useful management benchmark." }
+      ],
+      ftq: [
+        { title: "Safe-haven assets and funding stress move together", body: "Treasuries rally, the dollar strengthens, and FRA-OIS gaps wider. That is how you know this is a plumbing event, not just slower growth." },
+        { title: "Speed outruns economics", body: "The market can move violently before macro data confirms anything. That is why this scenario is about surviving the first week, not the next quarter." },
+        { title: "Spread widening is partly a liquidity premium", body: "Credit gaps wider because exits are expensive and dealer balance sheets pull back, not only because default math changes." },
+        { title: "Business question is operational", body: "The central challenge is whether inventory, basis, and funding can be carried while liquidity gets more expensive and less available." }
+      ],
+      severeRally: [
+        { title: "The reason rates fall matters", body: "This is not a gentle easing cycle. Rates collapse because the economy cracks hard and policy response turns aggressive." },
+        { title: "Recession beta and optionality amplify each other", body: "Spreads widen sharply, equities fall hard, and mortgage books can become deeply nonlinear at the same time." },
+        { title: "Oil supports the deflationary regime", body: "Lower Brent helps keep the narrative coherent as a severe recession or deflation scare rather than a mixed inflation story." },
+        { title: "The scenario is not just 'Moderate plus more'", body: "It changes the policy regime and makes convexity central, which produces different hedge and management questions." }
+      ],
+      severeStag: [
+        { title: "Rates and spreads hurt together", body: "Long rates rise while credit widens sharply. That is the defining challenge of the inflationary tail." },
+        { title: "Commodities are part of the regime, not decoration", body: "Brent up 60% to 80% anchors the inflation pressure and helps explain why policy cannot simply cut." },
+        { title: "The dollar stays neutral to firmer", body: "That keeps the scenario from relying on an under-defended weak-dollar assumption while funding remains stressed." },
+        { title: "Diversification fails", body: "Traditional recession protection from lower rates is missing, so duration, spreads, and weak equities can all lean against the firm together." }
+      ]
+    };
+
+    const scenarios = {
+      ratesRally: {
+        code: "BAU_MODERATE_RATES_RALLY",
+        short: "Rates Rally",
+        title: "An orderly easing cycle where rates hurt more than defaults.",
+        badge: "#3d8bff",
+        percentile: 67,
+        duration: "3-6 months, orderly feel",
+        regime: "Disinflationary slowdown",
+        coreEnemy: "Carry and reinvestment pain",
+        mainEngine: "Rates + convexity",
+        oneLiner: "Nothing is truly breaking, but inflation fades fast enough that lower yields reshape the economics of duration, mortgages, and balance-sheet carry.",
+        beginner: "Think of this as the scenario where safe assets do well, but the business model built on earning attractive yields gets squeezed.",
+        quant: "The fingerprint is a large 10Y rally, only modest spread widening, lower dollar, lower oil, and a meaningful prepayment response in agency mortgage risk.",
+        business: "If the firm is long carry, long mortgages, or depends on stable asset yields, this scenario bites without needing a credit crisis.",
+        compareSignature: "10Y down hard; spreads only mildly wider; dollar softer; oil lower",
+        businessUse: "Tests NII compression, duration positioning, and mortgage optionality",
+        analogy: "Imagine the room cooling quickly. It feels calmer, but every part of the franchise that liked high yields starts earning less.",
+        remember: "Lower rates can help government bonds and still hurt earnings, mortgage carry, and reinvestment economics.",
+        blindSpot: "People often say 'rates down is good.' That misses mortgage shortening, reinvestment drag, and NII pressure.",
+        whyDistinct: "Unlike Moderate, this is not mainly a credit-default story. It is a lower-yields and optionality story.",
+        scorecard: { speed: 2, breadth: 3, funding: 1, diversification: 2, policy: 5 },
+        assetLens: {
+          rates: "The curve rallies hard because inflation cools and the market believes policy can ease without the system breaking.",
+          credit: "Credit underperforms duration but does not fully crack. This is relative spread pain more than a default wave.",
+          equities: "Equities soften on slower growth and lower earnings power, not on a full-blown crisis of confidence.",
+          fx: "The dollar softens because lower U.S. yields take away some of its rate support.",
+          commodities: "Oil and inflation pressure cool. This is a disinflation story, not a supply-shock story.",
+          funding: "Funding stays broadly orderly, so the scenario is about earnings and carry rather than plumbing failure.",
+          optionality: "Mortgage prepayments and negative convexity are the hidden villain because lower rates change cash flows and hedge needs quickly."
+        },
+        books: [
+          { name: "UST duration", impact: 2, note: "Pure safe duration is the clearest buffer because rates rally hard." },
+          { name: "Agency MBS", impact: -2, note: "Faster prepayments and negative convexity can erase the comfort from lower yields." },
+          { name: "IG credit", impact: -1, note: "Spreads widen only modestly, but carry-rich positions can still underperform." },
+          { name: "HY / leveraged loans", impact: -1, note: "Not the center of the story, but weaker growth still pressures risky credit." },
+          { name: "Liquidity / funding", impact: 0, note: "Funding is mostly intact. The pain is economic rather than plumbing-driven." },
+          { name: "Earnings / NII", impact: -2, note: "Lower asset yields and reinvestment rates can squeeze the franchise over time." }
+        ],
+        map: { x: 118, y: 288, r: 28 },
+        factors: [
+          { name: "10Y UST", range: "-125 to -135 bp", mid: -130, scale: 300, note: "The rates move is the point of the scenario." },
+          { name: "BBB spreads", range: "+30 to +40 bp", mid: 35, scale: 175, note: "Credit is not calm, but it is not the center of gravity." },
+          { name: "S&P 500", range: "-10% to -15%", mid: -12.5, scale: 40, note: "Equities soften because growth cools, not because funding breaks." },
+          { name: "DXY", range: "-3% to -5%", mid: -4, scale: 8, note: "Lower relative rates take some support out of the dollar." },
+          { name: "Brent", range: "About -10%", mid: -10, scale: 80, note: "No inflationary supply shock is needed here." },
+          { name: "Prepayment speed", range: "Meaningfully higher", mid: 70, scale: 100, note: "Mortgage optionality matters more than headline default risk." }
+        ],
+        drivers: {
+          "Rates": 5,
+          "Spreads": 2,
+          "Equities": 2,
+          "Funding": 1,
+          "Inflation": 1,
+          "Convexity": 4
+        },
+        driverNote: "The hidden trap is that a 'good' move in rates can still be a bad move for mortgage carry, structural NII, and reinvestment income.",
+        steps: [
+          { label: "Trigger", title: "Inflation cools", body: "Disinflation arrives faster than expected and the market believes the Fed can ease cleanly." },
+          { label: "Market move", title: "Curve rallies", body: "Yields fall, the front end moves most, spreads widen only modestly, and the dollar softens." },
+          { label: "Desk impact", title: "Carry gets squeezed", body: "Bond duration likes the move, but mortgage books shorten and reinvestment economics worsen." },
+          { label: "Committee question", title: "Are we long the wrong kind of duration?", body: "The real issue is whether lower rates help mark-to-market but weaken earnings or optionality." }
+        ],
+        roleLens: {
+          newcomer: {
+            care: "This is the cleanest example of a scenario where 'rates down' is not automatically good for the firm.",
+            watch: "Watch Treasury yields, mortgage speeds, and where income would reprice lower.",
+            question: "Which books win mark-to-market but lose their earnings power if yields reset lower?"
+          },
+          crossasset: {
+            care: "Read this as a lower-yield regime that helps safe assets but hurts carry businesses, mortgage optionality, and earnings power.",
+            watch: "Watch the Treasury rally, faster mortgage speeds, a softer dollar, lower oil, and only mild credit widening.",
+            question: "If rates fall without a crisis, where do earnings and optionality still get worse?"
+          },
+          rates: {
+            care: "Government duration performs, but negative convexity and reinvestment drag become central.",
+            watch: "Primary-secondary mortgage basis, hedge slippage, and where your duration assumption can disappear.",
+            question: "How fast do our mortgage and callable exposures shorten if the 10Y lands around 2.8%?"
+          },
+          credit: {
+            care: "Credit is not the main story, which means this scenario is about relative underperformance, not collapse.",
+            watch: "IG repricing, spread beta, and how much your book needs a wider spread buffer.",
+            question: "Are we over-reading mild spread widening as a default story when it is really a carry reset story?"
+          },
+          funding: {
+            care: "Funding is mostly intact; the issue is balance-sheet economics, not a dollar scramble.",
+            watch: "Deposit beta, asset-yield reset, and whether lower rates compress margins faster than liabilities reprice.",
+            question: "If funding stays available, where do we still lose because assets earn less?"
+          },
+          executive: {
+            care: "This scenario reminds management that a friendly macro headline can still pressure profitability and optionality.",
+            watch: "NII sensitivity, mortgage exposure, and how much of the firm needs stable high yields to perform.",
+            question: "Would a benign easing cycle expose a structural dependence on carry?"
+          }
+        },
+        heatmap: [5, 5, 2, 1, 1, 2, 2]
+      },
+      moderate: {
+        code: "BAU_CCAR_FIRM_MODERATE",
+        short: "Moderate",
+        title: "A broad cyclical downturn where risk premia normalize.",
+        badge: "#11b0b7",
+        percentile: 72,
+        duration: "6-12 months, broad slowdown",
+        regime: "Broad cyclical downturn",
+        coreEnemy: "Spread repricing",
+        mainEngine: "Credit + equities",
+        oneLiner: "Growth disappoints, hiring softens, financial conditions tighten, and broad risk assets reprice without the system fully breaking.",
+        beginner: "This is the classic 'the economy gets weaker and markets stop pricing perfection' scenario.",
+        quant: "Rates fall, but not as violently as in the rates-rally tail. Credit spreads and leveraged-risk assets do the heavier lifting in the loss profile.",
+        business: "This is often the most decision-useful management scenario because it hits many books at once without relying on a once-in-a-generation dislocation.",
+        compareSignature: "10Y down modestly; BBB and B wider; equities down; dollar modestly firmer",
+        businessUse: "Tests broad portfolio resilience in a real but not catastrophic downturn",
+        analogy: "The economy stops running at full speed and every risky asset loses some of the optimism that had been priced in.",
+        remember: "This is the baseline stress story. It is ordinary in shape, but that is exactly why it is powerful.",
+        blindSpot: "People sometimes underweight it because it sounds ordinary. Ordinary downturns are often the most useful risk test.",
+        whyDistinct: "Unlike FTQ, the pain comes from weaker growth and wider risk premia, not from market plumbing breaking first.",
+        scorecard: { speed: 3, breadth: 4, funding: 2, diversification: 3, policy: 4 },
+        assetLens: {
+          rates: "Rates rally modestly as growth slows, but not enough to dominate the scenario.",
+          credit: "BBB and B spreads widen materially from tight starting levels. Spread repricing is the core pain.",
+          equities: "Equities fall because both earnings expectations and risk appetite are marked down together.",
+          fx: "The dollar firms a bit, but this is not a panic bid for cash.",
+          commodities: "Commodities are flat to softer, keeping the regime cyclical rather than stagflationary.",
+          funding: "Funding gets somewhat tighter, but plumbing still works and the market is still functioning.",
+          optionality: "Basis and convexity matter at the margin, but linear credit and equity risk do most of the damage."
+        },
+        books: [
+          { name: "UST duration", impact: 1, note: "Rates help somewhat, but not enough to dominate the total scenario." },
+          { name: "Agency MBS", impact: -1, note: "Lower rates help less than in the pure rates scenario because spread and risk-off effects also matter." },
+          { name: "IG credit", impact: -2, note: "BBB widening is a core part of the loss story." },
+          { name: "HY / leveraged loans", impact: -2, note: "Lower-quality credit feels the cyclical slowdown much more acutely." },
+          { name: "Liquidity / funding", impact: -1, note: "Funding strains are present but not dominant." },
+          { name: "Equity / beta books", impact: -2, note: "Multiple compression and weaker earnings pressure broad risk assets." }
+        ],
+        map: { x: 250, y: 246, r: 32 },
+        factors: [
+          { name: "10Y UST", range: "-50 to -75 bp", mid: -62.5, scale: 300, note: "Rates rally, but less than in the pure rates scenario." },
+          { name: "BBB spreads", range: "+60 to +80 bp", mid: 70, scale: 175, note: "Investment grade reprices meaningfully from tight starting levels." },
+          { name: "B spreads", range: "+225 to +275 bp", mid: 250, scale: 525, note: "Riskier credit feels the growth slowdown much more acutely." },
+          { name: "S&P 500", range: "-20% to -25%", mid: -22.5, scale: 40, note: "Broad earnings and multiple compression, not just one sector wobble." },
+          { name: "DXY", range: "Modestly stronger", mid: 3, scale: 8, note: "The dollar firms, but this is not a full funding panic." },
+          { name: "Brent", range: "Flat to -10%", mid: -5, scale: 80, note: "This is deliberately not a stagflation scenario." }
+        ],
+        drivers: {
+          "Rates": 3,
+          "Spreads": 5,
+          "Equities": 4,
+          "Funding": 2,
+          "Inflation": 1,
+          "Convexity": 2
+        },
+        driverNote: "This is the scenario where a risk committee should ask whether the portfolio can survive a normal, ugly downturn rather than a cinematic tail event.",
+        steps: [
+          { label: "Trigger", title: "Growth weakens", body: "Consumption, hiring, and credit formation slow enough that risk assets cannot stay priced for perfection." },
+          { label: "Market move", title: "Risk premia normalize", body: "Treasury yields fall some, spreads widen, and equities reprice to weaker growth." },
+          { label: "Desk impact", title: "Broad drag", body: "Credit, loans, equities, and cyclical exposures all feel pressure at the same time." },
+          { label: "Committee question", title: "Can we take a normal recession punch?", body: "If this scenario is painful, the book may be too dependent on benign spreads and stable earnings." }
+        ],
+        roleLens: {
+          newcomer: {
+            care: "This is usually the best baseline stress story for understanding why tight spreads are dangerous.",
+            watch: "Watch whether spread widening and weaker equities show up together without a full liquidity accident.",
+            question: "If the economy simply slows, where do we still lose too much?"
+          },
+          crossasset: {
+            care: "This is the cleanest all-desk scenario: slower growth pushes many risky assets weaker together without needing a market seizure.",
+            watch: "Watch the modest rates rally, wider spreads, weaker equities, mildly firmer dollar, and limited funding strain.",
+            question: "Which books are really a disguised bet on spreads staying tight and growth staying easy?"
+          },
+          rates: {
+            care: "Rates help some, but they do not save the book if spread and equity risk dominate.",
+            watch: "Curve shift, swap spread behavior, and whether lower rates offset broader risk-off losses.",
+            question: "How much of the mark-to-market relief from lower yields gets given back through spread beta?"
+          },
+          credit: {
+            care: "This is your core proving ground, especially if starting spreads are tight.",
+            watch: "BBB and B repricing, downgrade vulnerability, and loan-market depth.",
+            question: "Which sectors or ratings turn a normal downturn into a concentrated loss?"
+          },
+          funding: {
+            care: "Funding strains are present but not dominant, which helps separate economic weakness from liquidity panic.",
+            watch: "FRA-OIS, CP spreads, and balance-sheet usage, but do not mistake this for FTQ.",
+            question: "Are we relying on funding conditions staying exceptionally easy even in a broad slowdown?"
+          },
+          executive: {
+            care: "This is often the scenario most useful for capital, appetite, and performance discussion because it is plausible enough to happen and broad enough to matter.",
+            watch: "Aggregate spread beta, equity risk, CRE and consumer concentrations, and the breadth of business-line pain.",
+            question: "Does our core portfolio still make sense if the cycle simply turns?"
+          }
+        },
+        heatmap: [3, 2, 5, 2, 1, 4, 3]
+      },
+      ftq: {
+        code: "BAU_MODERATE_FLIGHT_TO_QUALITY",
+        short: "Flight to Quality",
+        title: "An acute liquidity shock where the market gaps before the economy does.",
+        badge: "#8a61ff",
+        percentile: 75,
+        duration: "Days to months, acute feel",
+        regime: "Acute liquidity shock",
+        coreEnemy: "Funding and market depth",
+        mainEngine: "Liquidity + basis",
+        oneLiner: "Investors run into Treasuries and dollars, dealers pull back, financing spreads gap wider, and mark-to-market losses arrive faster than macro data can explain them.",
+        beginner: "Think of this as the scenario where the plumbing matters as much as the economy.",
+        quant: "Rates fall, the dollar strengthens, equities drop, credit gaps wider on liquidity, and funding metrics like FRA-OIS jump hard.",
+        business: "This is the scenario that catches people who think credit only widens when defaults visibly worsen. Here, the market moves first.",
+        compareSignature: "Rates down, dollar up, spreads gap wider, funding indicators jump",
+        businessUse: "Tests funding resilience, liquidity buffers, basis exposures, and inventory risk",
+        analogy: "Think fire drill. The danger is not just the shock. It is everyone trying to exit through the same door at once.",
+        remember: "Speed matters more than calendar length. A short shock can still be lethal if funding and liquidity gap immediately.",
+        blindSpot: "People confuse this with recession. The market can panic before the economic data catches up.",
+        whyDistinct: "Unlike Moderate, the dollar and funding stress are central, not incidental.",
+        scorecard: { speed: 5, breadth: 4, funding: 5, diversification: 4, policy: 3 },
+        assetLens: {
+          rates: "Treasuries rally quickly because investors want safety immediately.",
+          credit: "Credit gaps wider because liquidity vanishes and exits get expensive before defaults are even fully visible.",
+          equities: "Equities fall fast because risk appetite collapses abruptly rather than slowly.",
+          fx: "The dollar jumps because investors want cash and safe funding conditions.",
+          commodities: "Oil falls on demand fear, not because inflation was already defeated.",
+          funding: "Funding and market depth are the center of gravity: FRA-OIS, repo, CP, and dealer balance sheets matter immediately.",
+          optionality: "Basis risk jumps because hedges and cash assets stop moving cleanly together once liquidity thins."
+        },
+        books: [
+          { name: "UST duration", impact: 1, note: "Treasuries rally, but gains can be offset elsewhere if liquidity evaporates." },
+          { name: "Agency MBS", impact: -1, note: "Rates help, but basis and hedging conditions can worsen if market depth falls." },
+          { name: "IG credit", impact: -2, note: "Liquidity premium and dealer pullback can gap marks wider quickly." },
+          { name: "HY / leveraged loans", impact: -2, note: "Illiquid or crowded risk can underperform hard under forced selling." },
+          { name: "Liquidity / funding", impact: -2, note: "This is the center of gravity. Funding cost and funding access both matter." },
+          { name: "EM / FX", impact: -2, note: "A stronger dollar and thinner liquidity can hurt cross-border and EM-sensitive positions fast." }
+        ],
+        map: { x: 270, y: 102, r: 34 },
+        factors: [
+          { name: "10Y UST", range: "-75 to -100 bp", mid: -87.5, scale: 300, note: "Treasuries rally because investors scramble for safety." },
+          { name: "BBB spreads", range: "+75 to +90 bp", mid: 82.5, scale: 175, note: "Widening is driven by liquidity and positioning, not just fundamentals." },
+          { name: "S&P 500", range: "-20% to -25%", mid: -22.5, scale: 40, note: "Risk assets sell off quickly in a short, sharp episode." },
+          { name: "DXY", range: "+6% to +8%", mid: 7, scale: 8, note: "The defining move is a stronger dollar, not a weaker one." },
+          { name: "Brent", range: "-10% to -15%", mid: -12.5, scale: 80, note: "Demand-destruction fear dominates any commodity optimism." },
+          { name: "FRA-OIS", range: "+35 to +45 bp", mid: 40, scale: 55, note: "This is what makes the scenario feel like a plumbing event rather than a slow recession." }
+        ],
+        drivers: {
+          "Rates": 3,
+          "Spreads": 4,
+          "Equities": 3,
+          "Funding": 5,
+          "Inflation": 1,
+          "Convexity": 2
+        },
+        driverNote: "The intuition to keep is that this scenario is more about market functioning than macro decay. The economic data can still look fine while P&amp;L is already bleeding.",
+        steps: [
+          { label: "Trigger", title: "Shock hits confidence", body: "A bank stress event, geopolitical shock, or gating event makes investors prefer cash, dollars, and Treasuries immediately." },
+          { label: "Market move", title: "Plumbing tightens", body: "Funding spreads rise, market depth falls, and risky assets gap lower faster than fundamentals alone would justify." },
+          { label: "Desk impact", title: "Liquidity tax arrives", body: "Inventory, financing, EM, and basis books suffer because exit prices and funding terms worsen together." },
+          { label: "Committee question", title: "Can we survive the first week?", body: "This scenario is about whether the firm can handle the speed of stress, not just the size." }
+        ],
+        roleLens: {
+          newcomer: {
+            care: "This is the best scenario for learning that 'risk-off' and 'recession' are not the same thing.",
+            watch: "Watch the dollar, funding spreads, and how quickly spread marks change relative to macro headlines.",
+            question: "If the market froze tomorrow, which books would feel it before any earnings data moved?"
+          },
+          crossasset: {
+            care: "This is a speed-and-plumbing stress across all desks, not just a macro slowdown.",
+            watch: "Watch safe-haven rates, a stronger dollar, gapping spreads, FRA-OIS, repo, and thinning market depth.",
+            question: "What breaks first if financing and exit liquidity get worse at the same time?"
+          },
+          rates: {
+            care: "Treasury duration helps, but basis and mortgage hedging can still go against you if liquidity disappears.",
+            watch: "Cash-futures basis, mortgage basis, and whether lower yields are accompanied by worse liquidity everywhere else.",
+            question: "How much of our rates protection relies on liquidity staying open?"
+          },
+          credit: {
+            care: "Spread widening here can exceed a milder macro downturn because the gap is a liquidity premium, not just a default premium.",
+            watch: "Cash-CDS basis, secondary trading depth, ETF dislocations, and loan marks under forced selling.",
+            question: "Which positions are marked by market depth rather than by long-run credit value?"
+          },
+          funding: {
+            care: "This is your home scenario. Dollar demand, CP stress, repo behavior, and balance-sheet flexibility define the outcome.",
+            watch: "FRA-OIS, CP, repo, and any sign that collateral transformation becomes harder.",
+            question: "Where would we be forced to use liquidity buffers faster than planned?"
+          },
+          executive: {
+            care: "This scenario reveals whether the firm can absorb a violent market shock without a long recession narrative to explain it away.",
+            watch: "Liquidity usage, funding lines, basis exposures, and the speed of client and market-maker behavior.",
+            question: "How long can we function if the market becomes expensive to finance and hard to exit?"
+          }
+        },
+        heatmap: [3, 2, 4, 5, 1, 3, 5]
+      },
+      severeRally: {
+        code: "BAU_SEVERE_RATES_RALLY",
+        short: "Severe Rates Rally",
+        title: "A deep recession where lower rates are not enough to save you.",
+        badge: "#165fff",
+        percentile: 87,
+        duration: "12-18 months, deep recession",
+        regime: "Deep recession / deflation scare",
+        coreEnemy: "Recession plus optionality",
+        mainEngine: "Rates + recession beta + convexity",
+        oneLiner: "Growth cracks hard, emergency easing drives a historic rates rally, but credit, equity, and mortgage-optional exposures still take severe damage.",
+        beginner: "This is the scenario where safe rates scream lower because the economy is genuinely in trouble.",
+        quant: "The 10Y drops 250-300 bp, credit widens sharply, equities fall 30%-35%, the dollar is flat to firmer, oil falls hard, and mortgage convexity becomes a major nonlinear issue.",
+        business: "This is not just 'Moderate, but more.' It adds deep recession dynamics, emergency policy, and much stronger optionality effects.",
+        compareSignature: "Massive rates rally; recession-driven spread widening; equities down hard; oil lower",
+        businessUse: "Tests severe recession resilience and the interaction between lower rates and optionality-heavy books",
+        analogy: "The economy slams into the guardrail. Safe rates crash lower, but the rest of the car still skids.",
+        remember: "Deep recession plus optionality is not the same thing as a bigger moderate scenario.",
+        blindSpot: "Seeing a huge rates rally and assuming it offsets everything else.",
+        whyDistinct: "It combines severe recession beta with the most nonlinear mortgage and callable behavior in the set.",
+        scorecard: { speed: 4, breadth: 5, funding: 2, diversification: 4, policy: 5 },
+        assetLens: {
+          rates: "Rates collapse because recession is severe enough to force emergency easing.",
+          credit: "IG and HY widen sharply because this is a real recession, not just a growth wobble.",
+          equities: "Equities fall hard on earnings destruction and full recession beta.",
+          fx: "The dollar is flat to firmer, which keeps the story clean as a severe recession rather than a dollar-collapse scenario.",
+          commodities: "Oil falls hard on demand destruction, reinforcing the deflationary regime.",
+          funding: "Funding is stressed but not the lead villain; this is less about plumbing than FTQ.",
+          optionality: "Mortgage and callable convexity become extreme, so hedge assumptions can fail just when rates are moving most."
+        },
+        books: [
+          { name: "UST duration", impact: 2, note: "Safe duration is the obvious buffer because rates collapse." },
+          { name: "Agency MBS", impact: -2, note: "This is the hardest convexity and prepayment stress in the set." },
+          { name: "IG credit", impact: -2, note: "Spread repricing is severe because the economy is truly in trouble." },
+          { name: "HY / leveraged loans", impact: -2, note: "Lower-quality credit can move toward full recession pricing." },
+          { name: "Liquidity / funding", impact: -1, note: "Not the lead villain, but balance-sheet and collateral pressures still rise." },
+          { name: "Earnings / NII", impact: -2, note: "Rates help marks but do not save the franchise from recession beta and lower asset yields." }
+        ],
+        map: { x: 84, y: 154, r: 40 },
+        factors: [
+          { name: "10Y UST", range: "-250 to -300 bp", mid: -275, scale: 300, note: "This is the largest down-rates scenario in the set." },
+          { name: "BBB spreads", range: "+125 to +150 bp", mid: 137.5, scale: 175, note: "Credit reprices hard because the economy is truly in trouble." },
+          { name: "B spreads", range: "+400 to +450 bp", mid: 425, scale: 525, note: "High-beta credit can gap toward full recession pricing." },
+          { name: "S&P 500", range: "-30% to -35%", mid: -32.5, scale: 40, note: "Broad earnings destruction and risk repricing." },
+          { name: "DXY", range: "Flat to +3%", mid: 1.5, scale: 8, note: "This keeps the severe recession story cleaner than an outright weaker-dollar assumption." },
+          { name: "Brent", range: "-20% to -30%", mid: -25, scale: 80, note: "Demand destruction is part of the recession fingerprint." }
+        ],
+        drivers: {
+          "Rates": 5,
+          "Spreads": 4,
+          "Equities": 4,
+          "Funding": 2,
+          "Inflation": 1,
+          "Convexity": 5
+        },
+        driverNote: "The phrase to remember is 'lower rates help some assets and still hurt the firm' because convexity, refinancing, and recession beta all intensify at once.",
+        steps: [
+          { label: "Trigger", title: "Economy cracks", body: "Demand, labor, and risk appetite deteriorate enough that emergency easing becomes plausible." },
+          { label: "Market move", title: "Safe rates collapse", body: "Treasury yields fall toward crisis territory while risky assets reprice to severe recession conditions." },
+          { label: "Desk impact", title: "Optionality turns nonlinear", body: "Mortgage speeds jump, duration assumptions collapse, and spread products still widen hard." },
+          { label: "Committee question", title: "What breaks even when rates help?", body: "The right question is where lower yields fail to offset recession and optionality damage." }
+        ],
+        roleLens: {
+          newcomer: {
+            care: "This scenario teaches that 'rates rally' can coexist with severe losses because the reason rates rally matters.",
+            watch: "Watch whether lower yields come with obvious recession signals and much wider risky-asset spreads.",
+            question: "Which books still lose badly even if government bonds perform?"
+          },
+          crossasset: {
+            care: "Cross-asset, this is recession plus optionality: safe rates rally violently while most risky assets still lose hard.",
+            watch: "Watch the 10Y collapse, wider spreads, sharp equity drawdown, lower oil, and mortgage convexity turning nonlinear.",
+            question: "Where does the firm still lose badly even when government bonds are making money?"
+          },
+          rates: {
+            care: "This is your extreme-duration and convexity stress. Safe duration wins, but hedging assumptions can move violently.",
+            watch: "Prepayment behavior, mortgage basis, hedge-rebalance needs, and where duration disappears on you.",
+            question: "If the 10Y lands near 1.4%, what part of our mortgage and callable profile stops behaving linearly?"
+          },
+          credit: {
+            care: "This is full recession beta, not just tighter financial conditions.",
+            watch: "Lower-quality spread behavior, downgrade migration, recovery assumptions, and where liquidity dries up in loan markets.",
+            question: "Which names or sectors become the first real default cluster?"
+          },
+          funding: {
+            care: "Funding is not the lead villain here, but it still matters because crisis policy and recession stress can move collateral and balance-sheet demand quickly.",
+            watch: "Funding stays more manageable than FTQ, but collateral usage and balance-sheet elasticity still matter.",
+            question: "Can we support the balance sheet while the rest of the firm is adjusting to a major rates shock?"
+          },
+          executive: {
+            care: "This tests whether the franchise is too exposed to a real recession even if policy tries to cushion it.",
+            watch: "Mortgage optionality, recession beta, high-yield and loan concentration, and where lower rates fail to save earnings.",
+            question: "What part of the firm remains structurally fragile even under aggressive policy easing?"
+          }
+        },
+        heatmap: [5, 5, 4, 2, 1, 4, 3]
+      },
+      severeStag: {
+        code: "BAU_SEVERE_STAGFLATION",
+        short: "Severe Stagflation",
+        title: "The severe tail where inflation and growth go wrong together.",
+        badge: "#ff7f59",
+        percentile: 90,
+        duration: "12-24 months, persistent stress",
+        regime: "Inflationary severe tail",
+        coreEnemy: "Rates up and spreads wide at the same time",
+        mainEngine: "Inflation + spreads + duration loss",
+        oneLiner: "Energy and trade-policy pressure keep inflation sticky while growth weakens, leaving the firm exposed to rising long-end yields, wider spreads, weaker equities, and stressed funding at the same time.",
+        beginner: "This is the nastiest mix: the economy is weak, but policy cannot simply cut rates because inflation is still a problem.",
+        quant: "The 10Y rises 125-150 bp, BBB widens 150-175 bp, B widens 475-525 bp, equities fall 35%-40%, oil surges 60%-80%, and funding stress is significant.",
+        business: "This is the tail that hurts both traditional risk assets and long-duration balance-sheet exposures together. You lose the usual diversification help from lower rates.",
+        compareSignature: "Rates up, oil up, spreads very wide, equities down, funding stressed",
+        businessUse: "Tests the inflationary tail most unlike a standard deflationary regulatory downturn",
+        analogy: "Imagine feeling weaker while your bills go up at the same time. The usual relief valve never opens.",
+        remember: "This is the tail where lower rates do not rescue the book.",
+        blindSpot: "Assuming recession automatically means yields fall.",
+        whyDistinct: "It is the only scenario where inflation, rates, spreads, and weak equities all lean against the firm together.",
+        scorecard: { speed: 4, breadth: 5, funding: 4, diversification: 5, policy: 1 },
+        assetLens: {
+          rates: "Long yields rise because inflation persists and policy cannot rescue risk cleanly.",
+          credit: "Credit widens sharply because fundamentals worsen while discount rates also move against risk assets.",
+          equities: "Equities are hit by weaker growth and higher discount rates at the same time.",
+          fx: "The dollar is neutral to firmer, consistent with tighter conditions rather than a weak-dollar inflation fantasy.",
+          commodities: "Oil and inflation-sensitive markets surge. That is the anchor of the scenario, not a side detail.",
+          funding: "Funding stays pressured because policy cannot ease decisively and balance-sheet conditions stay tight.",
+          optionality: "Optionality and basis still matter, but the bigger lesson is diversification failure: long-duration and spread books can lose together."
+        },
+        books: [
+          { name: "UST duration", impact: -2, note: "This is the direct duration pain scenario because long rates rise." },
+          { name: "Agency MBS", impact: -2, note: "Higher rates and weaker liquidity can stress mortgage positions from the other side." },
+          { name: "IG credit", impact: -2, note: "Fundamentals worsen while discount rates rise, which is a bad combination." },
+          { name: "HY / leveraged loans", impact: -2, note: "Lower-quality risk absorbs both recession stress and financing pressure." },
+          { name: "Liquidity / funding", impact: -2, note: "Funding stays uncomfortable because policy and balance-sheet conditions do not ease cleanly." },
+          { name: "Equity / beta books", impact: -2, note: "Earnings and valuation pressure land together while diversification weakens." }
+        ],
+        map: { x: 456, y: 146, r: 42 },
+        factors: [
+          { name: "10Y UST", range: "+125 to +150 bp", mid: 137.5, scale: 300, note: "This is the only scenario where long rates are a direct part of the pain." },
+          { name: "BBB spreads", range: "+150 to +175 bp", mid: 162.5, scale: 175, note: "Spread stress is severe because fundamentals and discount rates both worsen." },
+          { name: "B spreads", range: "+475 to +525 bp", mid: 500, scale: 525, note: "Riskier credit absorbs both recession risk and financing pressure." },
+          { name: "S&P 500", range: "-35% to -40%", mid: -37.5, scale: 40, note: "Equity valuations and earnings both come under heavy pressure." },
+          { name: "DXY", range: "Flat to +2%", mid: 1, scale: 8, note: "The cleanest teaching assumption is neutral to slightly firmer, not an unsupported weak-dollar call." },
+          { name: "Brent", range: "+60% to +80%", mid: 70, scale: 80, note: "The commodity shock is part of the regime, not a side note." }
+        ],
+        drivers: {
+          "Rates": 5,
+          "Spreads": 5,
+          "Equities": 4,
+          "Funding": 4,
+          "Inflation": 5,
+          "Convexity": 3
+        },
+        driverNote: "This is the scenario where the usual diversification reflex breaks down. Rates are not bailing out the rest of the book.",
+        steps: [
+          { label: "Trigger", title: "Inflation stays sticky", body: "Energy and policy pressure keep inflation elevated even as growth rolls over." },
+          { label: "Market move", title: "Everything hurts together", body: "Long rates rise, spreads widen sharply, equities fall, commodities surge, and funding gets tighter." },
+          { label: "Desk impact", title: "Diversification fails", body: "Long-duration assets, spread products, and growth-sensitive positions all get hit at once." },
+          { label: "Committee question", title: "What if lower rates do not save us?", body: "This scenario asks whether the firm is prepared for a weak-growth environment with no rates cushion." }
+        ],
+        roleLens: {
+          newcomer: {
+            care: "This is the hardest scenario to learn because it violates the usual idea that weak growth means lower rates.",
+            watch: "Watch whether inflationary pressure keeps long rates rising even as risky assets weaken.",
+            question: "Which books are relying on lower rates to diversify recession risk?"
+          },
+          crossasset: {
+            care: "This is the full all-asset failure mode: rates, spreads, equities, funding, and inflation all lean against the firm together.",
+            watch: "Watch long-end yields, oil, credit, equities, and funding pressure rise together without the usual rates cushion.",
+            question: "What protects the firm if the usual lower-rates hedge never arrives?"
+          },
+          rates: {
+            care: "This is your duration pain scenario. Long-end losses and curve repricing are front and center.",
+            watch: "Long-end yield sensitivity, swap spreads, inflation expectations, and where hedges assume the wrong sign on rates.",
+            question: "How much duration pain do we absorb before spreads and equities even enter the picture?"
+          },
+          credit: {
+            care: "Credit suffers from both weaker fundamentals and a higher discount-rate environment.",
+            watch: "Energy-sensitive sectors, lower-quality beta, and whether refinancing risk turns into a spread air pocket.",
+            question: "Which exposures are most vulnerable when financing conditions and growth both worsen?"
+          },
+          funding: {
+            care: "Funding matters because inflation pressure can keep policy tighter and balance-sheet conditions less forgiving.",
+            watch: "Dollar funding, repo, CP, and whether collateral and mark-to-market pressure show up together.",
+            question: "Can we fund the balance sheet comfortably if long rates rise into a weak-growth backdrop?"
+          },
+          executive: {
+            care: "This is the scenario most likely to expose a false sense of diversification because traditional hedges stop helping.",
+            watch: "Long-duration assets, spread books, energy sensitivity, and whether the firm has enough balance-sheet flexibility.",
+            question: "What happens if both inflation and recession channels land on us at the same time?"
+          }
+        },
+        heatmap: [5, 3, 5, 4, 5, 4, 4]
+      }
+    };
+
+    const state = {
+      panel: "start",
+      scenarioKey: "moderate",
+      roleKey: "newcomer",
+      compareKey: "ftq",
+      glossaryFilter: ""
+    };
+
+    const orderedScenarioKeys = Object.keys(scenarios);
+    const tooltipLookup = Object.fromEntries(Object.entries(termDefinitions).map(([term, body]) => [term.toLowerCase(), body]));
+    const tooltipTerms = Object.keys(termDefinitions)
+      .filter(term => !term.includes("&"))
+      .sort((a, b) => b.length - a.length);
+    const tooltipPattern = new RegExp(`\\b(${tooltipTerms.map(escapeRegExp).join("|")})\\b`, "gi");
+    const tooltipEl = document.getElementById("tooltip");
+    let activeTooltipTarget = null;
+
+    function escapeRegExp(value) {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function escapeAttr(value) {
+      return escapeHtml(value).replace(/'/g, "&#39;");
+    }
+
+    function annotateText(text) {
+      return escapeHtml(text).replace(tooltipPattern, (match) => {
+        const body = tooltipLookup[match.toLowerCase()];
+        if (!body) return match;
+        return `<span class="term" tabindex="0" data-tooltip="${escapeAttr(body)}">${match}</span>`;
+      });
+    }
+
+    function ordinal(value) {
+      const mod10 = value % 10;
+      const mod100 = value % 100;
+      if (mod10 === 1 && mod100 !== 11) return `${value}st`;
+      if (mod10 === 2 && mod100 !== 12) return `${value}nd`;
+      if (mod10 === 3 && mod100 !== 13) return `${value}rd`;
+      return `${value}th`;
+    }
+
+    function intensityColor(value) {
+      const colors = {
+        1: "rgba(90, 216, 255, 0.12)",
+        2: "rgba(90, 216, 255, 0.2)",
+        3: "rgba(61, 139, 255, 0.24)",
+        4: "rgba(255, 201, 64, 0.22)",
+        5: "rgba(255, 154, 77, 0.28)"
+      };
+      return colors[value];
+    }
+
+    function intensityLabel(value) {
+      return ["Low", "Low-med", "Medium", "High", "Very high"][value - 1];
+    }
+
+    function factorColor(mid, name) {
+      if (name.includes("Brent") && mid > 0) return "#ff8277";
+      if (name.includes("FRA-OIS")) return "#b295ff";
+      if (name.includes("spreads")) return mid > 120 ? "#ff9a4d" : "#ffc940";
+      if (name.includes("S&P")) return "#ff9a4d";
+      if (name.includes("DXY")) return mid >= 0 ? "#7eb6ff" : "#5ad8ff";
+      if (name.includes("10Y")) return mid < 0 ? "#5ad8ff" : "#ff8277";
+      return mid >= 0 ? "#ffc940" : "#5ad8ff";
+    }
+
+    function getScenario() {
+      return scenarios[state.scenarioKey];
+    }
+
+    function ensureCompareKey() {
+      if (state.compareKey === state.scenarioKey) {
+        state.compareKey = orderedScenarioKeys.find(key => key !== state.scenarioKey) || state.scenarioKey;
+      }
+    }
+
+    function driverShares(scenario) {
+      const entries = Object.entries(scenario.drivers);
+      const total = entries.reduce((sum, [, value]) => sum + value, 0);
+      return entries
+        .map(([label, value]) => ({
+          label,
+          value,
+          share: Math.round((value / total) * 100),
+          color: driverPalette[label] || "#7eb6ff"
+        }))
+        .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
+    }
+
+    function factorLookup(scenario) {
+      return Object.fromEntries(scenario.factors.map(factor => [factor.name, factor]));
+    }
+
+    function strongestFactors(scenario, limit = 3) {
+      return [...scenario.factors]
+        .sort((a, b) => (Math.abs(b.mid) / (b.scale || 100)) - (Math.abs(a.mid) / (a.scale || 100)))
+        .slice(0, limit);
+    }
+
+    function impactMeta(impact) {
+      if (impact >= 2) return { label: "Buffer", className: "impact-pill impact-good" };
+      if (impact === 1) return { label: "Some buffer", className: "impact-pill impact-good" };
+      if (impact === 0) return { label: "Mixed", className: "impact-pill impact-mixed" };
+      if (impact === -1) return { label: "Drag", className: "impact-pill impact-bad" };
+      return { label: "Heavy drag", className: "impact-pill impact-bad" };
+    }
+
+    function infoDot(term) {
+      const body = termDefinitions[term];
+      if (!body) return "";
+      return `<button class="info-dot" type="button" data-tooltip="${escapeAttr(body)}">i</button>`;
+    }
+
+    function renderScenarioButtons() {
+      const scenarioButtons = document.getElementById("scenarioButtons");
+      scenarioButtons.innerHTML = "";
+
+      orderedScenarioKeys.forEach((key) => {
+        const scenario = scenarios[key];
+        const button = document.createElement("button");
+        button.className = "chip" + (state.scenarioKey === key ? " active" : "");
+        button.textContent = scenario.short;
+        if (state.scenarioKey === key) button.style.background = scenario.badge;
+        button.addEventListener("click", () => {
+          state.scenarioKey = key;
+          ensureCompareKey();
+          render();
+        });
+        scenarioButtons.appendChild(button);
+      });
+    }
+
+    function renderRoleButtons() {
+      const roleButtons = document.getElementById("roleButtons");
+      roleButtons.innerHTML = "";
+
+      Object.entries(roles).forEach(([key, role]) => {
+        const button = document.createElement("button");
+        button.className = "chip" + (state.roleKey === key ? " active" : "");
+        button.textContent = role.label;
+        if (state.roleKey === key) button.style.background = "#24364f";
+        button.addEventListener("click", () => {
+          state.roleKey = key;
+          renderRoleButtons();
+          renderBusinessLens();
+          bindTooltips();
+        });
+        roleButtons.appendChild(button);
+      });
+    }
+
+    function withArticle(text) {
+      return /^[aeiou]/i.test(text) ? `an ${text}` : `a ${text}`;
+    }
+
+    function renderSelectedSummary() {
+      const scenario = getScenario();
+      const container = document.getElementById("selectedSummary");
+      container.innerHTML = `
+        <div class="scenario-hero">
+          <div>
+            <div class="scenario-title-row">
+              <span class="scenario-badge" style="background:${scenario.badge};">${escapeHtml(scenario.short)}</span>
+              <span class="scenario-code">${escapeHtml(scenario.code)}</span>
+            </div>
+            <div class="scenario-title">${escapeHtml(scenario.title)}</div>
+          </div>
+          <p class="scenario-one-liner">${annotateText(scenario.oneLiner)}</p>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-label">Severity</div>
+              <div class="stat-value">~${ordinal(scenario.percentile)}</div>
+              <p>Teaching proxy for how hard the scenario is meant to hit.</p>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Time feel</div>
+              <div class="stat-value">${escapeHtml(scenario.duration)}</div>
+              <p>The pace of the stress often matters as much as its endpoint.</p>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Main engine</div>
+              <div class="stat-value">${escapeHtml(scenario.mainEngine)}</div>
+              <p>The shortest answer to "what really drives the losses?"</p>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Core enemy</div>
+              <div class="stat-value">${escapeHtml(scenario.coreEnemy)}</div>
+              <p>The thing a portfolio manager should be most afraid of in this regime.</p>
+            </div>
+          </div>
+          <div class="translation-grid">
+            <div class="translation-card">
+              <h4>Analogy</h4>
+              <p>${annotateText(scenario.analogy)}</p>
+            </div>
+            <div class="translation-card">
+              <h4>Remember this</h4>
+              <p>${annotateText(scenario.remember)}</p>
+            </div>
+            <div class="translation-card">
+              <h4>Common blind spot</h4>
+              <p>${annotateText(scenario.blindSpot)}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderScenarioLadder() {
+      const ladder = document.getElementById("scenarioLadder");
+      ladder.innerHTML = orderedScenarioKeys
+        .map((key) => scenarios[key])
+        .sort((a, b) => a.percentile - b.percentile)
+        .map((scenario) => `
+          <div class="ladder-card${scenario.code === getScenario().code ? " active" : ""}" data-scenario="${escapeAttr(scenario.code)}" style="border-left:3px solid ${scenario.badge};">
+            <div class="ladder-top">
+              <div class="ladder-title">${escapeHtml(scenario.short)}</div>
+              <div class="ladder-severity">~${ordinal(scenario.percentile)}</div>
+            </div>
+            <p>${annotateText(scenario.mainEngine)}</p>
+            <div class="footnote">${escapeHtml(scenario.regime)}</div>
+          </div>
+        `).join("");
+
+      ladder.querySelectorAll(".ladder-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          const key = orderedScenarioKeys.find(item => scenarios[item].code === card.dataset.scenario);
+          if (!key) return;
+          state.scenarioKey = key;
+          ensureCompareKey();
+          render();
+        });
+      });
+    }
+
+    function renderAtoZChecklist() {
+      const container = document.getElementById("atozChecklistGrid");
+      container.innerHTML = aToZChecklist.map((item) => `
+        <div class="az-card">
+          <div class="az-step">${escapeHtml(item.step)}</div>
+          <h4>${escapeHtml(item.title)}</h4>
+          <p>${annotateText(item.body)}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderDriverShare() {
+      const scenario = getScenario();
+      const strip = document.getElementById("driverShareStrip");
+      const list = document.getElementById("driverShareList");
+      const shares = driverShares(scenario);
+
+      strip.innerHTML = `<div class="contribution-strip">${
+        shares.map(item => `<div class="segment" style="width:${item.share}%;background:${item.color};" title="${escapeAttr(item.label)}"></div>`).join("")
+      }</div>`;
+
+      list.innerHTML = shares.map(item => `
+        <div class="contribution-item">
+          <span class="dot" style="background:${item.color};"></span>
+          <span>${escapeHtml(item.label)}</span>
+          <span>${item.share}%</span>
+        </div>
+      `).join("");
+    }
+
+    function renderScenarioLab() {
+      const scenario = getScenario();
+
+      document.getElementById("translationGrid").innerHTML = `
+        <div class="translation-card">
+          <h4>Beginner intuition</h4>
+          <p>${annotateText(scenario.beginner)}</p>
+        </div>
+        <div class="translation-card">
+          <h4>Quant intuition</h4>
+          <p>${annotateText(scenario.quant)}</p>
+        </div>
+        <div class="translation-card">
+          <h4>Business intuition</h4>
+          <p>${annotateText(scenario.business)}</p>
+        </div>
+      `;
+
+      document.getElementById("timeline").innerHTML = scenario.steps.map(step => `
+        <div class="timeline-card">
+          <div class="timeline-label">${escapeHtml(step.label)}</div>
+          <strong>${escapeHtml(step.title)}</strong>
+          <p>${annotateText(step.body)}</p>
+        </div>
+      `).join("");
+
+      document.getElementById("coherenceList").innerHTML = coherenceMap[state.scenarioKey].map(item => `
+        <div class="coherence-item">
+          <strong>${escapeHtml(item.title)}</strong>
+          <p>${annotateText(item.body)}</p>
+        </div>
+      `).join("");
+
+      renderMap();
+    }
+
+    function renderMap() {
+      const svg = document.getElementById("scenarioMap");
+      const plot = { x: 52, y: 30, w: 456, h: 300 };
+
+      const bubbles = orderedScenarioKeys.map((key) => {
+        const scenario = scenarios[key];
+        const active = key === state.scenarioKey;
+        return `
+          <g class="bubble" data-key="${key}" style="cursor:pointer;">
+            <circle cx="${scenario.map.x}" cy="${scenario.map.y}" r="${scenario.map.r}"
+              fill="${scenario.badge}"
+              fill-opacity="${active ? 0.95 : 0.72}"
+              stroke="${active ? "#ffffff" : "rgba(255,255,255,0.5)"}"
+              stroke-width="${active ? 4 : 2}"></circle>
+            <text x="${scenario.map.x}" y="${scenario.map.y - 6}" text-anchor="middle" style="font-family:var(--body);font-size:13px;font-weight:700;fill:#ffffff;">${escapeHtml(scenario.short)}</text>
+            <text x="${scenario.map.x}" y="${scenario.map.y + 12}" text-anchor="middle" style="font-family:var(--mono);font-size:11px;fill:#ffffff;">~${ordinal(scenario.percentile)}</text>
+          </g>
+        `;
+      }).join("");
+
+      svg.innerHTML = `
+        <rect x="${plot.x}" y="${plot.y}" width="${plot.w}" height="${plot.h}" rx="22" fill="rgba(255,255,255,0.03)" stroke="rgba(110,140,190,0.18)"></rect>
+        <line x1="${plot.x + plot.w / 2}" y1="${plot.y}" x2="${plot.x + plot.w / 2}" y2="${plot.y + plot.h}" stroke="rgba(255,255,255,0.12)" stroke-dasharray="6 8"></line>
+        <line x1="${plot.x}" y1="${plot.y + plot.h / 2}" x2="${plot.x + plot.w}" y2="${plot.y + plot.h / 2}" stroke="rgba(255,255,255,0.12)" stroke-dasharray="6 8"></line>
+        <text x="${plot.x - 8}" y="${plot.y + 18}" text-anchor="end" style="font-family:var(--mono);font-size:11px;fill:#6680a6;">More dislocated</text>
+        <text x="${plot.x - 8}" y="${plot.y + plot.h - 6}" text-anchor="end" style="font-family:var(--mono);font-size:11px;fill:#6680a6;">More orderly</text>
+        <text x="${plot.x + 6}" y="${plot.y + plot.h + 28}" style="font-family:var(--mono);font-size:11px;fill:#6680a6;">Deflationary / recessionary</text>
+        <text x="${plot.x + plot.w - 6}" y="${plot.y + plot.h + 28}" text-anchor="end" style="font-family:var(--mono);font-size:11px;fill:#6680a6;">Inflationary / commodity-led</text>
+        ${bubbles}
+      `;
+
+      svg.querySelectorAll(".bubble").forEach((node) => {
+        node.addEventListener("click", () => {
+          state.scenarioKey = node.dataset.key;
+          ensureCompareKey();
+          render();
+        });
+      });
+    }
+
+    function renderFactors() {
+      const scenario = getScenario();
+      const factorGrid = document.getElementById("factorGrid");
+      factorGrid.innerHTML = scenario.factors.map((factor) => {
+        const scale = factor.scale || 100;
+        const length = Math.min(Math.abs(factor.mid) / scale, 1) * 50;
+        const left = factor.mid >= 0 ? 50 : 50 - length;
+        return `
+          <div class="metric-card">
+            <div class="metric-top">
+              <div class="metric-name">${escapeHtml(factor.name)} ${infoDot(factor.name)}</div>
+              <div class="metric-value" style="color:${factorColor(factor.mid, factor.name)};">${escapeHtml(factor.range)}</div>
+            </div>
+            <div class="metric-track">
+              <div class="metric-zero"></div>
+              <div class="metric-bar" style="left:${left}%;width:${length}%;background:${factorColor(factor.mid, factor.name)};"></div>
+            </div>
+            <p>${annotateText(factor.note)}</p>
+          </div>
+        `;
+      }).join("");
+
+      document.getElementById("driverGrid").innerHTML = Object.entries(scenario.drivers).map(([label, value]) => `
+        <div class="driver-card">
+          <div class="driver-row">
+            <div class="driver-label">${escapeHtml(label)}</div>
+            <div class="driver-track">
+              <div class="driver-fill" style="width:${(value / 5) * 100}%;background:linear-gradient(90deg, ${driverPalette[label] || "#7eb6ff"} 0%, rgba(255,255,255,0.45) 100%);"></div>
+            </div>
+            <div class="driver-value">${value}/5</div>
+          </div>
+        </div>
+      `).join("");
+
+      document.getElementById("driverNote").innerHTML = annotateText(scenario.driverNote);
+
+      document.getElementById("keyNumbers").innerHTML = strongestFactors(scenario).map((factor) => `
+        <div class="mini-card">
+          <h4>${escapeHtml(factor.name)}</h4>
+          <div class="pill-note">${escapeHtml(factor.range)}</div>
+          <p style="margin-top:10px;">${annotateText(factor.note)}</p>
+        </div>
+      `).join("");
+
+      renderScoreboard();
+    }
+
+    function renderScoreboard() {
+      const scoreGrid = document.getElementById("scoreGrid");
+      const scorecard = getScenario().scorecard;
+      scoreGrid.innerHTML = Object.entries(scoreLabels).map(([key, label]) => `
+        <div class="score-row">
+          <span>${escapeHtml(label)}</span>
+          <div class="score-track">
+            <div class="score-fill" style="width:${(scorecard[key] / 5) * 100}%;"></div>
+          </div>
+          <div class="score-value">${scorecard[key]}/5</div>
+        </div>
+      `).join("");
+    }
+
+    function renderBusinessLens() {
+      const scenario = getScenario();
+      const lens = scenario.roleLens[state.roleKey];
+
+      document.getElementById("roleGrid").innerHTML = `
+        <div class="role-card">
+          <h4>Why you care in this role</h4>
+          <p>${annotateText(lens.care)}</p>
+        </div>
+        <div class="role-card">
+          <h4>What to watch first</h4>
+          <p>${annotateText(lens.watch)}</p>
+        </div>
+        <div class="role-card">
+          <h4>Question to ask out loud</h4>
+          <p>${annotateText(lens.question)}</p>
+        </div>
+      `;
+
+      document.getElementById("bookGrid").innerHTML = scenario.books.map((book) => {
+        const meta = impactMeta(book.impact);
+        return `
+          <div class="book-card">
+            <div class="${meta.className}">${meta.label}</div>
+            <div class="book-title">${escapeHtml(book.name)}</div>
+            <p>${annotateText(book.note)}</p>
+          </div>
+        `;
+      }).join("");
+
+      const firstBooks = scenario.books
+        .filter((book) => book.impact < 0)
+        .slice(0, 3)
+        .map((book) => book.name)
+        .join(", ");
+
+      const assetLensItems = [
+        { step: "A", title: "Big idea", body: scenario.remember },
+        { step: "B", title: "Rates", body: scenario.assetLens.rates },
+        { step: "C", title: "Credit", body: scenario.assetLens.credit },
+        { step: "D", title: "Equities", body: scenario.assetLens.equities },
+        { step: "E", title: "FX / dollar", body: scenario.assetLens.fx },
+        { step: "F", title: "Commodities / inflation", body: scenario.assetLens.commodities },
+        { step: "G", title: "Funding / liquidity", body: scenario.assetLens.funding },
+        { step: "H", title: "Optionality / basis", body: scenario.assetLens.optionality },
+        { step: "I", title: "Books hit first", body: `${firstBooks}. ${scenario.steps[2].body}` },
+        { step: "J", title: "Management question", body: scenario.steps[3].body }
+      ];
+
+      document.getElementById("assetLensGrid").innerHTML = assetLensItems.map((item) => `
+        <div class="asset-lens-card">
+          <div class="asset-step">${escapeHtml(item.step)}</div>
+          <h4>${escapeHtml(item.title)}</h4>
+          <p>${annotateText(item.body)}</p>
+        </div>
+      `).join("");
+
+      document.getElementById("businessNotes").innerHTML = `
+        <article class="card">
+          <div class="card-head">
+            <div><h3>Why this scenario exists</h3></div>
+          </div>
+          <div class="card-body">
+            <div class="business-note"><strong>Distinctive purpose</strong><p>${annotateText(scenario.whyDistinct)}</p></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <div><h3>First place the pain shows up</h3></div>
+          </div>
+          <div class="card-body">
+            <div class="business-note"><strong>First-order hit</strong><p>${annotateText(scenario.steps[2].body)}</p></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <div><h3>Management question</h3></div>
+          </div>
+          <div class="card-body">
+            <div class="business-note"><strong>Committee lens</strong><p>${annotateText(scenario.steps[3].body)}</p></div>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-head">
+            <div><h3>What people often miss</h3></div>
+          </div>
+          <div class="card-body">
+            <div class="business-note"><strong>Blind spot</strong><p>${annotateText(scenario.blindSpot)}</p></div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderComparePanel() {
+      ensureCompareKey();
+      const left = getScenario();
+      const right = scenarios[state.compareKey];
+      const compareSelect = document.getElementById("compareSelect");
+
+      compareSelect.innerHTML = orderedScenarioKeys
+        .filter(key => key !== state.scenarioKey)
+        .map(key => `<option value="${key}"${key === state.compareKey ? " selected" : ""}>${escapeHtml(scenarios[key].short)}</option>`)
+        .join("");
+
+      compareSelect.onchange = (event) => {
+        state.compareKey = event.target.value;
+        renderComparePanel();
+        bindTooltips();
+      };
+
+      document.getElementById("compareLeft").innerHTML = renderCompareCard(left);
+      document.getElementById("compareRight").innerHTML = renderCompareCard(right);
+      document.getElementById("compareHighlights").innerHTML = buildComparisonHighlights(left, right).map(item => `
+        <div class="compare-highlight">
+          <strong>${escapeHtml(item.title)}</strong>
+          <p>${annotateText(item.body)}</p>
+        </div>
+      `).join("");
+
+      renderCompareTable();
+      renderHeatmap();
+    }
+
+    function renderCompareCard(scenario) {
+      return `
+        <div class="compare-badge" style="background:${scenario.badge};">${escapeHtml(scenario.short)}</div>
+        <h4>${escapeHtml(scenario.title)}</h4>
+        <p>${annotateText(scenario.oneLiner)}</p>
+        <div class="footnote">Severity ~${ordinal(scenario.percentile)} | ${escapeHtml(scenario.regime)} | ${escapeHtml(scenario.mainEngine)}</div>
+      `;
+    }
+
+    function buildComparisonHighlights(left, right) {
+      const leftFactors = factorLookup(left);
+      const rightFactors = factorLookup(right);
+      const shared = left.factors
+        .filter(factor => rightFactors[factor.name])
+        .map((factor) => ({
+          name: factor.name,
+          left: factor,
+          right: rightFactors[factor.name],
+          diff: Math.abs((factor.mid / (factor.scale || 100)) - (rightFactors[factor.name].mid / (rightFactors[factor.name].scale || 100)))
+        }))
+        .sort((a, b) => b.diff - a.diff);
+
+      const biggest = shared[0];
+      const biggestDriver = Object.entries(left.drivers)
+        .map(([label, value]) => ({ label, diff: value - right.drivers[label], left: value, right: right.drivers[label] }))
+        .sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff))[0];
+
+      return [
+        {
+          title: "Macro frame",
+          body: `${left.short} is ${withArticle(left.regime.toLowerCase())} scenario. ${right.short} is ${withArticle(right.regime.toLowerCase())} scenario. The stories may both feel risk-off, but they are not asking the same business question.`
+        },
+        {
+          title: "Biggest market difference",
+          body: `${biggest.name} is the clearest separator: ${left.short} assumes ${biggest.left.range}, while ${right.short} assumes ${biggest.right.range}. That changes the hedge and loss story materially.`
+        },
+        {
+          title: "Biggest business difference",
+          body: `${left.short} leans more on ${biggestDriver.label.toLowerCase()} risk (${biggestDriver.left}/5 versus ${biggestDriver.right}/5). ${right.short} is therefore telling you to worry about a different first-order source of pain.`
+        }
+      ];
+    }
+
+    function renderCompareTable() {
+      const body = document.getElementById("compareTableBody");
+      body.innerHTML = orderedScenarioKeys.map((key) => {
+        const scenario = scenarios[key];
+        return `
+          <tr class="${key === state.scenarioKey ? "row-active" : ""}">
+            <td><strong>${escapeHtml(scenario.short)}</strong>${escapeHtml(scenario.code)}</td>
+            <td>${escapeHtml(scenario.regime)}</td>
+            <td>${annotateText(scenario.mainEngine)}</td>
+            <td>${annotateText(scenario.compareSignature)}</td>
+            <td>${annotateText(scenario.businessUse)}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function renderHeatmap() {
+      const heatmap = document.getElementById("heatmap");
+      const header = `
+        <div class="heatmap-header">
+          <div class="heatmap-label">Channel</div>
+          ${orderedScenarioKeys.map(key => `<div class="heatmap-scenario">${escapeHtml(scenarios[key].short)}</div>`).join("")}
+        </div>
+      `;
+
+      const rows = channels.map((channel, index) => `
+        <div class="heatmap-row">
+          <div class="heatmap-label">${escapeHtml(channel)}</div>
+          ${orderedScenarioKeys.map((key) => {
+            const scenario = scenarios[key];
+            const value = scenario.heatmap[index];
+            const border = key === state.scenarioKey ? `2px solid ${scenario.badge}` : "1px solid rgba(110, 140, 190, 0.16)";
+            return `
+              <div class="heatmap-cell" style="background:${intensityColor(value)};border:${border};">
+                <strong>${intensityLabel(value)}</strong>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `).join("");
+
+      heatmap.innerHTML = header + rows;
+    }
+
+    function renderGlossary() {
+      document.getElementById("glossarySearch").value = state.glossaryFilter;
+      const filter = state.glossaryFilter.trim().toLowerCase();
+      const items = glossary.filter(item =>
+        !filter ||
+        item.term.toLowerCase().includes(filter) ||
+        item.body.toLowerCase().includes(filter)
+      );
+
+      const grid = document.getElementById("glossaryGrid");
+      if (!items.length) {
+        grid.innerHTML = `<div class="empty-state">No glossary matches for "${escapeHtml(state.glossaryFilter)}". Try a shorter term such as carry, basis, convexity, or NII.</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => `
+        <div class="glossary-card">
+          <h4>${escapeHtml(item.term)}</h4>
+          <p>${annotateText(item.body)}</p>
+        </div>
+      `).join("");
+    }
+
+    function showTooltip(target, x, y) {
+      const text = target.dataset.tooltip;
+      if (!text) return;
+      activeTooltipTarget = target;
+      tooltipEl.innerHTML = text;
+      tooltipEl.classList.add("visible");
+      moveTooltip(x, y);
+    }
+
+    function moveTooltip(x, y) {
+      const tooltipWidth = tooltipEl.offsetWidth || 220;
+      const tooltipHeight = tooltipEl.offsetHeight || 60;
+      const left = Math.min(x + 16, window.innerWidth - tooltipWidth - 12);
+      const top = Math.min(y + 18, window.innerHeight - tooltipHeight - 12);
+      tooltipEl.style.left = `${Math.max(12, left)}px`;
+      tooltipEl.style.top = `${Math.max(12, top)}px`;
+    }
+
+    function hideTooltip() {
+      activeTooltipTarget = null;
+      tooltipEl.classList.remove("visible");
+    }
+
+    function bindTooltips() {
+      document.querySelectorAll("[data-tooltip]").forEach((node) => {
+        if (node.dataset.bound === "true") return;
+        node.dataset.bound = "true";
+
+        node.addEventListener("mouseenter", (event) => showTooltip(node, event.clientX, event.clientY));
+        node.addEventListener("mousemove", (event) => moveTooltip(event.clientX, event.clientY));
+        node.addEventListener("mouseleave", hideTooltip);
+        node.addEventListener("focus", () => {
+          const rect = node.getBoundingClientRect();
+          showTooltip(node, rect.left + rect.width / 2, rect.bottom);
+        });
+        node.addEventListener("blur", hideTooltip);
+        node.addEventListener("click", (event) => {
+          if (!node.classList.contains("info-dot")) return;
+          event.preventDefault();
+          const rect = node.getBoundingClientRect();
+          if (activeTooltipTarget === node) {
+            hideTooltip();
+          } else {
+            showTooltip(node, rect.left + rect.width / 2, rect.bottom);
+          }
+        });
+      });
+    }
+
+    function renderTabs() {
+      document.querySelectorAll(".nav-tab").forEach((button) => {
+        button.classList.toggle("active", button.dataset.panel === state.panel);
+      });
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === state.panel);
+      });
+    }
+
+    function render() {
+      renderScenarioButtons();
+      renderRoleButtons();
+      renderTabs();
+      renderSelectedSummary();
+      renderAtoZChecklist();
+      renderScenarioLadder();
+      renderDriverShare();
+      renderScenarioLab();
+      renderFactors();
+      renderBusinessLens();
+      renderComparePanel();
+      renderGlossary();
+      bindTooltips();
+    }
+
+    document.getElementById("glossarySearch").addEventListener("input", (event) => {
+      state.glossaryFilter = event.target.value;
+      renderGlossary();
+      bindTooltips();
+    });
+
+    document.getElementById("tabNav").querySelectorAll(".nav-tab").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.panel = button.dataset.panel;
+        renderTabs();
+      });
+    });
+
+    window.addEventListener("scroll", () => {
+      if (activeTooltipTarget && !document.body.contains(activeTooltipTarget)) {
+        hideTooltip();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
