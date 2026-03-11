@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Persian Gulf Conflicts — Energy & Equity Market Impact Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg-page: #0a0a0a; --bg-panel: #161616; --bg-header: #111111;
+    --bg-row: #0d0d0d; --border: #222; --border-light: #333;
+    --amber: #f59e0b; --amber-light: #fbbf24; --blue: #3b82f6;
+    --red: #ef4444; --green: #22c55e; --orange: #f97316;
+    --txt-primary: #e5e7eb; --txt-secondary: #9ca3af; --txt-muted: #6b7280;
+    --txt-dim: #4b5563;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg-page); color: var(--txt-primary); line-height: 1.4; -webkit-font-smoothing: antialiased; }
+  .mono { font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace; }
+
+  /* Header */
+  .header { background: var(--bg-header); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 50; }
+  .header-inner { max-width: 1600px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .header h1 { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+  .header h1 .amber { color: var(--amber); }
+  .header h1 .sep { color: var(--txt-dim); font-weight: 400; margin: 0 8px; }
+  .header h1 .sub { color: var(--txt-secondary); font-weight: 400; font-size: 13px; }
+  .header .tagline { font-size: 10px; color: var(--txt-dim); margin-top: 2px; letter-spacing: 0.3px; }
+  .tab-bar { display: flex; gap: 4px; }
+  .tab-btn { padding: 6px 14px; font-size: 11px; font-weight: 600; border-radius: 6px; border: 1px solid var(--border);
+    background: #1a1a1a; color: var(--txt-muted); cursor: pointer; transition: all 0.2s; }
+  .tab-btn:hover { background: #252525; color: var(--txt-secondary); border-color: var(--border-light); }
+  .tab-btn.active { background: rgba(245,158,11,0.15); color: var(--amber); border-color: rgba(245,158,11,0.4); }
+
+  /* Layout */
+  .container { max-width: 1600px; margin: 0 auto; padding: 16px 20px; }
+  .grid-9 { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; margin-bottom: 16px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 1100px) { .grid-9 { grid-template-columns: repeat(5, 1fr); } }
+  @media (max-width: 768px) { .grid-9 { grid-template-columns: repeat(3, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .kpi-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+  .kpi-card .label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--txt-dim); }
+  .kpi-card .value { font-size: 14px; font-weight: 700; margin-top: 4px; }
+  .kpi-card .value.amber { color: var(--amber); }
+  .kpi-card .value.red { color: var(--red); }
+  .kpi-card .value.blue { color: var(--blue); }
+  .kpi-card .value.white { color: var(--txt-primary); }
+  .kpi-card .value.orange { color: var(--orange); }
+
+  /* Panels */
+  .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .panel.live { border-color: rgba(245,158,11,0.3); }
+  .panel h2 { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+  .panel h2.amber { color: var(--amber); }
+  .panel h2.blue { color: var(--blue); }
+  .panel h2.white { color: var(--txt-primary); }
+  .panel .subtitle { font-size: 10px; color: var(--txt-dim); margin-top: -8px; margin-bottom: 10px; }
+
+  /* Table */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  .data-table th { text-align: left; padding: 5px 6px; color: var(--txt-muted); font-weight: 500; border-bottom: 1px solid var(--border-light); }
+  .data-table th.center { text-align: center; }
+  .data-table td { padding: 4px 6px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .data-table td.center { text-align: center; }
+  .data-table th.active-col { color: var(--amber); }
+
+  /* Heatmap cells */
+  .hm-cell { text-align: center; border-radius: 3px; padding: 3px 4px !important; }
+  .hm-na { background: #1a1a1a; color: var(--txt-dim); }
+  .hm-mild { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .hm-mod { background: rgba(239,68,68,0.25); color: #fca5a5; }
+  .hm-sev { background: rgba(239,68,68,0.35); color: #fecaca; }
+  .hm-ext { background: rgba(239,68,68,0.5); color: #fecaca; }
+  .hm-rec { font-size: 8px; opacity: 0.6; display: block; }
+
+  /* Live data rows */
+  .live-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-row);
+    border-radius: 6px; padding: 6px 12px; margin-bottom: 4px; }
+  .live-row .lbl { font-size: 11px; color: var(--txt-secondary); }
+  .live-row .vals { display: flex; align-items: center; gap: 12px; }
+  .live-row .cur { font-size: 12px; font-weight: 600; }
+  .live-row .cur.amber { color: var(--amber); }
+  .live-row .cur.blue { color: var(--blue); }
+  .live-row .from { font-size: 10px; color: var(--txt-dim); }
+  .live-row .delta { font-size: 10px; font-weight: 600; }
+  .live-row .delta.up { color: var(--red); }
+  .live-row .delta.down { color: var(--red); }
+
+  /* Scenario table */
+  .scenario-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .scenario-table th { text-align: left; padding: 6px 8px; color: var(--txt-muted); font-weight: 500; border-bottom: 1px solid var(--border-light); }
+  .scenario-table td { padding: 6px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--txt-secondary); }
+  .scenario-table td.name { font-weight: 600; }
+
+  /* Timeline */
+  .timeline-bar { position: relative; height: 60px; margin-top: 20px; }
+  .timeline-line { position: absolute; top: 12px; left: 0; right: 0; height: 2px; background: #333; }
+  .timeline-dots { display: flex; justify-content: space-between; position: relative; z-index: 2; }
+  .timeline-dot { display: flex; flex-direction: column; align-items: center; }
+  .timeline-dot .dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid; }
+  .timeline-dot .dot.start { background: var(--red); border-color: #f87171; }
+  .timeline-dot .dot.end { background: var(--green); border-color: #4ade80; }
+  .timeline-dot .yr { font-size: 10px; font-weight: 700; margin-top: 6px; color: var(--txt-primary); }
+  .timeline-dot .desc { font-size: 8px; color: var(--txt-dim); text-align: center; max-width: 70px; }
+  .conflict-bars { margin-top: 16px; }
+  .conflict-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+  .conflict-bar-row .name { font-size: 9px; color: var(--txt-dim); width: 65px; text-align: right; flex-shrink: 0; }
+  .conflict-bar-row .track { flex: 1; position: relative; height: 18px; }
+  .conflict-bar-row .bar { position: absolute; height: 100%; border-radius: 3px; border: 1px solid;
+    display: flex; align-items: center; padding: 0 6px; }
+  .conflict-bar-row .bar span { font-size: 8px; color: var(--txt-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-tanker { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); }
+  .bar-gulf { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); }
+  .bar-iraq { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); }
+  .bar-epic { background: rgba(245,158,11,0.15); border-color: var(--amber); }
+
+  /* Pulse */
+  .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--red); display: inline-block; margin-right: 6px;
+    animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* Chart containers */
+  .chart-wrap { position: relative; height: 280px; }
+
+  /* Sector bar (pure CSS) */
+  .sector-bars { display: flex; flex-direction: column; gap: 4px; }
+  .sector-row { display: flex; align-items: center; gap: 6px; }
+  .sector-row .s-name { width: 80px; font-size: 10px; color: var(--txt-secondary); text-align: right; flex-shrink: 0; }
+  .sector-row .s-track { flex: 1; height: 20px; position: relative; }
+  .sector-row .s-bar { position: absolute; height: 100%; border-radius: 3px; display: flex; align-items: center; padding: 0 5px;
+    font-size: 9px; font-weight: 600; transition: width 0.4s ease; }
+  .sector-row .s-bar.pos { background: var(--green); color: #064e3b; left: 50%; }
+  .sector-row .s-bar.neg { background: var(--red); color: #450a0a; right: 50%; text-align: right; justify-content: flex-end; }
+  .sector-row .s-zero { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #444; }
+
+  /* Footer */
+  .footer { text-align: center; padding: 12px 0; font-size: 9px; color: var(--txt-dim); letter-spacing: 0.3px; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1><span class="amber">Persian Gulf Conflicts</span><span class="sep">|</span><span class="sub">Energy & Equity Market Impact Dashboard</span></h1>
+      <div class="tagline">INTERNAL — FOR SENIOR LEADERSHIP &nbsp;|&nbsp; Data as of March 11, 2026</div>
+    </div>
+    <div class="tab-bar" id="tabBar"></div>
+  </div>
+</div>
+
+<div class="container">
+  <!-- KPI Cards -->
+  <div class="grid-9" id="kpiRow"></div>
+
+  <!-- Row 1: Energy Chart + Equity Heatmap -->
+  <div class="grid-2">
+    <div class="panel">
+      <h2 class="amber" id="energyTitle">Energy Price Trajectory</h2>
+      <div class="subtitle" id="energySub">Indexed to T=0 at conflict onset (T-30 through T+90 days)</div>
+      <div class="chart-wrap"><canvas id="energyChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <h2 class="blue">Global Equity Heatmap — All Conflicts</h2>
+      <div class="subtitle">Max drawdown % and recovery time | Deeper red = larger drawdown</div>
+      <div style="overflow-x:auto"><table class="data-table" id="heatmapTable"></table></div>
+    </div>
+  </div>
+
+  <!-- Row 2: Comparative + Sector -->
+  <div class="grid-2">
+    <div class="panel">
+      <h2 class="white">Comparative: Peak Energy Spike vs. Equity Drawdown</h2>
+      <div class="chart-wrap"><canvas id="compChart"></canvas></div>
+    </div>
+    <div class="panel">
+      <h2 class="white" id="sectorTitle">Sector Impact</h2>
+      <div class="chart-wrap" style="height:auto;min-height:260px" id="sectorPanel"></div>
+    </div>
+  </div>
+
+  <!-- Row 3: Epic Fury Live Panel -->
+  <div id="livePanel" style="display:none"></div>
+
+  <!-- Row 4: Timeline -->
+  <div class="panel">
+    <h2 class="white">Historical Timeline — Persian Gulf Conflicts</h2>
+    <div class="timeline-bar">
+      <div class="timeline-line"></div>
+      <div class="timeline-dots" id="timelineDots"></div>
+    </div>
+    <div class="conflict-bars" id="conflictBars"></div>
+  </div>
+
+  <div class="footer">INTERNAL — FOR SENIOR LEADERSHIP &nbsp;|&nbsp; CIB Risk Analytics &nbsp;|&nbsp; Data as of March 11, 2026 &nbsp;|&nbsp; Sources: EIA, FRED, ICE, CME, Bloomberg, AAA, IEA, OPEC</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════
+const CONFLICTS = {
+  tankerWars: {
+    id:"tankerWars", name:"Tanker Wars", period:"1987–1988", shortName:"Tanker Wars",
+    kpi: [
+      {l:"Brent Peak \u0394%",v:"+15%",c:"amber"},{l:"WTI Peak \u0394%",v:"+14%",c:"amber"},{l:"Gasoline Peak \u0394%",v:"+8%",c:"amber"},
+      {l:"S&P 500 Max DD",v:"-3 to -5%*",c:"red"},{l:"Nikkei Max DD",v:"Minimal",c:"red"},{l:"DAX Max DD",v:"-5 to -8%*",c:"red"},
+      {l:"VIX Peak",v:"N/A (VXO)",c:"blue"},{l:"Duration",v:"~420 days",c:"white"},{l:"Supply Risk",v:"<1 mbpd",c:"orange"}
+    ],
+    energy: [
+      {day:-30,brent:18.2,wti:18.6,gas:0.90},{day:-15,brent:18.5,wti:18.9,gas:0.91},{day:0,brent:18.3,wti:18.7,gas:0.90},
+      {day:15,brent:19.5,wti:19.8,gas:0.93},{day:30,brent:20.1,wti:20.5,gas:0.95},{day:45,brent:20.5,wti:21.0,gas:0.97},
+      {day:60,brent:20.3,wti:21.3,gas:0.96},{day:75,brent:19.8,wti:20.2,gas:0.94},{day:90,brent:19.2,wti:19.5,gas:0.92}
+    ],
+    heatmap: {
+      sp500:{dd:"-3%*",rec:"1 mo"},djia:{dd:"-4%*",rec:"1 mo"},nasdaq:{dd:"-5%*",rec:"2 mo"},
+      nikkei:{dd:"Minimal",rec:"N/A"},ftse:{dd:"-5%*",rec:"2 mo"},dax:{dd:"-5%*",rec:"2 mo"},
+      cac40:{dd:"N/A",rec:"N/A"},hangSeng:{dd:"-52%*",rec:"12 mo"},kospi:{dd:"N/A",rec:"N/A"},
+      shanghai:{dd:"N/A",rec:"N/A"},asx200:{dd:"N/A",rec:"N/A"},sensex:{dd:"N/A",rec:"N/A"}
+    },
+    sectors: [{n:"Defense",r:8},{n:"Energy",r:5},{n:"Utilities",r:-2},{n:"Airlines",r:-3},{n:"Technology",r:-4},{n:"Financials",r:-5}]
+  },
+  gulfWar: {
+    id:"gulfWar", name:"Gulf War", period:"1990–1991", shortName:"Gulf War",
+    kpi: [
+      {l:"Brent Peak \u0394%",v:"+126%",c:"amber"},{l:"WTI Peak \u0394%",v:"+147%",c:"amber"},{l:"Gasoline Peak \u0394%",v:"+29%",c:"amber"},
+      {l:"S&P 500 Max DD",v:"-16.9%",c:"red"},{l:"Nikkei Max DD",v:"-34.8%",c:"red"},{l:"DAX Max DD",v:"-21.8%",c:"red"},
+      {l:"VIX Peak",v:"36.5 (VXO)",c:"blue"},{l:"Duration",v:"210 days",c:"white"},{l:"Supply Risk",v:"4.3 mbpd",c:"orange"}
+    ],
+    energy: [
+      {day:-30,brent:16.8,wti:15.5,gas:1.02},{day:-15,brent:17.5,wti:16.2,gas:1.05},{day:0,brent:21.0,wti:21.5,gas:1.08},
+      {day:15,brent:28.5,wti:28.0,gas:1.18},{day:30,brent:33.2,wti:32.8,gas:1.25},{day:45,brent:36.5,wti:36.0,gas:1.30},
+      {day:60,brent:39.8,wti:39.5,gas:1.36},{day:71,brent:41.2,wti:41.1,gas:1.39},{day:90,brent:33.5,wti:33.0,gas:1.28}
+    ],
+    heatmap: {
+      sp500:{dd:"-16.9%",rec:"6 mo"},djia:{dd:"-18.4%",rec:"6 mo"},nasdaq:{dd:"-25.7%",rec:"8 mo"},
+      nikkei:{dd:"-34.8%",rec:"N/A\u2020"},ftse:{dd:"-15.4%",rec:"5 mo"},dax:{dd:"-21.8%",rec:"7 mo"},
+      cac40:{dd:"-22.0%",rec:"7 mo"},hangSeng:{dd:"-16.2%",rec:"4 mo"},kospi:{dd:"-18.7%",rec:"9 mo"},
+      shanghai:{dd:"N/A",rec:"N/A"},asx200:{dd:"-19.8%",rec:"5 mo"},sensex:{dd:"-34.5%",rec:"4 mo"}
+    },
+    sectors: [{n:"Energy",r:18},{n:"Defense",r:12},{n:"Utilities",r:-10},{n:"Healthcare",r:-8},{n:"Cons. Disc.",r:-22},{n:"Technology",r:-24},{n:"Financials",r:-28},{n:"Airlines",r:-38}]
+  },
+  iraqWar: {
+    id:"iraqWar", name:"Iraq War", period:"2003", shortName:"OIF 2003",
+    kpi: [
+      {l:"Brent Peak \u0394%",v:"+27%",c:"amber"},{l:"WTI Peak \u0394%",v:"+31%",c:"amber"},{l:"Gasoline Peak \u0394%",v:"+17%",c:"amber"},
+      {l:"S&P 500 Max DD",v:"-9.6%",c:"red"},{l:"Nikkei Max DD",v:"-9.0%",c:"red"},{l:"DAX Max DD",v:"-31.1%",c:"red"},
+      {l:"VIX Peak",v:"34.7",c:"blue"},{l:"Duration",v:"42 days",c:"white"},{l:"Supply Risk",v:"2.5 mbpd",c:"orange"}
+    ],
+    energy: [
+      {day:-30,brent:30.5,wti:33.0,gas:1.52},{day:-15,brent:33.0,wti:36.5,gas:1.65},{day:0,brent:27.0,wti:28.5,gas:1.73},
+      {day:5,brent:24.5,wti:26.0,gas:1.68},{day:15,brent:24.8,wti:26.8,gas:1.60},{day:30,brent:25.0,wti:27.0,gas:1.55},
+      {day:45,brent:25.9,wti:28.1,gas:1.50},{day:60,brent:27.5,wti:30.0,gas:1.48},{day:90,brent:28.8,wti:31.5,gas:1.52}
+    ],
+    heatmap: {
+      sp500:{dd:"-9.6%",rec:"2 mo"},djia:{dd:"-10.4%",rec:"3 mo"},nasdaq:{dd:"-4.1%",rec:"1 mo"},
+      nikkei:{dd:"-9.0%",rec:"4 mo"},ftse:{dd:"-18.6%",rec:"5 mo"},dax:{dd:"-31.1%",rec:"5 mo"},
+      cac40:{dd:"-17.3%",rec:"5 mo"},hangSeng:{dd:"-11.8%",rec:"3 mo"},kospi:{dd:"-23.4%",rec:"5 mo"},
+      shanghai:{dd:"-5.9%",rec:"3 mo"},asx200:{dd:"-7.3%",rec:"2 mo"},sensex:{dd:"-4.8%",rec:"2 mo"}
+    },
+    sectors: [{n:"Technology",r:18},{n:"Defense",r:15},{n:"Industrials",r:12},{n:"Financials",r:12},{n:"Energy",r:10},{n:"Healthcare",r:9},{n:"Cons. Staples",r:5},{n:"Utilities",r:5},{n:"Airlines",r:-18}]
+  },
+  epicFury: {
+    id:"epicFury", name:"Epic Fury", period:"2026", shortName:"Epic Fury",
+    kpi: [
+      {l:"Brent Peak \u0394%",v:"+70\u201380%",c:"amber"},{l:"WTI Peak \u0394%",v:"+52\u201370%",c:"amber"},{l:"Gasoline Peak \u0394%",v:"+24%",c:"amber"},
+      {l:"S&P 500 Max DD",v:"-3.1%",c:"red"},{l:"Nikkei Max DD",v:"-11.9%",c:"red"},{l:"DAX Max DD",v:"-5.4%",c:"red"},
+      {l:"VIX Peak",v:"~30",c:"blue"},{l:"Duration",v:"11 days+",c:"white"},{l:"Supply Risk",v:"5\u201320 mbpd",c:"orange"}
+    ],
+    energy: [
+      {day:-30,brent:70.5,wti:67.2,gas:2.82},{day:-15,brent:70.8,wti:67.5,gas:2.85},{day:0,brent:70.1,wti:67.9,gas:2.88},
+      {day:1,brent:82.0,wti:78.5,gas:2.95},{day:3,brent:90.0,wti:86.0,gas:3.11},{day:5,brent:95.0,wti:91.0,gas:3.25},
+      {day:7,brent:105.0,wti:100.0,gas:3.40},{day:9,brent:119.0,wti:110.0,gas:3.50},{day:10,brent:89.0,wti:87.0,gas:3.54},
+      {day:11,brent:87.5,wti:86.5,gas:3.58}
+    ],
+    heatmap: {
+      sp500:{dd:"-3.1%",rec:"TBD"},djia:{dd:"-2.9%",rec:"TBD"},nasdaq:{dd:"-4.0%",rec:"TBD"},
+      nikkei:{dd:"-11.9%",rec:"TBD"},ftse:{dd:"-2.7%",rec:"TBD"},dax:{dd:"-5.4%",rec:"TBD"},
+      cac40:{dd:"-4.0%",rec:"TBD"},hangSeng:{dd:"-3.2%",rec:"TBD"},kospi:{dd:"-16.9%",rec:"TBD"},
+      shanghai:{dd:"-1.2%",rec:"TBD"},asx200:{dd:"-7.2%",rec:"TBD"},sensex:{dd:"-2.6%",rec:"TBD"}
+    },
+    sectors: [{n:"Energy",r:15},{n:"Utilities",r:2},{n:"Cons. Staples",r:1},{n:"Healthcare",r:0},{n:"Industrials",r:-3},{n:"Materials",r:-4},{n:"Financials",r:-4},{n:"Real Estate",r:-5},{n:"Comm. Svcs",r:-5},{n:"Technology",r:-6},{n:"Cons. Disc.",r:-8},{n:"Airlines",r:-14}],
+    live: {
+      energy: [
+        {l:"Brent Crude",cur:87.50,pre:70.12,d:"+24.8%",u:"$/bbl"},
+        {l:"WTI Crude",cur:86.50,pre:67.85,d:"+27.5%",u:"$/bbl"},
+        {l:"Gasoline (Retail)",cur:3.58,pre:2.88,d:"+24.3%",u:"$/gal"},
+        {l:"Diesel (Retail)",cur:4.17,pre:3.89,d:"+7.2%",u:"$/gal"},
+        {l:"Jet Fuel",cur:2.70,pre:2.15,d:"+25.6%",u:"$/gal"}
+      ],
+      equity: [
+        {l:"S&P 500",cur:5840,pre:5954,d:"-1.9%"},
+        {l:"DJIA",cur:43200,pre:43840,d:"-1.5%"},
+        {l:"NASDAQ",cur:18400,pre:18847,d:"-2.4%"},
+        {l:"Nikkei 225",cur:33800,pre:37155,d:"-9.0%"},
+        {l:"DAX",cur:22300,pre:22983,d:"-3.0%"},
+        {l:"Hang Seng",cur:22600,pre:22941,d:"-1.5%"},
+        {l:"KOSPI",cur:5533,pre:6323,d:"-12.5%"}
+      ]
+    },
+    scenarios: [
+      {n:"Quick Ceasefire",brent:"$65\u2013$75",wti:"$62\u2013$72",gas:"$2.80\u2013$3.10",sp:"Recover in 2\u20134 wks",gl:"Full recovery <1 mo",c:"#22c55e"},
+      {n:"Extended Conflict",brent:"$90\u2013$110",wti:"$85\u2013$105",gas:"$3.50\u2013$4.50",sp:"-5 to -10%",gl:"Asia -10\u201315%",c:"#f59e0b"},
+      {n:"Prolonged War",brent:"$110\u2013$130+",wti:"$105\u2013$125+",gas:"$4.50\u2013$6.00+",sp:"-10 to -20%",gl:"Bear market risk",c:"#ef4444"}
+    ]
+  }
+};
+
+const compData = [
+  {name:"Tanker Wars",ep:15,ed:-5},{name:"Gulf War",ep:126,ed:-16.9},
+  {name:"Iraq War",ep:27,ed:-9.6},{name:"Epic Fury",ep:75,ed:-3.1}
+];
+const timelineEvts = [
+  {yr:1987,lbl:"Tanker Wars Begin",t:"start"},{yr:1988,lbl:"Ceasefire",t:"end"},
+  {yr:1990,lbl:"Iraq Invades Kuwait",t:"start"},{yr:1991,lbl:"Desert Storm",t:"end"},
+  {yr:2003,lbl:"Iraq War / OIF",t:"start"},{yr:2026,lbl:"Epic Fury",t:"start"}
+];
+const indexNames = {sp500:"S&P 500",djia:"DJIA",nasdaq:"NASDAQ",nikkei:"Nikkei 225",ftse:"FTSE 100",dax:"DAX",cac40:"CAC 40",hangSeng:"Hang Seng",kospi:"KOSPI",shanghai:"Shanghai",asx200:"ASX 200",sensex:"SENSEX"};
+const conflictKeys = Object.keys(CONFLICTS);
+
+let selected = "epicFury";
+let energyChart = null, compChart = null;
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+
+function render() {
+  const c = CONFLICTS[selected];
+
+  // Tabs
+  const tabBar = document.getElementById("tabBar");
+  tabBar.innerHTML = conflictKeys.map(k =>
+    `<button class="tab-btn ${k===selected?'active':''}" onclick="selectConflict('${k}')">${CONFLICTS[k].shortName}</button>`
+  ).join("");
+
+  // KPI
+  const kpiRow = document.getElementById("kpiRow");
+  kpiRow.innerHTML = c.kpi.map(k =>
+    `<div class="kpi-card"><div class="label">${k.l}</div><div class="value mono ${k.c}">${k.v}</div></div>`
+  ).join("");
+
+  // Energy chart
+  document.getElementById("energyTitle").textContent = `Energy Price Trajectory \u2014 ${c.name} (${c.period})`;
+  renderEnergyChart(c);
+
+  // Heatmap
+  renderHeatmap();
+
+  // Comparative chart
+  renderCompChart();
+
+  // Sector panel
+  document.getElementById("sectorTitle").textContent = `Sector Impact \u2014 ${c.name} (${c.period})`;
+  renderSectors(c);
+
+  // Live panel
+  renderLivePanel(c);
+
+  // Timeline (only once)
+  renderTimeline();
+}
+
+function renderEnergyChart(c) {
+  const ctx = document.getElementById("energyChart").getContext("2d");
+  if (energyChart) energyChart.destroy();
+
+  const labels = c.energy.map(d => d.day);
+  energyChart = new Chart(ctx, {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        { label:"Brent ($/bbl)", data:c.energy.map(d=>d.brent), borderColor:"#f59e0b", backgroundColor:"rgba(245,158,11,0.1)",
+          borderWidth:2, pointRadius:3, pointBackgroundColor:"#f59e0b", yAxisID:"y", tension:0.3, fill:false },
+        { label:"WTI ($/bbl)", data:c.energy.map(d=>d.wti), borderColor:"#3b82f6", backgroundColor:"rgba(59,130,246,0.1)",
+          borderWidth:2, pointRadius:3, pointBackgroundColor:"#3b82f6", yAxisID:"y", tension:0.3, fill:false },
+        { label:"Gasoline ($/gal)", data:c.energy.map(d=>d.gas), borderColor:"#22c55e", backgroundColor:"rgba(34,197,94,0.1)",
+          borderWidth:1.5, pointRadius:3, pointBackgroundColor:"#22c55e", yAxisID:"y1", tension:0.3, fill:false, borderDash:[5,3] }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, interaction:{mode:"index",intersect:false},
+      plugins: {
+        legend:{labels:{color:"#888",font:{size:10},boxWidth:12,padding:10}},
+        tooltip:{backgroundColor:"#1a1a1a",borderColor:"#444",borderWidth:1,titleColor:"#999",bodyColor:"#ddd",bodyFont:{family:"monospace",size:11},
+          callbacks:{title:t=>`Day ${t[0].label}`}},
+        annotation: { annotations: { zeroLine: { type:'line', xMin:labels.indexOf(0), xMax:labels.indexOf(0),
+          borderColor:'#f59e0b', borderWidth:1, borderDash:[5,5], label:{display:true,content:'T=0',color:'#f59e0b',font:{size:9},position:'start'}} }}
+      },
+      scales: {
+        x:{grid:{color:"#1a1a1a"},ticks:{color:"#666",font:{size:9}},title:{display:true,text:"Days from Onset",color:"#555",font:{size:10}}},
+        y:{position:"left",grid:{color:"#1a1a1a"},ticks:{color:"#888",font:{size:9}},title:{display:true,text:"$/bbl",color:"#888",font:{size:10}}},
+        y1:{position:"right",grid:{drawOnChartArea:false},ticks:{color:"#888",font:{size:9}},title:{display:true,text:"$/gal",color:"#888",font:{size:10}}}
+      }
+    }
+  });
+}
+
+function renderCompChart() {
+  const ctx = document.getElementById("compChart").getContext("2d");
+  if (compChart) compChart.destroy();
+  compChart = new Chart(ctx, {
+    type:"bar",
+    data:{
+      labels:compData.map(d=>d.name),
+      datasets:[
+        {label:"Brent Peak \u0394%",data:compData.map(d=>d.ep),backgroundColor:"rgba(245,158,11,0.7)",borderColor:"#f59e0b",borderWidth:1,borderRadius:3},
+        {label:"S&P 500 Max DD %",data:compData.map(d=>d.ed),backgroundColor:"rgba(239,68,68,0.7)",borderColor:"#ef4444",borderWidth:1,borderRadius:3}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,interaction:{mode:"index",intersect:false},
+      plugins:{legend:{labels:{color:"#888",font:{size:10},boxWidth:12}},
+        tooltip:{backgroundColor:"#1a1a1a",borderColor:"#444",borderWidth:1,titleColor:"#999",bodyColor:"#ddd",bodyFont:{family:"monospace",size:11}}},
+      scales:{x:{grid:{color:"#1a1a1a"},ticks:{color:"#888",font:{size:10}}},
+        y:{grid:{color:"#1a1a1a"},ticks:{color:"#888",font:{size:9}}}}
+    }
+  });
+}
+
+function hmClass(dd) {
+  if (!dd || dd==="N/A" || dd==="Minimal") return "hm-na";
+  const n = parseFloat(dd);
+  if (isNaN(n)) return "hm-na";
+  if (n<=-20) return "hm-ext";
+  if (n<=-10) return "hm-sev";
+  if (n<=-5) return "hm-mod";
+  if (n<0) return "hm-mild";
+  return "hm-na";
+}
+
+function renderHeatmap() {
+  const tbl = document.getElementById("heatmapTable");
+  let h = `<thead><tr><th>Index</th>`;
+  conflictKeys.forEach(k => { h += `<th class="center ${k===selected?'active-col':''}">${CONFLICTS[k].shortName}</th>`; });
+  h += `</tr></thead><tbody>`;
+  Object.keys(indexNames).forEach(idx => {
+    h += `<tr><td style="font-weight:500;color:#ccc">${indexNames[idx]}</td>`;
+    conflictKeys.forEach(k => {
+      const d = CONFLICTS[k].heatmap[idx];
+      h += `<td class="hm-cell ${hmClass(d?.dd)}">${d?.dd||"N/A"}<span class="hm-rec">${d?.rec||""}</span></td>`;
+    });
+    h += `</tr>`;
+  });
+  h += `</tbody>`;
+  tbl.innerHTML = h;
+}
+
+function renderSectors(c) {
+  const panel = document.getElementById("sectorPanel");
+  const sorted = [...c.sectors].sort((a,b) => b.r - a.r);
+  const maxAbs = Math.max(...sorted.map(s => Math.abs(s.r)), 1);
+  let html = `<div class="sector-bars">`;
+  sorted.forEach(s => {
+    const pct = (Math.abs(s.r) / maxAbs) * 48;
+    const cls = s.r >= 0 ? "pos" : "neg";
+    const style = s.r >= 0
+      ? `left:50%;width:${pct}%`
+      : `right:50%;width:${pct}%`;
+    const bg = s.r > 0 ? "var(--green)" : s.r < 0 ? "var(--red)" : "#555";
+    html += `<div class="sector-row">
+      <div class="s-name">${s.n}</div>
+      <div class="s-track">
+        <div class="s-zero"></div>
+        <div class="s-bar ${cls}" style="${style};background:${bg}">${s.r>0?"+":""}${s.r}%</div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+  panel.innerHTML = html;
+}
+
+function renderLivePanel(c) {
+  const panel = document.getElementById("livePanel");
+  if (selected !== "epicFury") { panel.style.display = "none"; return; }
+  panel.style.display = "block";
+
+  let html = `<div class="panel live" style="margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
+      <span class="pulse"></span>
+      <h2 class="amber" style="margin:0">Operation Epic Fury \u2014 Live Situation (as of March 11, 2026)</h2>
+    </div>
+    <div class="grid-2" style="margin-bottom:0">
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:var(--txt-dim);margin-bottom:8px">Energy Commodities</div>`;
+
+  c.live.energy.forEach(item => {
+    html += `<div class="live-row">
+      <span class="lbl">${item.l}</span>
+      <div class="vals">
+        <span class="cur mono amber">$${item.cur.toFixed(2)}</span>
+        <span class="from">from $${item.pre.toFixed(2)}</span>
+        <span class="delta mono up">${item.d}</span>
+      </div>
+    </div>`;
+  });
+
+  html += `</div><div>
+    <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:var(--txt-dim);margin-bottom:8px">Global Equity Indexes</div>`;
+
+  c.live.equity.forEach(item => {
+    html += `<div class="live-row">
+      <span class="lbl">${item.l}</span>
+      <div class="vals">
+        <span class="cur mono blue">${item.cur.toLocaleString()}</span>
+        <span class="from">from ${item.pre.toLocaleString()}</span>
+        <span class="delta mono down">${item.d}</span>
+      </div>
+    </div>`;
+  });
+
+  html += `</div></div>
+    <div style="margin-top:16px">
+      <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:var(--txt-dim);margin-bottom:8px">Forward Scenario Analysis</div>
+      <table class="scenario-table"><thead><tr>
+        <th>Scenario</th><th>Brent Range</th><th>WTI Range</th><th>Gasoline</th><th>S&P 500</th><th>Global Impact</th>
+      </tr></thead><tbody>`;
+
+  c.scenarios.forEach(s => {
+    html += `<tr>
+      <td class="name" style="color:${s.c}">${s.n}</td>
+      <td class="mono">${s.brent}</td><td class="mono">${s.wti}</td>
+      <td class="mono">${s.gas}</td><td>${s.sp}</td><td>${s.gl}</td>
+    </tr>`;
+  });
+
+  html += `</tbody></table></div></div>`;
+  panel.innerHTML = html;
+}
+
+function renderTimeline() {
+  // Dots
+  const dots = document.getElementById("timelineDots");
+  dots.innerHTML = timelineEvts.map(e =>
+    `<div class="timeline-dot">
+      <div class="dot ${e.t}"></div>
+      <div class="yr">${e.yr}</div>
+      <div class="desc">${e.lbl}</div>
+    </div>`
+  ).join("");
+
+  // Bars
+  const bars = document.getElementById("conflictBars");
+  const barData = [
+    {name:"Tanker Wars",start:0,width:18,cls:"bar-tanker",peak:"WTI: $21.28",trough:"S&P: -3%*"},
+    {name:"Gulf War",start:22,width:16,cls:"bar-gulf",peak:"Brent: $41.15",trough:"S&P: -16.9%"},
+    {name:"Iraq War",start:50,width:10,cls:"bar-iraq",peak:"WTI: $37.83",trough:"S&P: -9.6%"},
+    {name:"Epic Fury",start:92,width:7,cls:"bar-epic",peak:"Brent: $119\u2013126",trough:"S&P: -3.1%"}
+  ];
+  bars.innerHTML = barData.map(b =>
+    `<div class="conflict-bar-row">
+      <div class="name">${b.name}</div>
+      <div class="track">
+        <div class="bar ${b.cls}" style="left:${b.start}%;width:${b.width}%">
+          <span>${b.peak} | ${b.trough}</span>
+        </div>
+      </div>
+    </div>`
+  ).join("");
+}
+
+function selectConflict(k) { selected = k; render(); }
+
+// Boot
+document.addEventListener("DOMContentLoaded", render);
+</script>
+</body>
+</html>
