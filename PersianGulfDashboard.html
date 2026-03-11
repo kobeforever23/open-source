@@ -38,7 +38,7 @@
   .grid-9 { display: grid; grid-template-columns: repeat(9, 1fr); gap: 8px; margin-bottom: 16px; }
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
   @media (max-width: 1100px) { .grid-9 { grid-template-columns: repeat(5, 1fr); } }
-  @media (max-width: 768px) { .grid-9 { grid-template-columns: repeat(3, 1fr); } .grid-2 { grid-template-columns: 1fr; } }
+  @media (max-width: 768px) { .grid-9 { grid-template-columns: repeat(3, 1fr); } .grid-2 { grid-template-columns: 1fr; } .grid-2x2 { grid-template-columns: 1fr; } }
 
   /* Cards */
   .kpi-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
@@ -143,11 +143,79 @@
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+  /* Narrative panels */
+  .narrative-panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 4px solid; margin-bottom: 16px; }
+  .narrative-panel.amber-accent { border-left-color: var(--amber); }
+  .narrative-panel.blue-accent { border-left-color: var(--blue); }
+  .narrative-panel.red-accent { border-left-color: var(--red); }
+  .narrative-panel.green-accent { border-left-color: var(--green); }
+  .narrative-text { font-size: 12.5px; color: var(--txt-secondary); line-height: 1.65; margin-bottom: 8px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 9px; font-weight: 600; letter-spacing: 0.5px; margin-right: 6px; margin-bottom: 4px; }
+  .badge.amber { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .badge.blue { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .badge.red { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge.green { background: rgba(34,197,94,0.15); color: var(--green); }
+
+  /* Collapsible */
+  .collapsible-header { display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 12px 16px; }
+  .collapsible-header:hover { background: #1a1a1a; border-radius: 8px; }
+  .collapsible-header h2 { margin: 0; }
+  .collapsible-body { padding: 0 16px 16px; }
+  .collapsible-body.hidden { display: none; }
+
+  /* Grid helpers */
+  .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 768px) { .grid-2x2 { grid-template-columns: 1fr; } }
+
+  /* Finding cards */
+  .finding-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 14px; border-left: 4px solid; }
+  .finding-title { font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .finding-body { font-size: 12px; color: var(--txt-secondary); line-height: 1.6; clear: both; }
+
+  /* Comparison table */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+  .comp-table th { text-align: left; padding: 6px 8px; color: var(--txt-muted); border-bottom: 1px solid var(--border-light); font-weight: 500; }
+  .comp-table td { padding: 5px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--txt-secondary); }
+  .comp-table td:first-child { font-weight: 600; color: var(--txt-primary); }
+
+  /* Mechanism rows */
+  .mechanism-row { display:flex; gap:10px; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.03); }
+  .mechanism-channel { width:120px; flex-shrink:0; font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--amber); }
+  .mechanism-detail { font-size:12px; color:var(--txt-secondary); line-height:1.5; }
+
+  /* Strategic bullets */
+  .strategic-bullet { display:flex; gap:8px; padding:4px 0; font-size:12px; color:var(--txt-secondary); line-height:1.5; }
+  .strategic-bullet::before { content:'\25B8'; color:var(--amber); flex-shrink:0; }
+
+  /* Key metrics bar */
+  .key-metrics-bar { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+  .key-metric-block { text-align:center; }
+  .key-metric-block .km-label { font-size:9px; text-transform:uppercase; letter-spacing:0.6px; color:var(--txt-dim); margin-bottom:3px; }
+  .key-metric-block .km-value { font-size:11px; font-weight:600; color:var(--txt-secondary); }
+  .badges-row { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+
+  /* CB Policy table */
+  .cb-policy-table { width:100%; border-collapse:collapse; font-size:11px; margin-top:8px; }
+  .cb-policy-table th { text-align:left; padding:6px 8px; color:var(--txt-muted); font-weight:500; border-bottom:1px solid var(--border-light); font-size:10px; }
+  .cb-policy-table td { padding:6px 8px; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--txt-secondary); font-size:11px; }
+  .cb-policy-table td:first-child { font-weight:600; color:var(--txt-primary); white-space:nowrap; }
+
+  /* Precedent table */
+  .precedent-table { width:100%; border-collapse:collapse; font-size:10px; }
+  .precedent-table th { text-align:left; padding:5px 6px; color:var(--txt-muted); font-weight:500; border-bottom:1px solid var(--border-light); }
+  .precedent-table td { padding:4px 6px; border-bottom:1px solid rgba(255,255,255,0.03); color:var(--txt-secondary); }
+  .precedent-table td.mono { font-family:'SF Mono','Cascadia Code','Consolas',monospace; }
+
+  /* Sector context */
+  .sector-context-text { font-size:11.5px; color:var(--txt-secondary); line-height:1.6; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+
+  @media (max-width: 768px) { .key-metrics-bar { grid-template-columns: repeat(2,1fr); } }
 </style>
 </head>
 <body>
 
-<!-- ═══ HEADER ═══ -->
+<!-- HEADER -->
 <div class="header">
   <div class="header-inner">
     <div>
@@ -162,12 +230,16 @@
   <!-- KPI Cards -->
   <div class="grid-9" id="kpiRow"></div>
 
+  <!-- After KPI row -->
+  <div id="briefingPanel"></div>
+
   <!-- Row 1: Energy Chart + Equity Heatmap -->
   <div class="grid-2">
     <div class="panel">
       <h2 class="amber" id="energyTitle">Energy Price Trajectory</h2>
       <div class="subtitle" id="energySub">Indexed to T=0 at conflict onset (T-30 through T+90 days)</div>
       <div class="chart-wrap"><canvas id="energyChart"></canvas></div>
+      <div id="energyKeyMetrics"></div>
     </div>
     <div class="panel">
       <h2 class="blue">Global Equity Heatmap — All Conflicts</h2>
@@ -185,14 +257,24 @@
     <div class="panel">
       <h2 class="white" id="sectorTitle">Sector Impact</h2>
       <div class="chart-wrap" style="height:auto;min-height:260px" id="sectorPanel"></div>
+      <div id="sectorAnnotation"></div>
     </div>
   </div>
 
-  <!-- Row 3: Epic Fury Live Panel -->
+  <!-- Transmission Mechanisms -->
+  <div id="transmissionPanel" style="margin-bottom:16px"></div>
+
+  <!-- Epic Fury Live Panel -->
   <div id="livePanel" style="display:none"></div>
 
-  <!-- Row 4: Timeline -->
-  <div class="panel">
+  <!-- Key Findings -->
+  <div id="keyFindingsPanel" style="margin-bottom:16px"></div>
+
+  <!-- This Time Is Different -->
+  <div id="thisTimeDifferentPanel" style="margin-bottom:16px"></div>
+
+  <!-- Timeline -->
+  <div class="panel" style="margin-bottom:16px">
     <h2 class="white">Historical Timeline — Persian Gulf Conflicts</h2>
     <div class="timeline-bar">
       <div class="timeline-line"></div>
@@ -201,16 +283,22 @@
     <div class="conflict-bars" id="conflictBars"></div>
   </div>
 
+  <!-- Historical Precedent -->
+  <div id="historicalPrecedent" style="margin-bottom:16px"></div>
+
+  <!-- Methodology -->
+  <div id="methodologyPanel" style="margin-bottom:16px"></div>
+
   <div class="footer">INTERNAL — FOR SENIOR LEADERSHIP &nbsp;|&nbsp; CIB Risk Analytics &nbsp;|&nbsp; Data as of March 11, 2026 &nbsp;|&nbsp; Sources: EIA, FRED, ICE, CME, Bloomberg, AAA, IEA, OPEC</div>
 </div>
 
 <script>
-// ═══════════════════════════════════════
+// =======================================
 // DATA
-// ═══════════════════════════════════════
+// =======================================
 const CONFLICTS = {
   tankerWars: {
-    id:"tankerWars", name:"Tanker Wars", period:"1987–1988", shortName:"Tanker Wars",
+    id:"tankerWars", name:"Tanker Wars", period:"1987\u20131988", shortName:"Tanker Wars",
     kpi: [
       {l:"Brent Peak \u0394%",v:"+15%",c:"amber"},{l:"WTI Peak \u0394%",v:"+14%",c:"amber"},{l:"Gasoline Peak \u0394%",v:"+8%",c:"amber"},
       {l:"S&P 500 Max DD",v:"-3 to -5%*",c:"red"},{l:"Nikkei Max DD",v:"Minimal",c:"red"},{l:"DAX Max DD",v:"-5 to -8%*",c:"red"},
@@ -230,11 +318,11 @@ const CONFLICTS = {
     sectors: [{n:"Defense",r:8},{n:"Energy",r:5},{n:"Utilities",r:-2},{n:"Airlines",r:-3},{n:"Technology",r:-4},{n:"Financials",r:-5}]
   },
   gulfWar: {
-    id:"gulfWar", name:"Gulf War", period:"1990–1991", shortName:"Gulf War",
+    id:"gulfWar", name:"Gulf War", period:"1990\u20131991", shortName:"Gulf War",
     kpi: [
-      {l:"Brent Peak \u0394%",v:"+126%",c:"amber"},{l:"WTI Peak \u0394%",v:"+147%",c:"amber"},{l:"Gasoline Peak \u0394%",v:"+29%",c:"amber"},
+      {l:"Brent Peak \u0394%",v:"+126%",c:"amber"},{l:"WTI Peak \u0394%",v:"+147%",c:"amber"},{l:"Gasoline Peak \u0394%",v:"+25%",c:"amber"},
       {l:"S&P 500 Max DD",v:"-16.9%",c:"red"},{l:"Nikkei Max DD",v:"-34.8%",c:"red"},{l:"DAX Max DD",v:"-21.8%",c:"red"},
-      {l:"VIX Peak",v:"36.5 (VXO)",c:"blue"},{l:"Duration",v:"210 days",c:"white"},{l:"Supply Risk",v:"4.3 mbpd",c:"orange"}
+      {l:"VXO Peak",v:"34.94",c:"blue"},{l:"Duration",v:"210 days",c:"white"},{l:"Supply Risk",v:"4.3 mbpd",c:"orange"}
     ],
     energy: [
       {day:-30,brent:16.8,wti:15.5,gas:1.02},{day:-15,brent:17.5,wti:16.2,gas:1.05},{day:0,brent:21.0,wti:21.5,gas:1.08},
@@ -279,8 +367,8 @@ const CONFLICTS = {
     energy: [
       {day:-30,brent:70.5,wti:67.2,gas:2.82},{day:-15,brent:70.8,wti:67.5,gas:2.85},{day:0,brent:70.1,wti:67.9,gas:2.88},
       {day:1,brent:82.0,wti:78.5,gas:2.95},{day:3,brent:90.0,wti:86.0,gas:3.11},{day:5,brent:95.0,wti:91.0,gas:3.25},
-      {day:7,brent:105.0,wti:100.0,gas:3.40},{day:9,brent:119.0,wti:110.0,gas:3.50},{day:10,brent:89.0,wti:87.0,gas:3.54},
-      {day:11,brent:87.5,wti:86.5,gas:3.58}
+      {day:7,brent:105.0,wti:100.0,gas:3.40},{day:9,brent:119.0,wti:110.0,gas:3.50},
+      {day:10,brent:89.0,wti:85.0,gas:3.52},{day:11,brent:91.0,wti:85.0,gas:3.55}
     ],
     heatmap: {
       sp500:{dd:"-3.1%",rec:"TBD"},djia:{dd:"-2.9%",rec:"TBD"},nasdaq:{dd:"-4.0%",rec:"TBD"},
@@ -291,26 +379,178 @@ const CONFLICTS = {
     sectors: [{n:"Energy",r:15},{n:"Utilities",r:2},{n:"Cons. Staples",r:1},{n:"Healthcare",r:0},{n:"Industrials",r:-3},{n:"Materials",r:-4},{n:"Financials",r:-4},{n:"Real Estate",r:-5},{n:"Comm. Svcs",r:-5},{n:"Technology",r:-6},{n:"Cons. Disc.",r:-8},{n:"Airlines",r:-14}],
     live: {
       energy: [
-        {l:"Brent Crude",cur:87.50,pre:70.12,d:"+24.8%",u:"$/bbl"},
-        {l:"WTI Crude",cur:86.50,pre:67.85,d:"+27.5%",u:"$/bbl"},
-        {l:"Gasoline (Retail)",cur:3.58,pre:2.88,d:"+24.3%",u:"$/gal"},
+        {l:"Brent Crude",cur:91.00,pre:70.12,d:"+29.8%",u:"$/bbl"},
+        {l:"WTI Crude",cur:85.08,pre:67.85,d:"+25.4%",u:"$/bbl"},
+        {l:"Gasoline (Retail)",cur:3.55,pre:2.88,d:"+23.3%",u:"$/gal"},
         {l:"Diesel (Retail)",cur:4.17,pre:3.89,d:"+7.2%",u:"$/gal"},
         {l:"Jet Fuel",cur:2.70,pre:2.15,d:"+25.6%",u:"$/gal"}
       ],
       equity: [
-        {l:"S&P 500",cur:5840,pre:5954,d:"-1.9%"},
-        {l:"DJIA",cur:43200,pre:43840,d:"-1.5%"},
-        {l:"NASDAQ",cur:18400,pre:18847,d:"-2.4%"},
-        {l:"Nikkei 225",cur:33800,pre:37155,d:"-9.0%"},
-        {l:"DAX",cur:22300,pre:22983,d:"-3.0%"},
-        {l:"Hang Seng",cur:22600,pre:22941,d:"-1.5%"},
-        {l:"KOSPI",cur:5533,pre:6323,d:"-12.5%"}
+        {l:"S&P 500",cur:6781,pre:6879,d:"-1.4%"},
+        {l:"DJIA",cur:47707,pre:48978,d:"-2.6%"},
+        {l:"NASDAQ",cur:22697,pre:22668,d:"+0.1%"},
+        {l:"Nikkei 225",cur:55388,pre:58885,d:"-5.9%"},
+        {l:"DAX",cur:23200,pre:23500,d:"-1.3%"},
+        {l:"Hang Seng",cur:26039,pre:26450,d:"-1.6%"},
+        {l:"KOSPI",cur:5724,pre:6131,d:"-6.6%"}
       ]
     },
     scenarios: [
       {n:"Quick Ceasefire",brent:"$65\u2013$75",wti:"$62\u2013$72",gas:"$2.80\u2013$3.10",sp:"Recover in 2\u20134 wks",gl:"Full recovery <1 mo",c:"#22c55e"},
       {n:"Extended Conflict",brent:"$90\u2013$110",wti:"$85\u2013$105",gas:"$3.50\u2013$4.50",sp:"-5 to -10%",gl:"Asia -10\u201315%",c:"#f59e0b"},
       {n:"Prolonged War",brent:"$110\u2013$130+",wti:"$105\u2013$125+",gas:"$4.50\u2013$6.00+",sp:"-10 to -20%",gl:"Bear market risk",c:"#ef4444"}
+    ]
+  }
+};
+
+// =======================================
+// NARRATIVE DATA
+// =======================================
+const NARRATIVE = {
+  briefings: {
+    tankerWars: {
+      summary: "The Tanker Wars represented the internationalization of the Iran-Iraq War (1980-1988), as both belligerents targeted commercial shipping in the Persian Gulf. The US intervened through Operation Earnest Will, the largest naval convoy operation since WWII. Oil markets were dominated by post-1986 price collapse and OPEC overproduction, muting the geopolitical risk premium.",
+      straitStatus: "Contested but never closed",
+      opec: "In disarray; Saudi maintained production",
+      spr: "No drawdown; actively filling toward 527M bbl target",
+      supplyNote: "~546 attacks on merchant vessels; <1 mbpd disrupted"
+    },
+    gulfWar: {
+      summary: "Iraq's invasion of Kuwait on August 2, 1990 removed approximately 4.3 mbpd from global supply (~6.5% of world production), triggering the most significant oil supply shock between the 1979 Iranian Revolution and 2022. Saudi Arabia led emergency production increases of +3.1 mbpd, offsetting ~75% of lost barrels.",
+      straitStatus: "Open throughout",
+      opec: "Saudi ramped +3.1 mbpd; OPEC offset ~75%",
+      spr: "First-ever IEA emergency release (Jan 17, 1991); US drew 17.2M bbl",
+      supplyNote: "4.3 mbpd removed; net disruption ~1.0-1.5 mbpd after OPEC response"
+    },
+    iraqWar: {
+      summary: "The 2003 Iraq War was a textbook 'buy the rumor, sell the news' event. The US military buildup was publicly telegraphed for months, allowing markets to price in a war premium. When invasion began March 20, oil fell sharply and equities rallied. The Venezuela oil strike (Dec 2002-Feb 2003) simultaneously removed ~2.5 mbpd, inflating pre-war oil premiums.",
+      straitStatus: "Open and uncontested",
+      opec: "Saudi pre-war increase of +2.8 mbpd (Jan-Feb 2003)",
+      spr: "No drawdown; SPR held ~600M bbl",
+      supplyNote: "Iraqi production fell from ~2.5 to ~0.3 mbpd; fully offset by OPEC"
+    },
+    epicFury: {
+      summary: "Operation Epic Fury represents the most significant US military engagement in the Persian Gulf since 2003 and the first direct US-Iran confrontation. Launched February 28, 2026, involving coordinated US-Israeli strikes. Iran's retaliation \u2014 attacks on Gulf oil infrastructure, effective Strait of Hormuz closure, and regional missile strikes \u2014 created the most severe energy disruption since 1990-91.",
+      straitStatus: "Effectively closed since March 3",
+      opec: "Accelerated output increases; Saudi/UAE willing to ramp if >30 days",
+      spr: "Under discussion; SPR at ~395M bbl (depleted post-2022)",
+      supplyNote: "~20 mbpd at risk through Strait (~20% global supply)"
+    }
+  },
+  transmissionMechanisms: {
+    tankerWars: [
+      "Oil supply disruption: Minimal actual disruption. Tanker attacks damaged vessels but rarely halted flows. ~6-7 mbpd continued through Hormuz.",
+      "Insurance/shipping cost: Primary transmission. War risk premiums surged 300-400%, adding $0.50-$1.50/bbl.",
+      "Inflation channel: CPI rose 3.7% (1987) and 4.1% (1988), driven by broader factors.",
+      "Safe-haven: Gold rose from ~$390/oz to ~$500/oz in late 1987."
+    ],
+    gulfWar: [
+      "Oil supply: 4.3 mbpd removed (~6.5% global). Saudi-led OPEC increase offset ~75%. Net disruption ~1.0-1.5 mbpd.",
+      "Inflation: US CPI accelerated from 4.7% (Jul) to 6.3% (Oct 1990). Fed kept funds rate at 8.0%.",
+      "Recession trigger: Oil shock tipped US into July 1990-March 1991 recession.",
+      "VXO: Spiked from ~19 to 34.94 (Oct 11, 1990).",
+      "Credit: HY OAS widened from ~450bp to ~750bp."
+    ],
+    iraqWar: [
+      "War premium: 'Buy the rumor, sell the news' \u2014 $5-$8/bbl premium evaporated on invasion day.",
+      "Oil supply: Iraqi production fell from ~2.5 to ~0.3 mbpd; fully offset by OPEC.",
+      "Inflation: Minimal. CPI 2.3% in 2003.",
+      "VIX: Peaked at 34.7 (Mar 12) then collapsed to 19.2 by May 1."
+    ],
+    epicFury: [
+      "Oil supply: ~20 mbpd at risk through Hormuz (~20% global). Total: 5-20+ mbpd depending on Strait status.",
+      "Inflation: Feb CPI at 2.4%. Energy could add 0.3-0.5pp if oil stays above $85.",
+      "Earnings: Airlines facing $1.5-2.0B incremental fuel costs. Energy sector earnings to surge 30-50%.",
+      "Currency: DXY up ~2.2% to 98.5. Gold surged to $2,950+/oz. 10Y at 4.21%.",
+      "Volatility: VIX peaked ~30 (Mar 9), now 24.9. IG spreads +15bp. HY OAS +60bp.",
+      "US independence: Net exporter (~13.5 mbpd). Insulates US equities vs Asia/Europe."
+    ]
+  },
+  sectorAnnotations: {
+    tankerWars: "Energy and defense stocks saw modest gains; all sectors were crushed during Black Monday (Oct 1987). No GICS sector ETFs existed in 1987-88.",
+    gulfWar: "Energy surged +12-25%. Airlines plunged -30 to -45%. Financials -25-30% (S&L crisis). Technology -20-28%.",
+    iraqWar: "Tech led recovery (+18.4%). Defense +5-15% pre-war, +8-20% through May. Airlines -15-25% (still post-9/11 fragile).",
+    epicFury: "Energy (XLE) +12-18%: XOM +14%, CVX +16%, COP +20%. Defense: LMT +12%, RTX +13%. Airlines worst: DAL -13%, UAL -14%, AAL -17%. Tech -4 to -7%."
+  },
+  keyFindings: [
+    { title: "Oil-Equity Correlation Weakening", text: "Oil spike magnitude correlates with equity drawdown, but with diminishing sensitivity. Gulf War (+126% Brent) produced -16.9% S&P. Epic Fury (+70-80% Brent) only -3.1% S&P \u2014 US energy independence structurally dampens transmission.", accent: "amber" },
+    { title: "Equities Recover Before Oil Normalizes", text: "In 1990-91, equities bottomed on Oct 11 (same day as oil peak) and rallied 22.6% over 6 months while fires continued. In 2003, equities rallied on invasion day. Markets look through transitory supply shocks.", accent: "blue" },
+    { title: "Asia-Pacific Most Vulnerable", text: "Japan and Korea's 70-90% Middle East crude dependence creates structural vulnerability across all four conflicts. In Epic Fury, KOSPI (-16.9%) has fallen more than 5x the S&P 500 (-3.1%).", accent: "red" },
+    { title: "Historical Averages Hold", text: "Carson Group's finding that S&P 500 averages +3.4% (mean) over six months post-geopolitical event is broadly consistent. Their 40-event study showing -7.85% average drawdown in 3 months includes longer conflicts.", accent: "green" }
+  ],
+  thisTimeIsDifferent: [
+    { factor: "US Energy Status", historical: "Major net importer (1987-2003)", current: "Net exporter since ~2019; ~13.5 mbpd", implication: "Insulates US equities" },
+    { factor: "Shale Revolution", historical: "Did not exist", current: "Rapid ramp; 2-4 month response", implication: "Limits sustained shortfall" },
+    { factor: "SPR Level", historical: "560-620M bbl", current: "~395M bbl (post-2022)", implication: "Reduced buffer" },
+    { factor: "OPEC+ Dynamics", historical: "Saudi dominant; high spare", current: "Russia as member; ~3-4 mbpd spare", implication: "Slower response" },
+    { factor: "Market Structure", historical: "Human-dominated", current: "60%+ algorithmic; AI-driven", implication: "Amplifies both directions" },
+    { factor: "Renewable Share", historical: "Negligible (<2%)", current: "~15-18% global energy", implication: "Reduces oil intensity" },
+    { factor: "LNG Infrastructure", historical: "Minimal trade", current: "~550 MTPA capacity", implication: "Mitigates gas shortfall" },
+    { factor: "Iran Military", historical: "Significant navy", current: "Navy destroyed early", implication: "Less sustained closure risk" },
+    { factor: "Pre-Pricing", historical: "1990 surprise; 2003 telegraphed", current: "Priced since Jun 2025", implication: "Limits additional downside" },
+    { factor: "Dominant Narrative", historical: "Oil was the story", current: "AI trade > Iran for US flows", implication: "Geopolitics competes with tech" }
+  ],
+  centralBankMatrix: [
+    { bank: "Federal Reserve", c: "Continue hold; resume cuts Q3", e: "Hold through 2026; stagflation", p: "Weigh inflation vs recession" },
+    { bank: "ECB", c: "Resume 25bp cuts", e: "Pause cuts; energy inflation", p: "Emergency measures; EUR weak" },
+    { bank: "BOJ", c: "Continue normalization", e: "Pause hikes; yen risk", p: "JPY crisis; import inflation" },
+    { bank: "PBOC", c: "Maintain easing", e: "Accelerate easing", p: "Full stimulus mode" }
+  ],
+  keyVariables: [
+    "Strait of Hormuz reopening timeline",
+    "OPEC+ supply response speed/magnitude",
+    "IEA/SPR emergency release decisions",
+    "Iranian escalation/de-escalation signals",
+    "China/India diplomatic efforts",
+    "US shale production response",
+    "Insurance market signals for Gulf shipping"
+  ],
+  earningsImplications: [
+    { sector: "Energy", detail: "EPS revisions sharply higher. XOM, CVX windfall. +2-3pp to S&P EPS." },
+    { sector: "Airlines", detail: "$1.5-2.0B incremental fuel costs. Guidance downgrades likely." },
+    { sector: "Consumer Disc.", detail: "Gasoline pass-through reduces disposable income." },
+    { sector: "Defense", detail: "Record backlogs. LMT, RTX, NOC likely raise guidance." },
+    { sector: "Technology", detail: "Minimal direct impact. AI capex intact. Data center energy risk." }
+  ],
+  strategicImplications: [
+    "Brent pulled back from $119-126 highs to ~$91 on ceasefire signals, but remains ~30% above pre-conflict",
+    "US equities resilient (S&P -3.1%) vs Asia-Pacific (Nikkei -11.9%, KOSPI -16.9%) \u2014 US energy independence",
+    "Historical: oil-driven selloffs recover 2-6 months post-resolution; S&P averages +3.4% over 6 months (Carson Group)",
+    "Key variable: Strait reopening. Extended closure (>30 days) shifts from 'transitory' to 'structural inflation risk'",
+    "Market structure differs: US is net exporter, SPR depleted, AI/algo trading amplifies momentum"
+  ],
+  historicalTimeline: [
+    { yr: "1956", ev: "Suez Crisis", oil: "+27-50%", sp: "-4.3%", dur: "~3 months" },
+    { yr: "1967", ev: "Six-Day War", oil: "+2%", sp: "-1.5%", dur: "6 days" },
+    { yr: "1973-74", ev: "Yom Kippur / OPEC Embargo", oil: "+300%", sp: "-43.3%", dur: "6 months" },
+    { yr: "1978-79", ev: "Iranian Revolution", oil: "+150%", sp: "+18.4%", dur: "12 months" },
+    { yr: "1980-88", ev: "Iran-Iraq War", oil: "+50% initially", sp: "+32.4%", dur: "8 years" },
+    { yr: "1987-88", ev: "Tanker Wars", oil: "+12-15%", sp: "Minimal*", dur: "~14 months" },
+    { yr: "1990-91", ev: "Gulf War", oil: "+126%", sp: "-16.9%", dur: "7 months" },
+    { yr: "2003", ev: "Iraq War (OIF)", oil: "+27%", sp: "-9.6%", dur: "~3 months" },
+    { yr: "2006", ev: "Israel-Lebanon War", oil: "+8%", sp: "-2.1%", dur: "34 days" },
+    { yr: "2011", ev: "Arab Spring / Libya", oil: "+35%", sp: "-5.3%", dur: "8 months" },
+    { yr: "2014", ev: "ISIS Advance", oil: "+10%", sp: "-2.0%", dur: "~2 months" },
+    { yr: "2019", ev: "Abqaiq Attack", oil: "+15%", sp: "-0.5%", dur: "2 weeks" },
+    { yr: "2020", ev: "Soleimani Strike", oil: "+3%", sp: "-0.7%", dur: "1 week" },
+    { yr: "2023-24", ev: "Israel-Hamas/Houthis", oil: "+10%", sp: "-4.0%", dur: "Ongoing" },
+    { yr: "2025", ev: "Op. Midnight Hammer", oil: "+5-8%", sp: "-1.5%", dur: "~2 weeks" },
+    { yr: "2026", ev: "Op. Epic Fury", oil: "+70-80%", sp: "-3.1%", dur: "Ongoing" }
+  ],
+  methodology: {
+    sources: ["EIA", "FRED", "ICE/NYMEX/CME", "IEA", "OPEC", "Bloomberg/Refinitiv", "Yahoo Finance", "AAA/GasBuddy", "US DOE (SPR)", "Carson Group"],
+    phases: [
+      { phase: "Pre-Conflict", def: "30 trading days before onset", period: "T-30 to T-1" },
+      { phase: "Conflict Onset", def: "First military action", period: "T=0" },
+      { phase: "Peak Disruption", def: "Max energy price/equity drawdown", period: "Varies" },
+      { phase: "Recovery", def: "Return to pre-conflict level (+/-2%)", period: "T+n days" }
+    ],
+    caveats: [
+      "Brent futures launched Jun 1988; pre-1988 uses spot assessments",
+      "Henry Hub spot from 1997; no gas benchmark for Tanker Wars",
+      "GICS sectors from 1999; ETFs from 1998-2000",
+      "VIX from 1993 (recalculated to 1990); VXO for Tanker Wars",
+      "Epic Fury data provisional \u2014 conflict ongoing Mar 11, 2026"
     ]
   }
 };
@@ -330,10 +570,21 @@ const conflictKeys = Object.keys(CONFLICTS);
 let selected = "epicFury";
 let energyChart = null, compChart = null;
 
-// ═══════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════
+// =======================================
+// COLLAPSE/EXPAND SYSTEM
+// =======================================
+const sectionState = {};
+function toggleSection(id) {
+  sectionState[id] = !sectionState[id];
+  const body = document.getElementById(id + '-body');
+  const arrow = document.getElementById(id + '-arrow');
+  if (body) body.classList.toggle('hidden');
+  if (arrow) arrow.textContent = sectionState[id] ? '\u25BC' : '\u25B6';
+}
 
+// =======================================
+// RENDER
+// =======================================
 function render() {
   const c = CONFLICTS[selected];
 
@@ -349,9 +600,15 @@ function render() {
     `<div class="kpi-card"><div class="label">${k.l}</div><div class="value mono ${k.c}">${k.v}</div></div>`
   ).join("");
 
+  // Section 1: Executive Briefing
+  renderBriefing(c);
+
   // Energy chart
   document.getElementById("energyTitle").textContent = `Energy Price Trajectory \u2014 ${c.name} (${c.period})`;
   renderEnergyChart(c);
+
+  // Key Metrics Below Energy Chart
+  renderEnergyKeyMetrics();
 
   // Heatmap
   renderHeatmap();
@@ -363,17 +620,109 @@ function render() {
   document.getElementById("sectorTitle").textContent = `Sector Impact \u2014 ${c.name} (${c.period})`;
   renderSectors(c);
 
-  // Live panel
+  // Sector Annotation
+  renderSectorAnnotation();
+
+  // Transmission Mechanisms
+  renderTransmission(c);
+
+  // Live panel (Epic Fury only, enhanced)
   renderLivePanel(c);
 
-  // Timeline (only once)
+  // Key Findings
+  renderKeyFindings();
+
+  // This Time Is Different
+  renderThisTimeIsDifferent();
+
+  // Timeline
   renderTimeline();
+
+  // Historical Precedent Table
+  renderHistoricalPrecedent();
+
+  // Methodology & Data Notes
+  renderMethodology();
 }
 
+// =======================================
+// SECTION 1: EXECUTIVE BRIEFING (always visible)
+// =======================================
+function renderBriefing(c) {
+  const el = document.getElementById("briefingPanel");
+  const b = NARRATIVE.briefings[selected];
+  if (!b) { el.innerHTML = ''; return; }
+
+  const straitClass = selected === 'epicFury' ? 'red' : (b.straitStatus.toLowerCase().includes('open') ? 'green' : 'amber');
+
+  el.innerHTML = `<div class="narrative-panel amber-accent">
+    <h2 class="amber" style="margin-bottom:8px">Executive Briefing \u2014 ${c.name} (${c.period})</h2>
+    <p class="narrative-text">${b.summary}</p>
+    <div class="badges-row">
+      <span class="badge ${straitClass}">STRAIT: ${b.straitStatus}</span>
+      <span class="badge blue">OPEC: ${b.opec}</span>
+      <span class="badge amber">SPR: ${b.spr}</span>
+      <span class="badge red">SUPPLY: ${b.supplyNote}</span>
+    </div>
+  </div>`;
+}
+
+// =======================================
+// KEY METRICS BELOW ENERGY CHART
+// =======================================
+function renderEnergyKeyMetrics() {
+  const el = document.getElementById("energyKeyMetrics");
+  const b = NARRATIVE.briefings[selected];
+  if (!b) { el.innerHTML = ''; return; }
+
+  el.innerHTML = `<div class="key-metrics-bar">
+    <div class="key-metric-block"><div class="km-label">Strait Status</div><div class="km-value">${b.straitStatus}</div></div>
+    <div class="key-metric-block"><div class="km-label">OPEC Response</div><div class="km-value" style="font-size:10px">${b.opec}</div></div>
+    <div class="key-metric-block"><div class="km-label">SPR / IEA Action</div><div class="km-value" style="font-size:10px">${b.spr}</div></div>
+    <div class="key-metric-block"><div class="km-label">Supply Disruption</div><div class="km-value" style="font-size:10px">${b.supplyNote}</div></div>
+  </div>`;
+}
+
+// =======================================
+// SECTOR ANNOTATION
+// =======================================
+function renderSectorAnnotation() {
+  const el = document.getElementById("sectorAnnotation");
+  const text = NARRATIVE.sectorAnnotations[selected];
+  if (!text) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="sector-context-text">${text}</div>`;
+}
+
+// =======================================
+// TRANSMISSION MECHANISMS (collapsible)
+// =======================================
+function renderTransmission(c) {
+  const el = document.getElementById("transmissionPanel");
+  const items = NARRATIVE.transmissionMechanisms[selected];
+  if (!items) { el.innerHTML = ''; return; }
+
+  const id = 'transmission';
+  const isOpen = sectionState[id];
+  let rows = items.map(item =>
+    `<div style="display:flex;gap:8px;padding:5px 0;font-size:12px;color:var(--txt-secondary);line-height:1.5;border-bottom:1px solid rgba(255,255,255,0.03)">
+      <span style="color:var(--blue);flex-shrink:0">\u25B8</span><span>${item}</span></div>`
+  ).join("");
+
+  el.innerHTML = `<div class="narrative-panel blue-accent">
+    <div class="collapsible-header" onclick="toggleSection('${id}')" style="padding:0;margin-bottom:0">
+      <h2 class="blue" style="margin:0">Transmission Mechanisms \u2014 ${c.name}</h2>
+      <span id="${id}-arrow" style="color:var(--blue);font-size:14px">${isOpen?'\u25BC':'\u25B6'}</span>
+    </div>
+    <div id="${id}-body" class="${isOpen?'':'hidden'}" style="margin-top:12px">${rows}</div>
+  </div>`;
+}
+
+// =======================================
+// ENERGY CHART
+// =======================================
 function renderEnergyChart(c) {
   const ctx = document.getElementById("energyChart").getContext("2d");
   if (energyChart) energyChart.destroy();
-
   const labels = c.energy.map(d => d.day);
   energyChart = new Chart(ctx, {
     type: "line",
@@ -406,6 +755,9 @@ function renderEnergyChart(c) {
   });
 }
 
+// =======================================
+// COMPARATIVE CHART
+// =======================================
 function renderCompChart() {
   const ctx = document.getElementById("compChart").getContext("2d");
   if (compChart) compChart.destroy();
@@ -428,6 +780,9 @@ function renderCompChart() {
   });
 }
 
+// =======================================
+// HEATMAP
+// =======================================
 function hmClass(dd) {
   if (!dd || dd==="N/A" || dd==="Minimal") return "hm-na";
   const n = parseFloat(dd);
@@ -456,6 +811,9 @@ function renderHeatmap() {
   tbl.innerHTML = h;
 }
 
+// =======================================
+// SECTORS
+// =======================================
 function renderSectors(c) {
   const panel = document.getElementById("sectorPanel");
   const sorted = [...c.sectors].sort((a,b) => b.r - a.r);
@@ -480,12 +838,25 @@ function renderSectors(c) {
   panel.innerHTML = html;
 }
 
+// =======================================
+// LIVE PANEL (Epic Fury only, enhanced)
+// =======================================
 function renderLivePanel(c) {
   const panel = document.getElementById("livePanel");
   if (selected !== "epicFury") { panel.style.display = "none"; return; }
   panel.style.display = "block";
 
-  let html = `<div class="panel live" style="margin-bottom:16px">
+  // Strategic Implications Banner
+  let stratHtml = `<div class="narrative-panel amber-accent" style="margin-bottom:12px">
+    <h2 class="amber" style="margin-bottom:8px">Strategic Implications</h2>`;
+  NARRATIVE.strategicImplications.forEach(s => {
+    stratHtml += `<div class="strategic-bullet">${s}</div>`;
+  });
+  stratHtml += `</div>`;
+
+  // Main live panel content
+  let html = stratHtml;
+  html += `<div class="panel live" style="margin-bottom:16px">
     <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px">
       <span class="pulse"></span>
       <h2 class="amber" style="margin:0">Operation Epic Fury \u2014 Live Situation (as of March 11, 2026)</h2>
@@ -509,12 +880,13 @@ function renderLivePanel(c) {
     <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.8px;color:var(--txt-dim);margin-bottom:8px">Global Equity Indexes</div>`;
 
   c.live.equity.forEach(item => {
+    const deltaClass = item.d.startsWith('+') ? 'up' : 'down';
     html += `<div class="live-row">
       <span class="lbl">${item.l}</span>
       <div class="vals">
         <span class="cur mono blue">${item.cur.toLocaleString()}</span>
         <span class="from">from ${item.pre.toLocaleString()}</span>
-        <span class="delta mono down">${item.d}</span>
+        <span class="delta mono ${deltaClass}">${item.d}</span>
       </div>
     </div>`;
   });
@@ -534,12 +906,114 @@ function renderLivePanel(c) {
     </tr>`;
   });
 
+  html += `</tbody></table></div>`;
+
+  // Central Bank Policy Matrix (collapsible)
+  const cbId = 'cbPolicy';
+  const cbOpen = sectionState[cbId];
+  html += `<div style="margin-top:16px;border-top:1px solid var(--border);padding-top:12px">
+    <div class="collapsible-header" onclick="toggleSection('${cbId}')" style="padding:0">
+      <span style="font-size:11px;font-weight:600;color:var(--amber)">CENTRAL BANK POLICY MATRIX</span>
+      <span id="${cbId}-arrow" style="color:var(--amber);font-size:12px">${cbOpen?'\u25BC':'\u25B6'}</span>
+    </div>
+    <div id="${cbId}-body" class="${cbOpen?'':'hidden'}">
+      <table class="cb-policy-table"><thead><tr>
+        <th>Bank</th><th style="color:#22c55e">Quick Ceasefire</th><th style="color:#f59e0b">Extended Conflict</th><th style="color:#ef4444">Prolonged War</th>
+      </tr></thead><tbody>`;
+  NARRATIVE.centralBankMatrix.forEach(r => {
+    html += `<tr><td>${r.bank}</td><td>${r.c}</td><td>${r.e}</td><td>${r.p}</td></tr>`;
+  });
   html += `</tbody></table></div></div>`;
+
+  // Key Variables to Monitor (collapsible)
+  const kvId = 'keyVars';
+  const kvOpen = sectionState[kvId];
+  html += `<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+    <div class="collapsible-header" onclick="toggleSection('${kvId}')" style="padding:0">
+      <span style="font-size:11px;font-weight:600;color:var(--blue)">KEY VARIABLES TO MONITOR</span>
+      <span id="${kvId}-arrow" style="color:var(--blue);font-size:12px">${kvOpen?'\u25BC':'\u25B6'}</span>
+    </div>
+    <div id="${kvId}-body" class="${kvOpen?'':'hidden'}" style="margin-top:8px">`;
+  NARRATIVE.keyVariables.forEach((v,i) => {
+    html += `<div style="display:flex;gap:8px;padding:4px 0;font-size:11px;color:var(--txt-secondary);line-height:1.5;border-bottom:1px solid rgba(255,255,255,0.03)">
+      <span style="color:var(--blue);font-weight:600;flex-shrink:0">${i+1}.</span><span>${v}</span></div>`;
+  });
+  html += `</div></div>`;
+
+  // Earnings Season Implications (collapsible)
+  const eiId = 'earningsImpl';
+  const eiOpen = sectionState[eiId];
+  html += `<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">
+    <div class="collapsible-header" onclick="toggleSection('${eiId}')" style="padding:0">
+      <span style="font-size:11px;font-weight:600;color:var(--orange)">EARNINGS SEASON IMPLICATIONS</span>
+      <span id="${eiId}-arrow" style="color:var(--orange);font-size:12px">${eiOpen?'\u25BC':'\u25B6'}</span>
+    </div>
+    <div id="${eiId}-body" class="${eiOpen?'':'hidden'}" style="margin-top:8px">`;
+  NARRATIVE.earningsImplications.forEach(e => {
+    html += `<div class="mechanism-row"><div class="mechanism-channel" style="color:var(--orange)">${e.sector}</div><div class="mechanism-detail">${e.detail}</div></div>`;
+  });
+  html += `</div></div>`;
+
+  html += `</div>`;
   panel.innerHTML = html;
 }
 
+// =======================================
+// KEY FINDINGS (always visible, 2x2 grid)
+// =======================================
+function renderKeyFindings() {
+  const el = document.getElementById("keyFindingsPanel");
+  const findings = NARRATIVE.keyFindings;
+
+  const accentMap = {
+    amber: { border: "var(--amber)", color: "var(--amber)" },
+    blue: { border: "var(--blue)", color: "var(--blue)" },
+    red: { border: "var(--red)", color: "var(--red)" },
+    green: { border: "var(--green)", color: "var(--green)" }
+  };
+
+  let html = `<div class="grid-2x2">`;
+  findings.forEach(f => {
+    const a = accentMap[f.accent] || accentMap.amber;
+    html += `<div class="finding-card" style="border-left-color:${a.border}">
+      <div class="finding-title" style="color:${a.color}">${f.title}</div>
+      <div class="finding-body">${f.text}</div>
+    </div>`;
+  });
+  html += `</div>`;
+  el.innerHTML = html;
+}
+
+// =======================================
+// THIS TIME IS DIFFERENT (collapsible)
+// =======================================
+function renderThisTimeIsDifferent() {
+  const el = document.getElementById("thisTimeDifferentPanel");
+  const data = NARRATIVE.thisTimeIsDifferent;
+  const id = 'thisTime';
+  const isOpen = sectionState[id];
+
+  let rows = data.map(r =>
+    `<tr><td>${r.factor}</td><td>${r.historical}</td><td>${r.current}</td><td>${r.implication}</td></tr>`
+  ).join("");
+
+  el.innerHTML = `<div class="narrative-panel amber-accent">
+    <div class="collapsible-header" onclick="toggleSection('${id}')" style="padding:0">
+      <h2 class="amber" style="margin:0">"This Time Is Different" \u2014 Structural Shifts Since Historical Precedents</h2>
+      <span id="${id}-arrow" style="color:var(--amber);font-size:14px">${isOpen?'\u25BC':'\u25B6'}</span>
+    </div>
+    <div id="${id}-body" class="${isOpen?'':'hidden'}" style="margin-top:12px;overflow-x:auto">
+      <table class="comp-table"><thead><tr>
+        <th>Factor</th><th>Historical (1987\u20132003)</th><th>2026 Reality</th><th>Market Implication</th>
+      </tr></thead><tbody>${rows}</tbody></table>
+    </div>
+  </div>`;
+}
+
+// =======================================
+// TIMELINE
+// =======================================
 function renderTimeline() {
-  // Dots
   const dots = document.getElementById("timelineDots");
   dots.innerHTML = timelineEvts.map(e =>
     `<div class="timeline-dot">
@@ -549,7 +1023,6 @@ function renderTimeline() {
     </div>`
   ).join("");
 
-  // Bars
   const bars = document.getElementById("conflictBars");
   const barData = [
     {name:"Tanker Wars",start:0,width:18,cls:"bar-tanker",peak:"WTI: $21.28",trough:"S&P: -3%*"},
@@ -567,6 +1040,72 @@ function renderTimeline() {
       </div>
     </div>`
   ).join("");
+}
+
+// =======================================
+// HISTORICAL PRECEDENT TABLE
+// =======================================
+function renderHistoricalPrecedent() {
+  const el = document.getElementById("historicalPrecedent");
+  const data = NARRATIVE.historicalTimeline;
+  const id = 'precedent';
+  const isOpen = sectionState[id];
+
+  let rows = data.map(r =>
+    `<tr><td class="mono">${r.yr}</td><td>${r.ev}</td><td class="mono">${r.oil}</td><td class="mono">${r.sp}</td><td>${r.dur}</td></tr>`
+  ).join("");
+
+  el.innerHTML = `<div class="narrative-panel blue-accent">
+    <div class="collapsible-header" onclick="toggleSection('${id}')" style="padding:0">
+      <h2 class="blue" style="margin:0">Historical Precedent Table \u2014 Middle East / Energy Crises (1956\u20132026)</h2>
+      <span id="${id}-arrow" style="color:var(--blue);font-size:14px">${isOpen?'\u25BC':'\u25B6'}</span>
+    </div>
+    <div id="${id}-body" class="${isOpen?'':'hidden'}" style="margin-top:12px;overflow-x:auto">
+      <table class="precedent-table"><thead><tr>
+        <th>Year</th><th>Event</th><th>Oil Impact</th><th>S&P Impact</th><th>Duration</th>
+      </tr></thead><tbody>${rows}</tbody></table>
+      <div style="font-size:9px;color:var(--txt-dim);margin-top:8px">* Tanker Wars equity impact confounded by Black Monday (Oct 1987). 1979 and 1980 S&P returns reflect full calendar-year performance during ongoing crises.</div>
+    </div>
+  </div>`;
+}
+
+// =======================================
+// METHODOLOGY & DATA NOTES (collapsible)
+// =======================================
+function renderMethodology() {
+  const el = document.getElementById("methodologyPanel");
+  const m = NARRATIVE.methodology;
+  const id = 'methodology';
+  const isOpen = sectionState[id];
+
+  let sourcesHtml = m.sources.map((s, i) => `${i+1}. ${s}`).join('<br>');
+
+  let phasesHtml = m.phases.map(p =>
+    `<tr><td style="font-weight:600;color:var(--txt-primary)">${p.phase}</td><td>${p.def}</td><td class="mono">${p.period}</td></tr>`
+  ).join('');
+
+  let caveatsHtml = m.caveats.map((c, i) => `${i+1}. ${c}`).join('<br>');
+
+  el.innerHTML = `<div class="narrative-panel amber-accent">
+    <div class="collapsible-header" onclick="toggleSection('${id}')" style="padding:0">
+      <h2 class="amber" style="margin:0">Methodology & Data Notes</h2>
+      <span id="${id}-arrow" style="color:var(--amber);font-size:14px">${isOpen?'\u25BC':'\u25B6'}</span>
+    </div>
+    <div id="${id}-body" class="${isOpen?'':'hidden'}" style="margin-top:12px">
+      <div style="margin-bottom:14px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--amber);margin-bottom:6px">Data Sources</div>
+        <div style="font-size:11px;color:var(--txt-secondary);line-height:1.7">${sourcesHtml}</div>
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--amber);margin-bottom:6px">Phase Definitions</div>
+        <table class="comp-table"><thead><tr><th>Phase</th><th>Definition</th><th>Period</th></tr></thead><tbody>${phasesHtml}</tbody></table>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--amber);margin-bottom:6px">Caveats & Limitations</div>
+        <div style="font-size:11px;color:var(--txt-secondary);line-height:1.7">${caveatsHtml}</div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function selectConflict(k) { selected = k; render(); }
