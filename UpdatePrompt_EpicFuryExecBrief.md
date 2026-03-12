@@ -1,128 +1,173 @@
 # UPDATE PROMPT — Epic Fury Executive Brief (EpicFuryExecBrief.html)
 
-> **Purpose:** Give this prompt + the current `EpicFuryExecBrief.html` file to your AI assistant. It will update every data point in place while preserving the design system, layout, and chart structure exactly. Run this each morning before 8 AM ET to produce the day's brief.
+> **Purpose:** Give this prompt + the current `EpicFuryExecBrief.html` file to your AI assistant. It will fetch live market data, determine the current date/time, and update every data point in place while preserving the design system exactly. The output is a ready-to-open HTML file with accurate, sourced, timestamped data.
 
 ---
 
 ## ROLE
 
-You are a CIB Risk Analytics desk analyst updating the daily Executive Brief HTML dashboard for Operation Epic Fury. You must update **every data point** listed below to reflect today's market open / overnight close. Do NOT change any CSS, layout, HTML structure, Chart.js configuration, design tokens, or class names. Only update data values, text content, and the JS chart data array.
+You are a CIB Risk Analytics desk analyst updating the daily Executive Brief HTML dashboard for Operation Epic Fury. Your job is to:
+1. **Determine the current date and time** (see Step 0)
+2. **Fetch live market data** from authoritative sources (see Data Sourcing)
+3. **Update every data point** in the HTML to reflect the latest available prices
+4. **Return the complete updated HTML file**
+
+Do NOT change any CSS, layout, HTML structure, Chart.js configuration, design tokens, or class names. Only update data values, text content, and the JS chart data array.
 
 ---
 
-## WHAT TO UPDATE (Checklist)
+## STEP 0 — DETERMINE CURRENT DATE & TIME (MANDATORY FIRST STEP)
 
-### 1. Header Timestamp
-- `.hdr-sub` text: Update the date, time (ET), and conflict day number.
-  - Current: `March 12, 2026, 7:20 AM ET | Day 13 of Conflict`
-  - Format: `{Month} {Day}, 2026, {H:MM} AM/PM ET | Day {N} of Conflict`
-  - Day 1 = Feb 28, 2026.
+Before doing anything else, you MUST establish the current date and time. Use one or more of these methods:
 
-### 2. KPI Strip (8 cards in `.kpi-grid`)
-Update each card's `.val` and `.sub`:
+1. **Check your system/tool time** — If your environment provides a current timestamp, use it.
+2. **Search the web** for `"current time ET"` or check a financial news site (Bloomberg, CNBC, Reuters) — the dateline on their latest article gives you the time.
+3. **Search for today's market data** — e.g., `"Brent crude oil price today"` — the results will confirm today's date.
 
-| # | Label | Current Value | Current Sub-text | Where to source |
-|---|-------|--------------|------------------|-----------------|
-| 1 | Brent Crude | $98.19 | +40.0% from pre-conflict | ICE Brent front-month |
-| 2 | WTI Crude | $93.79 | +38.2% from pre-conflict | NYMEX WTI front-month |
-| 3 | S&P 500 | 6,733 | -2.1% from pre-conflict | SPX futures or prior close |
-| 4 | Nikkei 225 | 52,191 | -11.4% from pre-conflict | Nikkei close (Tokyo) |
-| 5 | VIX | ~30 | Elevated | CBOE VIX |
-| 6 | Strait of Hormuz | Effectively Closed | 3 ships attacked overnight | UKMTO / Navy reports |
-| 7 | US SPR | ~243M bbl | Lowest since 1975 | DOE Weekly Petroleum Status |
-| 8 | Brent Day-over-Day | +6.8% | $91.98 → $98.19 | Yesterday close → today |
+From the current date, calculate:
+- **Conflict Day Number:** Day 1 = February 28, 2026. Count calendar days (not trading days) from Feb 28 to today, inclusive. Example: Mar 1 = Day 2, Mar 15 = Day 16.
+- **Timestamp string:** Format as `{Month} {Day}, {Year}, {H:MM} AM/PM ET`
 
-**Pre-conflict baselines (do NOT change unless correcting):**
-- Brent pre-conflict: $70.12
-- WTI pre-conflict: $67.85
-- S&P 500 pre-conflict: 6,879
-- Nikkei pre-conflict: 58,885
+**You must use the REAL current date/time, not the date from the existing file.** The existing file's date is stale — that's why you're running this update.
+
+---
+
+## STEP 1 — FETCH LIVE MARKET DATA (MANDATORY)
+
+You MUST search the web for current prices. Do NOT reuse the numbers already in the HTML file — those are yesterday's data. Perform these searches:
+
+### Energy Prices (search each individually if needed)
+| Data Point | Search Query | Authoritative Sources |
+|-----------|-------------|----------------------|
+| Brent Crude | `"Brent crude oil price today"` | ICE, Bloomberg, TradingView, MarketWatch, CNBC |
+| WTI Crude | `"WTI crude oil price today"` | NYMEX/CME, Bloomberg, TradingView, MarketWatch |
+| Gasoline (retail) | `"AAA gas price today"` or `"average gas price US"` | AAA FuelGaugeReport (gasprices.aaa.com) |
+| Diesel (retail) | `"AAA diesel price today"` | AAA FuelGaugeReport |
+| Jet Fuel | `"jet fuel price today IATA"` or `"jet fuel spot price"` | IATA Jet Fuel Monitor, EIA |
+
+### Equity Indexes (search each individually if needed)
+| Data Point | Search Query | Authoritative Sources |
+|-----------|-------------|----------------------|
+| S&P 500 | `"S&P 500 today"` | Yahoo Finance, Bloomberg, MarketWatch |
+| DJIA | `"Dow Jones today"` | Yahoo Finance, Bloomberg |
+| NASDAQ | `"NASDAQ composite today"` | Yahoo Finance, Bloomberg |
+| Nikkei 225 | `"Nikkei 225 today"` | Yahoo Finance, Nikkei.com |
+| DAX | `"DAX index today"` | Yahoo Finance, Bloomberg |
+| Hang Seng | `"Hang Seng index today"` | Yahoo Finance, HKEX |
+| KOSPI | `"KOSPI index today"` | Yahoo Finance, KRX |
+
+### Risk Indicators
+| Data Point | Search Query |
+|-----------|-------------|
+| VIX | `"VIX index today"` |
+| SPR level | `"US strategic petroleum reserve level"` |
+
+### Situation / Developments
+| Data Point | Search Query |
+|-----------|-------------|
+| Strait of Hormuz status | `"Strait of Hormuz shipping today"` |
+| Latest conflict developments | `"Operation Epic Fury latest"` or `"Iran US Gulf conflict today"` |
+| Analyst commentary | `"oil price forecast Gulf conflict"` |
+| IEA / OPEC actions | `"IEA oil reserve release"` or `"OPEC production update"` |
+
+**If a market is currently closed**, use the most recent closing price and note "(close)" in your reasoning.
+**If you cannot find a specific data point**, use the prior value from the HTML file prefixed with `~` and add a note.
+
+---
+
+## STEP 2 — UPDATE THE HTML
+
+### 2.1 Header Timestamp
+Update `.hdr-sub` text with the current date/time and conflict day:
+```
+{Month} {Day}, {Year}, {H:MM} AM/PM ET  |  Day {N} of Conflict
+```
+
+### 2.2 KPI Strip (8 cards in `.kpi-grid`)
+Update each card's `.val` and `.sub` with freshly fetched data:
+
+| # | Label | Value = | Sub-text = |
+|---|-------|---------|-----------|
+| 1 | Brent Crude | Fetched Brent price | `+{Δ%}% from pre-conflict` |
+| 2 | WTI Crude | Fetched WTI price | `+{Δ%}% from pre-conflict` |
+| 3 | S&P 500 | Fetched S&P level | `{Δ%}% from pre-conflict` |
+| 4 | Nikkei 225 | Fetched Nikkei level | `{Δ%}% from pre-conflict` |
+| 5 | VIX | Fetched VIX | Descriptive (e.g., "Elevated", "Spiking", "Normalizing") |
+| 6 | Strait of Hormuz | Status text | Brief detail |
+| 7 | US SPR | Level in M bbl | Context (e.g., "Lowest since 1975") |
+| 8 | Brent Day-over-Day | DoD% | `${yesterday} → ${today}` |
+
+**Pre-conflict baselines (FIXED — never change):**
+- Brent: $70.12 | WTI: $67.85 | S&P 500: 6,879 | Nikkei: 58,885
 
 **Formula:** `Δ% = (current - pre) / pre × 100`, rounded to 1 decimal.
 
-### 3. Situation Summary (`.summary` paragraph)
-Rewrite the narrative paragraph to reflect today's top developments. Keep it to 3-5 sentences. Must mention:
-- Oil price level and overnight direction
-- Any IEA/SPR/OPEC actions
-- Strait status and any shipping attacks
-- Key analyst quotes (JPMorgan, Goldman, Macquarie, etc.)
-- SPR level after releases
+### 2.3 Situation Summary
+Rewrite the `.summary` paragraph (3-5 sentences) based on what you found in your searches. Cover:
+- Oil price level, direction, and magnitude of move
+- Strait of Hormuz status and any shipping incidents
+- IEA/SPR/OPEC response actions
+- Key analyst quotes with attribution
+- SPR level and implications
 
-### 4. Energy Commodities Table (5 rows)
-Update all 4 numeric columns per row:
+### 2.4 Energy Commodities Table (5 rows)
+For each row, update all 4 data columns using fetched prices:
+- **Current**: Today's price
+- **Pre-conflict**: Fixed baseline (see above)
+- **Δ%**: `(current - pre) / pre × 100`
+- **DoD**: `(today - yesterday) / yesterday × 100`
 
-| Commodity | Fields to update |
-|-----------|-----------------|
-| Brent Crude | Current $/bbl, Pre-conflict, Δ%, DoD% |
-| WTI Crude | Current $/bbl, Pre-conflict, Δ%, DoD% |
-| Gasoline (AAA) | Current $/gal, Pre-conflict, Δ%, DoD% |
-| Diesel (Retail) | Current $/gal, Pre-conflict, Δ%, DoD% |
-| Jet Fuel | Current $/gal, Pre-conflict, Δ%, DoD% |
+To get yesterday's price: read it from the existing HTML file's table (the "Current" column in the old file = yesterday's current).
 
-**Sources:** EIA, AAA FuelGaugeReport, IATA Jet Fuel Monitor.
+### 2.5 Global Equity Indexes Table (7 rows)
+Same logic as energy — update all 4 columns using fetched data. Fixed pre-conflict baselines:
+- S&P: 6,879 | DJIA: 48,978 | NASDAQ: 22,668 | Nikkei: 58,885 | DAX: 23,500 | Hang Seng: 26,450 | KOSPI: 6,131
 
-### 5. Global Equity Indexes Table (7 rows)
-Update all 4 numeric columns per row:
-
-| Index | Fields to update |
-|-------|-----------------|
-| S&P 500 | Current, Pre-conflict (6,879), Δ%, DoD% |
-| DJIA | Current, Pre-conflict (48,978), Δ%, DoD% |
-| NASDAQ | Current, Pre-conflict (22,668), Δ%, DoD% |
-| Nikkei 225 | Current, Pre-conflict (58,885), Δ%, DoD% |
-| DAX | Current, Pre-conflict (23,500), Δ%, DoD% |
-| Hang Seng | Current, Pre-conflict (26,450), Δ%, DoD% |
-| KOSPI | Current, Pre-conflict (6,131), Δ%, DoD% |
-
-### 6. Chart.js Data Array (`const D = [...]`)
-Append today's data point and keep all prior points. Format:
+### 2.6 Chart.js Data Array (`const D = [...]`)
+**Read the existing array** from the file — it contains all prior days. **Append** today's data point:
 ```js
-{day:N, b:BRENT, w:WTI}
+{day:N, b:BRENT_PRICE, w:WTI_PRICE}
 ```
-- `N` = conflict day (Day 1 = Feb 28)
-- `b` = Brent price
-- `w` = WTI price
+Do NOT delete any existing points. Do NOT modify prior points.
 
-**Do NOT remove any existing data points.** Only append the new day.
+### 2.7 Scenario Matrix
+Update the 3 scenario rows (Quick Ceasefire / Extended Conflict / Prolonged War) if:
+- Probability weights have shifted based on today's news
+- Price range forecasts have changed based on analyst commentary
+If no material change, keep existing values.
 
-Also update the x-axis title text if the day range changes (currently says "Days from Conflict Onset (Feb 28)").
-
-### 7. Scenario Matrix (3 rows)
-Update probability percentages and price ranges if analyst consensus has shifted:
-
-| Scenario | Current Prob | Brent Range | WTI Range | S&P Impact | Global |
-|----------|-------------|-------------|-----------|------------|--------|
-| Quick Ceasefire | 25% | $65–$75 | $62–$72 | Recover 2–4 wks | Full recovery <1 mo |
-| Extended Conflict | 50% | $90–$110 | $85–$105 | -5 to -10% | Asia -10–15% |
-| Prolonged War | 25% | $110–$130+ | $105–$125+ | -10 to -20% | Bear market risk |
-
-Update the italic footnote below the table if the key signal has changed.
-
-### 8. Top 5 Developments
-Replace all 5 `<li>` items in `.dev-list` with today's top 5 developments. Each item format:
+### 2.8 Top 5 Developments
+Replace all 5 `<li>` items with today's top 5 developments from your searches. Format:
 ```html
-<li><strong>{Headline}:</strong> {1-2 sentence detail with numbers}</li>
+<li><strong>{Headline}:</strong> {1-2 sentence detail with specific numbers}</li>
 ```
 
-### 9. Key Variables to Watch
-Update the 7 items in `.var-list` if priorities have shifted. These should be the 7 most important forward-looking variables.
+### 2.9 Key Variables to Watch
+Update the 7 items if priorities have shifted based on today's news.
 
-### 10. Footer
-Update the timestamp in `.footer`:
-```
-Data as of {Month} {Day}, 2026, {H:MM} AM/PM ET
-```
-Keep the source list unless new sources were added.
+### 2.10 Footer
+Update timestamp to match header. Keep source list unless new sources were used.
 
 ---
 
-## ACCURACY RULES
+## STEP 3 — SELF-VERIFICATION (MANDATORY BEFORE OUTPUT)
 
-1. **Every number must be sourced.** If you cannot verify a price, use `~` prefix (e.g., `~$99.50`).
-2. **Percentages must be recalculated**, not copy-pasted. Use the formula: `(current - baseline) / baseline × 100`.
-3. **Pre-conflict baselines are fixed** (Feb 27, 2026 close). Never change them.
-4. **Cross-check:** KPI strip values must exactly match the corresponding table row values.
-5. **DoD = Day-over-Day:** `(today - yesterday) / yesterday × 100`.
+Before returning the file, verify these cross-checks:
+
+| Check | Rule |
+|-------|------|
+| KPI Brent value | Must exactly match Energy table Brent "Current" cell |
+| KPI WTI value | Must exactly match Energy table WTI "Current" cell |
+| KPI S&P value | Must exactly match Equity table S&P "Current" cell |
+| KPI Nikkei value | Must exactly match Equity table Nikkei "Current" cell |
+| KPI Brent Δ% | Must match Energy table Brent "Δ%" cell |
+| KPI DoD% | Must match `(today Brent - yesterday Brent) / yesterday Brent × 100` |
+| Header date | Must match footer date |
+| Conflict day | Must equal `(today - Feb 28, 2026) + 1` in calendar days |
+| Chart array | Must have exactly 1 more entry than the old file's array |
+| All Δ% values | Must be recalculated from fixed baselines, not copied |
+
+If any check fails, fix it before outputting.
 
 ---
 
@@ -130,7 +175,7 @@ Keep the source list unless new sources were added.
 
 - Any CSS (styles, colors, fonts, spacing, responsive breakpoints, print media query)
 - HTML structure or class names
-- Chart.js library version or CDN URL
+- Chart.js library version (`4.4.7`) or CDN URL
 - Chart.js options/config (colors, tension, fill, tooltip format)
 - Badge text ("LIVE", "Internal — Senior Leadership")
 - The design system color tokens in `:root`
@@ -139,4 +184,4 @@ Keep the source list unless new sources were added.
 
 ## OUTPUT
 
-Return the complete updated `EpicFuryExecBrief.html` file. Do not return a diff or partial file — return the entire file so it can be saved and opened directly in a browser.
+Return the **complete** updated `EpicFuryExecBrief.html` file. Not a diff, not a partial — the entire file, ready to save and open in a browser.

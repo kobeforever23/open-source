@@ -1,190 +1,203 @@
 # UPDATE PROMPT — Persian Gulf Conflicts Full Dashboard (PersianGulfDashboard.html)
 
-> **Purpose:** Give this prompt + the current `PersianGulfDashboard.html` file to your AI assistant. It will update the Epic Fury (2026) live data while preserving the complete 4-conflict analytical dashboard — historical data, design system, layout, tabs, and all rendering logic. Run this each morning to refresh the current-event data layer.
+> **Purpose:** Give this prompt + the current `PersianGulfDashboard.html` file to your AI assistant. It will fetch live market data, determine the current date/time, and update the Epic Fury (2026) data layer while preserving all historical conflict data and the complete dashboard architecture. The output is a ready-to-open HTML file.
 
 ---
 
 ## ROLE
 
-You are a CIB Risk Analytics desk analyst updating the full multi-conflict analytical dashboard. This dashboard covers 4 Persian Gulf conflicts (Tanker Wars 1987-88, Gulf War 1990-91, Iraq War 2003, Epic Fury 2026) with tabbed navigation. **Only the Epic Fury data and shared elements (header timestamp, footer) need updating.** Historical conflict data is fixed and must never be modified.
+You are a CIB Risk Analytics desk analyst updating the full multi-conflict analytical dashboard. This dashboard covers 4 Persian Gulf conflicts (Tanker Wars 1987–88, Gulf War 1990–91, Iraq War 2003, Epic Fury 2026) with tabbed navigation. Your job is to:
+1. **Determine the current date and time** (Step 0)
+2. **Fetch live market data** from the web (Step 1)
+3. **Update ONLY the Epic Fury data layer + shared timestamps** (Step 2)
+4. **Never touch historical conflict data** (locked list below)
+5. **Return the complete updated HTML file** (Step 3)
 
 ---
 
-## WHAT TO UPDATE (Checklist)
+## STEP 0 — DETERMINE CURRENT DATE & TIME (MANDATORY FIRST STEP)
 
-### 1. Header Timestamp
-Update the `.tagline` text:
+Before doing anything else, you MUST establish the current date and time. Use one or more of these methods:
+
+1. **Check your system/tool time** — If your environment provides a current timestamp, use it.
+2. **Search the web** for `"current time ET"` or check a financial news site (Bloomberg, CNBC, Reuters) — the dateline on their latest article gives you the time.
+3. **Search for today's market data** — e.g., `"Brent crude oil price today"` — the results will confirm today's date.
+
+From the current date, calculate:
+- **Conflict Day Number:** Day 1 = February 28, 2026. Count calendar days (not trading days) from Feb 28 to today, inclusive. Example: Mar 1 = Day 2, Mar 15 = Day 16.
+- **Timestamp string:** Format as `{Month} {Day}, {Year}, {H:MM} AM/PM ET`
+
+**You must use the REAL current date/time, not the date from the existing file.** The existing file's date is stale — that's why you're running this update.
+
+---
+
+## STEP 1 — FETCH LIVE MARKET DATA (MANDATORY)
+
+You MUST search the web for current prices. Do NOT reuse numbers from the existing HTML file — those are yesterday's data.
+
+### Energy Prices
+| Data Point | Search Query | Authoritative Sources |
+|-----------|-------------|----------------------|
+| Brent Crude | `"Brent crude oil price today"` | ICE, Bloomberg, TradingView, MarketWatch |
+| WTI Crude | `"WTI crude oil price today"` | NYMEX/CME, Bloomberg, TradingView |
+| Gasoline (retail) | `"AAA gas price today"` | AAA FuelGaugeReport |
+| Diesel (retail) | `"AAA diesel price today"` | AAA FuelGaugeReport |
+| Jet Fuel | `"jet fuel price today"` | IATA Jet Fuel Monitor, EIA |
+
+### Equity Indexes
+| Data Point | Search Query | Authoritative Sources |
+|-----------|-------------|----------------------|
+| S&P 500 | `"S&P 500 today"` | Yahoo Finance, Bloomberg, MarketWatch |
+| DJIA | `"Dow Jones today"` | Yahoo Finance, Bloomberg |
+| NASDAQ | `"NASDAQ composite today"` | Yahoo Finance |
+| Nikkei 225 | `"Nikkei 225 today"` | Yahoo Finance, Nikkei.com |
+| DAX | `"DAX index today"` | Yahoo Finance |
+| Hang Seng | `"Hang Seng index today"` | Yahoo Finance, HKEX |
+| KOSPI | `"KOSPI index today"` | Yahoo Finance, KRX |
+
+### Risk & Situation
+| Data Point | Search Query |
+|-----------|-------------|
+| VIX | `"VIX index today"` |
+| SPR level | `"US strategic petroleum reserve level"` |
+| Strait status | `"Strait of Hormuz shipping today"` |
+| Conflict news | `"Operation Epic Fury latest"` or `"Iran US Gulf conflict today"` |
+| Analyst views | `"oil price forecast Gulf conflict"` |
+| IEA/OPEC | `"IEA oil reserve release"` or `"OPEC production update"` |
+| Central bank | `"Federal Reserve interest rate"`, `"ECB rate decision"`, `"BOJ policy"` |
+
+### Sector Performance
+| Data Point | Search Query |
+|-----------|-------------|
+| Sector ETFs | `"XLE XLF XLK sector ETF performance today"` |
+| Airlines | `"airline stocks today DAL UAL AAL"` |
+| Defense | `"defense stocks today LMT RTX"` |
+
+**If a market is closed**, use the most recent closing price.
+**If you cannot find a data point**, keep the prior value prefixed with `~`.
+
+---
+
+## STEP 2 — UPDATE THE HTML (Epic Fury data layer ONLY)
+
+### 2.1 Header Timestamp
+Update `.tagline`:
 ```
-INTERNAL — FOR SENIOR LEADERSHIP | Data as of {Month} {Day}, 2026, {H:MM} AM/PM ET | Conflict Day {N}
+INTERNAL — FOR SENIOR LEADERSHIP | Data as of {Month} {Day}, {Year}, {H:MM} AM/PM ET | Conflict Day {N}
 ```
-Day 1 = Feb 28, 2026.
 
-### 2. Epic Fury KPI Array (`CONFLICTS.epicFury.kpi`)
-Update these 9 KPI objects. Only change `v` (value) fields:
+### 2.2 `CONFLICTS.epicFury.kpi` (9 objects)
+Update `v` values. These are **conflict-period peaks/maxima** — only update if today sets a new extreme:
 
-| Index | Label | Current Value | Source |
-|-------|-------|--------------|--------|
-| 0 | Brent Peak Δ% | +70–80% | ICE Brent intraday high vs $70.12 |
-| 1 | WTI Peak Δ% | +52–70% | NYMEX WTI intraday high vs $67.85 |
-| 2 | Gasoline Peak Δ% | +24% | AAA vs $2.88 |
-| 3 | S&P 500 Max DD | -3.1% | Max intraday drawdown from 6,879 |
-| 4 | Nikkei Max DD | -11.9% | Max drawdown from 58,885 |
-| 5 | DAX Max DD | -5.4% | Max drawdown from 23,500 |
-| 6 | VIX Peak | ~30 | CBOE VIX conflict-period high |
-| 7 | Duration | 13 days+ | Update day count |
-| 8 | Supply Risk | 5–20 mbpd | EIA / analyst estimates |
+| Index | Label | Logic |
+|-------|-------|-------|
+| 0 | Brent Peak Δ% | `(conflict_high_Brent - 70.12) / 70.12 × 100` |
+| 1 | WTI Peak Δ% | `(conflict_high_WTI - 67.85) / 67.85 × 100` |
+| 2 | Gasoline Peak Δ% | `(conflict_high_gas - 2.88) / 2.88 × 100` |
+| 3 | S&P 500 Max DD | `(conflict_low_SPX - 6879) / 6879 × 100` — negative |
+| 4 | Nikkei Max DD | `(conflict_low_Nikkei - 58885) / 58885 × 100` — negative |
+| 5 | DAX Max DD | `(conflict_low_DAX - 23500) / 23500 × 100` — negative |
+| 6 | VIX Peak | Highest VIX during conflict |
+| 7 | Duration | `{N} days+` using today's conflict day number |
+| 8 | Supply Risk | Update if EIA/analyst estimate has changed |
 
-**Important:** These are **peak/max** values across the entire conflict, not today's spot. Only update if today sets a new extreme.
-
-### 3. Epic Fury Energy Time-Series (`CONFLICTS.epicFury.energy`)
-Append today's data point to the array:
+### 2.3 `CONFLICTS.epicFury.energy` (time-series array)
+**Read the existing array.** Append one new entry:
 ```js
 {day:N, brent:XX.XX, wti:XX.XX, gas:X.XX}
 ```
-- `day` = conflict day number
-- Keep ALL existing data points — only append
+Never delete or modify existing entries.
 
-### 4. Epic Fury Heatmap (`CONFLICTS.epicFury.heatmap`)
-Update `dd` (max drawdown) values only if today sets a new low for any index:
+### 2.4 `CONFLICTS.epicFury.heatmap`
+Update `dd` only if today sets a new drawdown low for any index. Keep all `rec` as `"TBD"`.
 
-| Index Key | Current DD | Pre-conflict |
-|-----------|-----------|--------------|
-| sp500 | -3.1% | 6,879 |
-| djia | -2.9% | 48,978 |
-| nasdaq | -4.0% | 22,668 |
-| nikkei | -11.9% | 58,885 |
-| ftse | -2.7% | (use pre-conflict close) |
-| dax | -5.4% | 23,500 |
-| cac40 | -4.0% | (use pre-conflict close) |
-| hangSeng | -3.2% | 26,450 |
-| kospi | -16.9% | 6,131 |
-| shanghai | -1.2% | (use pre-conflict close) |
-| asx200 | -7.2% | (use pre-conflict close) |
-| sensex | -2.6% | (use pre-conflict close) |
+Fixed pre-conflict baselines:
+- sp500: 6,879 | djia: 48,978 | nasdaq: 22,668 | nikkei: 58,885 | dax: 23,500 | hangSeng: 26,450 | kospi: 6,131
 
-All `rec` fields stay `"TBD"` while conflict is ongoing.
+### 2.5 `CONFLICTS.epicFury.sectors`
+Update `r` (return %) values from SPDR sector ETF data if changed by ±2% or more since last update.
 
-### 5. Epic Fury Sectors (`CONFLICTS.epicFury.sectors`)
-Update percentage returns if meaningfully changed (±2% threshold):
+### 2.6 `CONFLICTS.epicFury.live` — Energy (5 items) + Equity (7 items)
+For each item, update:
+- `cur`: Today's price/level (fetched)
+- `d`: `"{sign}{Δ%}%"` — from-pre-conflict delta
+- `dod`: `"{sign}{DoD%}%"` — day-over-day
+- `prev`: Yesterday's close (= the `cur` value from the OLD file)
+
+**Pre-conflict baselines are the `pre` field — never change these.**
+
+### 2.7 `CONFLICTS.epicFury.scenarios`
+Update probability weights, price ranges, and impact estimates if analyst consensus has shifted based on today's news.
+
+### 2.8 `NARRATIVE` object — Epic Fury entries ONLY
+
+Update these sections based on today's fetched news:
+
+| Section | What to update |
+|---------|---------------|
+| `briefings.epicFury.summary` | Rewrite 3-5 sentences with today's key developments |
+| `briefings.epicFury.straitStatus` | Current Strait status |
+| `briefings.epicFury.opec` | OPEC+ response |
+| `briefings.epicFury.spr` | SPR level and release status |
+| `briefings.epicFury.supplyNote` | Supply disruption estimate |
+| `transmissionMechanisms.epicFury` | 6 strings — update if channels changed |
+| `sectorAnnotations.epicFury` | Update with current ETF performance data |
+| `strategicImplications` | 5 strings — today's key strategic takeaways |
+| `keyVariables` | 9 strings — reorder/rewrite based on priority |
+| `earningsImplications` | 5 sector entries — update if estimates changed |
+| `centralBankMatrix` | 4 rows — update if policy stance shifted |
+
+### 2.9 `compData` — Epic Fury entry only
 ```js
-{n:"Energy",r:15},{n:"Utilities",r:2}, ...
-```
-Source: SPDR sector ETF performance from Feb 27 close.
-
-### 6. Epic Fury Live Data (`CONFLICTS.epicFury.live`)
-
-#### Energy (5 items):
-Update `cur`, `d` (delta%), `dod` (day-over-day%), and `prev` (yesterday's close):
-
-| Label | Current fields | Pre-conflict (fixed) |
-|-------|---------------|---------------------|
-| Brent Crude | cur, d, dod, prev | pre: 70.12 |
-| WTI Crude | cur, d, dod, prev | pre: 67.85 |
-| Gasoline (AAA) | cur, d, dod, prev | pre: 2.88 |
-| Diesel (Retail) | cur, d, dod, prev | pre: 3.89 |
-| Jet Fuel | cur, d, dod, prev | pre: 2.15 |
-
-#### Equity (7 items):
-Update `cur`, `d` (delta%), `dod`, and `prev`:
-
-| Label | Pre-conflict (fixed) |
-|-------|---------------------|
-| S&P 500 | pre: 6879 |
-| DJIA | pre: 48978 |
-| NASDAQ | pre: 22668 |
-| Nikkei 225 | pre: 58885 |
-| DAX | pre: 23500 |
-| Hang Seng | pre: 26450 |
-| KOSPI | pre: 6131 |
-
-### 7. Scenario Probabilities (`CONFLICTS.epicFury.scenarios`)
-Update Brent/WTI/gasoline ranges and S&P/global impact if analyst consensus has shifted. Update the scenario color-coded probabilities if the situation has materially changed.
-
-### 8. Narrative Data (`NARRATIVE` object) — Epic Fury entries only
-
-#### `NARRATIVE.briefings.epicFury`
-- `summary`: Rewrite to reflect today's situation (3-5 sentences)
-- `straitStatus`: Update (e.g., "Effectively closed", "Partially reopened", "Open under escort")
-- `opec`: Update OPEC+ response status
-- `spr`: Update SPR level and release status
-- `supplyNote`: Update disruption estimate
-
-#### `NARRATIVE.transmissionMechanisms.epicFury`
-Update the 6 bullet strings if transmission channels have materially changed.
-
-#### `NARRATIVE.sectorAnnotations.epicFury`
-Update the annotation string with current sector performance data.
-
-#### `NARRATIVE.strategicImplications`
-Update the 5 bullet strings with today's key strategic takeaways.
-
-#### `NARRATIVE.keyVariables`
-Update the 9 monitoring variables if priorities have shifted.
-
-#### `NARRATIVE.earningsImplications`
-Update the 5 sector earnings impact entries if materially changed.
-
-#### `NARRATIVE.centralBankMatrix`
-Update the 4 central bank rows if policy stance has shifted.
-
-### 9. Comparative Chart Data (`compData`)
-Update Epic Fury entry only:
-```js
-{name:"Epic Fury", ep:XX, ed:-X.X}
-```
-- `ep` = peak Brent Δ% (midpoint of range)
-- `ed` = S&P 500 max drawdown %
-
-### 10. Timeline Bar Data (in `renderTimeline`)
-Update Epic Fury bar's `peak` and `trough` text if new extremes were set:
-```js
-{name:"Epic Fury", start:92, width:7, cls:"bar-epic", peak:"Brent: $119–126", trough:"S&P: -3.1%"}
+{name:"Epic Fury", ep:MIDPOINT_OF_BRENT_PEAK_RANGE, ed:SP500_MAX_DD}
 ```
 
-### 11. Footer Timestamp
-Update the footer date string to match the header.
+### 2.10 Timeline bar — Epic Fury entry only
+Update `peak` and `trough` strings if new extremes were set.
+
+### 2.11 Footer timestamp
+Must match header timestamp exactly.
 
 ---
 
-## HISTORICAL DATA — DO NOT MODIFY
+## STEP 3 — SELF-VERIFICATION (MANDATORY BEFORE OUTPUT)
 
-The following data objects are **locked** and must never be changed:
+| # | Check | Rule |
+|---|-------|------|
+| 1 | Header date = Footer date | Timestamps must be identical |
+| 2 | Conflict day calculation | `(today - Feb 28, 2026) + 1` in calendar days |
+| 3 | KPI duration | Must show today's conflict day number |
+| 4 | Live energy `cur` values | Must match the last entry in `energy` time-series array |
+| 5 | Live `d` values | Must equal `(cur - pre) / pre × 100` for each item |
+| 6 | Live `dod` values | Must equal `(cur - prev) / prev × 100` for each item |
+| 7 | Heatmap DDs | Each must be ≤ the worst single-day close vs pre-conflict |
+| 8 | KPI peak Δ% | Must use conflict-period highs, not today's spot |
+| 9 | Energy array length | Must be exactly 1 entry longer than the old file |
+| 10 | No historical data changed | Tanker Wars, Gulf War, Iraq War objects byte-identical |
+| 11 | Pre-conflict baselines | All `pre` values unchanged from original |
+| 12 | All Δ% recalculated | No copy-pasted percentages — all freshly computed |
+
+If any check fails, fix it before outputting.
+
+---
+
+## HISTORICAL DATA — DO NOT MODIFY (LOCKED)
+
+These objects are **permanently frozen**. Do not change a single character:
 
 - `CONFLICTS.tankerWars` (entire object)
 - `CONFLICTS.gulfWar` (entire object)
 - `CONFLICTS.iraqWar` (entire object)
-- `NARRATIVE.briefings.tankerWars`
-- `NARRATIVE.briefings.gulfWar`
-- `NARRATIVE.briefings.iraqWar`
-- `NARRATIVE.transmissionMechanisms.tankerWars`
-- `NARRATIVE.transmissionMechanisms.gulfWar`
-- `NARRATIVE.transmissionMechanisms.iraqWar`
+- `NARRATIVE.briefings.tankerWars / gulfWar / iraqWar`
+- `NARRATIVE.transmissionMechanisms.tankerWars / gulfWar / iraqWar`
 - `NARRATIVE.sectorAnnotations.tankerWars / gulfWar / iraqWar`
-- `NARRATIVE.keyFindings` (cross-conflict analysis — update only if new finding emerges)
-- `NARRATIVE.thisTimeIsDifferent` (structural comparison — update only if a factor materially changes)
-- `NARRATIVE.historicalTimeline` (all rows except Epic Fury)
-- `NARRATIVE.methodology` (sources, phases, caveats)
+- `NARRATIVE.keyFindings` (cross-conflict — update only if truly warranted)
+- `NARRATIVE.thisTimeIsDifferent` (update only if a structural factor materially changes)
+- `NARRATIVE.historicalTimeline` (all rows except Epic Fury's oil/sp/dur fields)
+- `NARRATIVE.methodology`
 - `compData` entries for Tanker Wars, Gulf War, Iraq War
-- `timelineEvts` array
-- `indexNames` object
-- All CSS
-- All rendering functions
-- All HTML structure
-
----
-
-## ACCURACY RULES
-
-1. **Every number must be sourced.** Use `~` prefix for estimates.
-2. **Percentages must be recalculated:** `(current - baseline) / baseline × 100`, rounded to 1 decimal.
-3. **Pre-conflict baselines are fixed** (Feb 27, 2026 close). Never change them.
-4. **Cross-check consistency:**
-   - KPI `v` values must match live data `d` values
-   - Heatmap `dd` must equal or exceed any single-day drawdown
-   - Chart data array must include every prior day (never delete points)
-   - Footer date must match header date
-5. **Peak/max values are cumulative** — only update if today sets a new extreme.
-6. **DoD = Day-over-Day:** `(today - yesterday) / yesterday × 100`.
+- `timelineEvts`, `indexNames`
+- All CSS, all rendering functions, all HTML structure
 
 ---
 
@@ -192,16 +205,14 @@ The following data objects are **locked** and must never be changed:
 
 - Any CSS (design system, colors, fonts, spacing, responsive breakpoints)
 - HTML structure or element IDs
-- Chart.js library version or CDN URL
+- Chart.js library version (`4.4.7`) or CDN URL
 - Chart.js rendering options/config
-- Tab system logic
-- Collapse/expand system
+- Tab system logic, collapse/expand system
 - Any render function signatures or logic
 - Badge styling or classification labels
-- Historical conflict data (see locked list above)
 
 ---
 
 ## OUTPUT
 
-Return the complete updated `PersianGulfDashboard.html` file. Do not return a diff or partial file — return the entire file so it can be saved and opened directly in a browser.
+Return the **complete** updated `PersianGulfDashboard.html` file. Not a diff, not a partial — the entire file, ready to save and open in a browser.
